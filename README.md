@@ -42,3 +42,7 @@ For Electron follow: https://twiki.cern.ch/twiki/bin/viewauth/CMS/HEEPElectronId
 ```
 git cms-merge-topic Sam-Harper:HEEPV70VID_8010_ReducedCheckout
 ```
+Finally download analyzer
+```
+git clone https://github.com/varuns23/phoJetAnalysis.git
+```
