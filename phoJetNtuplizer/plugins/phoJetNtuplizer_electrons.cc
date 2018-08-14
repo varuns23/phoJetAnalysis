@@ -14,8 +14,16 @@ vector<float>    eleD0_;
 vector<float>    eleDz_;
 vector<float>    eleSIP_;
 
-vector<float>    eleCalibPt_;
-vector<float>    eleCalibEn_;
+vector<float>    eleUnCalibE_;
+vector<float>    eleUnCalibESigma_;
+vector<float>    eleCalibEecalonly_;
+vector<float>    eleCalibE_;
+vector<float>    eleCalibESigma_;
+vector<float>    eleCalibEt_;
+vector<float>    eleCalibEtSigma_;
+
+vector<float>    eleEnergyScale_;
+vector<float>    eleEnergySigma_;
 
 vector<float>    eleSCRawEn_;
 vector<float>    eleSCEn_;
@@ -45,20 +53,34 @@ vector<float>    elePFNeuIso_;
 vector<float>    elePFPUIso_;
 vector<float>    elePFClusEcalIso_;
 vector<float>    elePFClusHcalIso_;
-vector<float>    eleIDMVA_;
+
+vector<float>    eleHEEPID_;
+vector<float>    eleMVAIsoID_;
+vector<float>    eleMVAnoIsoID_;
 vector<UShort_t> eleIDbit_; 
+vector<UShort_t> eleMVAIsoIDbit_; 
+vector<UShort_t> eleMVAnoIsoIDbit_;
 
-vector<float>  eleScale_stat_up_;
-vector<float>  eleScale_stat_dn_;
-vector<float>  eleScale_syst_up_;
-vector<float>  eleScale_syst_dn_;
-vector<float>  eleScale_gain_up_;
-vector<float>  eleScale_gain_dn_;
-vector<float>  eleResol_rho_up_;
-vector<float>  eleResol_rho_dn_;
-vector<float>  eleResol_phi_up_;
-vector<float>  eleResol_phi_dn_;
+vector<float>    eleTrkdxy_;
+vector<float>    eleKFHits_;
+vector<float>    eleKFChi2_;
+vector<float>    eleGSFChi2_;
 
+vector<float>    eleScale_up_;
+vector<float>    eleScale_dn_;
+vector<float>    eleScale_stat_up_;
+vector<float>    eleScale_stat_dn_;
+vector<float>    eleScale_syst_up_;
+vector<float>    eleScale_syst_dn_;
+vector<float>    eleScale_gain_up_;
+vector<float>    eleScale_gain_dn_;
+ 
+vector<float>    eleResol_up_;
+vector<float>    eleResol_dn_;
+vector<float>    eleResol_rho_up_;
+vector<float>    eleResol_rho_dn_;
+vector<float>    eleResol_phi_up_;
+vector<float>    eleResol_phi_dn_;
 
 void phoJetNtuplizer::branchElectrons (TTree* tree){
 
@@ -75,8 +97,16 @@ void phoJetNtuplizer::branchElectrons (TTree* tree){
   tree->Branch("eleDz",                   &eleDz_);
   tree->Branch("eleSIP",                  &eleSIP_);
 
-  tree->Branch("eleCalibPt",              &eleCalibPt_);
-  tree->Branch("eleCalibEn",              &eleCalibEn_);
+  tree->Branch("eleUnCalibE",             &eleUnCalibE_);
+  tree->Branch("eleUnCalibESigma",        &eleUnCalibESigma_);
+  tree->Branch("eleCalibEecalonly",       &eleCalibEecalonly_);
+  tree->Branch("eleCalibE",               &eleCalibE_);
+  tree->Branch("eleCalibESigma",          &eleCalibESigma_);
+  tree->Branch("eleCalibEt",              &eleCalibEt_);
+  tree->Branch("eleCalibEtSigma",         &eleCalibEtSigma_);
+
+  tree->Branch("eleEnergyScale",          &eleEnergyScale_);
+  tree->Branch("eleEnergySigma",          &eleEnergySigma_);
 
   tree->Branch("eleSCRawEn",              &eleSCRawEn_);
   tree->Branch("eleSCEn",                 &eleSCEn_);
@@ -106,20 +136,34 @@ void phoJetNtuplizer::branchElectrons (TTree* tree){
   tree->Branch("elePFPUIso",              &elePFPUIso_);
   tree->Branch("elePFClusEcalIso",        &elePFClusEcalIso_);
   tree->Branch("elePFClusHcalIso",        &elePFClusHcalIso_);
-  tree->Branch("eleIDMVA",                &eleIDMVA_);
-  tree->Branch("eleIDbit",                &eleIDbit_); 
 
+  tree->Branch("eleHEEPID",               &eleHEEPID_);
+  tree->Branch("eleMVAIsoID",             &eleMVAIsoID_);
+  tree->Branch("eleMVAnoIsoID",           &eleMVAnoIsoID_); 
+  tree->Branch("eleIDbit",                &eleIDbit_); 
+  tree->Branch("eleMVAIsoIDbit",          &eleMVAIsoIDbit_); 
+  tree->Branch("eleMVAnoIsoIDbit",        &eleMVAnoIsoIDbit_);
+
+  tree->Branch("eleTrkdxy",               &eleTrkdxy_);
+  tree->Branch("eleKFHits",               &eleKFHits_);
+  tree->Branch("eleKFChi2",               &eleKFChi2_);
+  tree->Branch("eleGSFChi2",              &eleGSFChi2_);
+
+  tree->Branch("eleScale_up",             &eleScale_up_);
+  tree->Branch("eleScale_dn",             &eleScale_dn_);
   tree->Branch("eleScale_stat_up",        &eleScale_stat_up_);
   tree->Branch("eleScale_stat_dn",        &eleScale_stat_dn_);
   tree->Branch("eleScale_syst_up",        &eleScale_syst_up_);
   tree->Branch("eleScale_syst_dn",        &eleScale_syst_dn_);
   tree->Branch("eleScale_gain_up",        &eleScale_gain_up_);
   tree->Branch("eleScale_gain_dn",        &eleScale_gain_dn_);
+
+  tree->Branch("eleResol_up",             &eleResol_up_);
+  tree->Branch("eleResol_dn",             &eleResol_dn_);
   tree->Branch("eleResol_rho_up",         &eleResol_rho_up_);
   tree->Branch("eleResol_rho_dn",         &eleResol_rho_dn_);
   tree->Branch("eleResol_phi_up",         &eleResol_phi_up_);
   tree->Branch("eleResol_phi_dn",         &eleResol_phi_dn_);
-
 }
 
 void phoJetNtuplizer::fillElectrons (const edm::Event& iEvent, const edm::EventSetup& iSetup, math::XYZPoint &ipv){
@@ -129,55 +173,29 @@ void phoJetNtuplizer::fillElectrons (const edm::Event& iEvent, const edm::EventS
   edm::Handle<edm::View<pat::Electron> > electronHandle;
   iEvent.getByToken(electronToken_, electronHandle);
 
-  edm::Handle<edm::View<pat::Electron> > calibelectronHandle;
-  iEvent.getByToken(calibelectronToken_, calibelectronHandle);
-
   edm::Handle<pat::PackedCandidateCollection> pfcands;
   iEvent.getByToken(packedPFCandsToken_, pfcands);
+
+  edm::Handle<reco::VertexCollection> vtxHandle;
+  iEvent.getByToken(vtxToken_, vtxHandle);
 
   if (!electronHandle.isValid()) {
     edm::LogWarning("phoJetNtuplizer") << "no pat::Electrons in event";
     return;
   }
 
-  if (!calibelectronHandle.isValid()) {
-    edm::LogWarning("phoJetNtuplizer") << "no calibrated pat::Electrons in event";
-    return;
-  }
-
-  edm::Handle<edm::ValueMap<bool> >  veto_id_decisions;
-  edm::Handle<edm::ValueMap<bool> >  loose_id_decisions;
-  edm::Handle<edm::ValueMap<bool> >  medium_id_decisions;
-  edm::Handle<edm::ValueMap<bool> >  tight_id_decisions;
-  edm::Handle<edm::ValueMap<bool> >  hlt_id_decisions; 
-  edm::Handle<edm::ValueMap<bool> >  heep_id_decisions;
-  edm::Handle<edm::ValueMap<float> > eleMVAValues;
-  edm::Handle<edm::ValueMap<float> > elePFClusEcalIsoValues;
-  edm::Handle<edm::ValueMap<float> > elePFClusHcalIsoValues;
-
-  iEvent.getByToken(eleVetoIdMapToken_ ,         veto_id_decisions);
-  iEvent.getByToken(eleLooseIdMapToken_ ,        loose_id_decisions);
-  iEvent.getByToken(eleMediumIdMapToken_,        medium_id_decisions);
-  iEvent.getByToken(eleTightIdMapToken_,         tight_id_decisions);
-  iEvent.getByToken(eleHLTIdMapToken_,           hlt_id_decisions);
-  iEvent.getByToken(eleHEEPIdMapToken_ ,         heep_id_decisions);
-  iEvent.getByToken(eleMVAValuesMapToken_,       eleMVAValues);
-  iEvent.getByToken(elePFClusEcalIsoToken_,      elePFClusEcalIsoValues);
-  iEvent.getByToken(elePFClusHcalIsoToken_,      elePFClusHcalIsoValues);
-
   for(edm::View<pat::Electron>::const_iterator iele = electronHandle->begin(); iele != electronHandle->end(); ++iele){
 
-    Float_t corrPt = -1;      
-    Float_t corrEn = -1;      
-    for (edm::View<pat::Electron>::const_iterator iCele = calibelectronHandle->begin(); iCele != calibelectronHandle->end(); ++iCele) {
-      if (fabs(iele->eta() - iCele->eta()) < 0.001 && fabs(iele->phi() - iCele->phi()) < 0.001) {
-	corrPt = iCele->pt(); 
-	corrEn = iCele->energy();
-      }                       
-    }//calibElectronHandle
+    eleUnCalibE_         .push_back(iele->userFloat("ecalTrkEnergyPreCorr"));
+    eleUnCalibESigma_    .push_back(iele->userFloat("ecalTrkEnergyErrPreCorr"));
+    eleCalibEecalonly_   .push_back(iele->userFloat("ecalEnergyPostCorr"));
+    eleCalibE_           .push_back(iele->userFloat("ecalTrkEnergyPostCorr"));
+    eleCalibESigma_      .push_back(iele->userFloat("ecalTrkEnergyErrPostCorr"));
+    eleCalibEt_          .push_back(iele->pt()*iele->userFloat("ecalTrkEnergyPostCorr")/iele->p());
+    eleCalibEtSigma_     .push_back(iele->pt()*iele->userFloat("ecalTrkEnergyErrPostCorr")/iele->p());
 
-    eleCalibPt_          .push_back(corrPt);
-    eleCalibEn_          .push_back(corrEn);
+    eleEnergyScale_      .push_back(iele->userFloat("energyScaleValue"));
+    eleEnergySigma_      .push_back(iele->userFloat("energySigmaValue"));
 
     elePt_               .push_back(iele->pt());
     eleEta_              .push_back(iele->eta());
@@ -207,20 +225,20 @@ void phoJetNtuplizer::fillElectrons (const edm::Event& iEvent, const edm::EventS
     eledPhiAtVtx_        .push_back(iele->deltaPhiSuperClusterTrackAtVtx());
     eledEtaAtCalo_       .push_back(iele->deltaEtaSeedClusterTrackAtCalo());
 
+    // (1/E - 1/p)
+    if (iele->ecalEnergy() == 0)   eleEoverPInv_.push_back(1e30);
+    else if (!std::isfinite(iele->ecalEnergy()))  eleEoverPInv_.push_back(1e30);
+    else  eleEoverPInv_.push_back((1.0 - iele->eSuperClusterOverP())/iele->ecalEnergy());
+
     ///HEEP ID                
     double eledEtaseedAtVtx = iele->superCluster().isNonnull() && iele->superCluster()->seed().isNonnull() ? iele->deltaEtaSuperClusterTrackAtVtx() - iele->superCluster()->eta() + iele->superCluster()->seed()->eta() : std::numeric_limits<float>::max();
 
     eledEtaseedAtVtx_   .push_back(eledEtaseedAtVtx);
 
-    // VID calculation of (1/E - 1/p)
-    if (iele->ecalEnergy() == 0)   eleEoverPInv_.push_back(1e30);
-    else if (!std::isfinite(iele->ecalEnergy()))  eleEoverPInv_.push_back(1e30);
-    else  eleEoverPInv_.push_back((1.0 - iele->eSuperClusterOverP())/iele->ecalEnergy());
-
     eleSigmaIEtaIEtaFull5x5_    .push_back(iele->full5x5_sigmaIetaIeta());
     eleSigmaIPhiIPhiFull5x5_    .push_back(iele->full5x5_sigmaIphiIphi());
     eleConvVeto_                .push_back((Int_t)iele->passConversionVeto()); // ConvVtxFit || missHit == 0
-    eleMissHits_                .push_back(iele->gsfTrack()->hitPattern().numberOfHits(reco::HitPattern::MISSING_INNER_HITS));
+    eleMissHits_                .push_back(iele->gsfTrack()->hitPattern().numberOfAllHits(reco::HitPattern::MISSING_INNER_HITS));
 
     reco::GsfElectron::PflowIsolationVariables pfIso = iele->pfIsolationVariables();
     elePFChIso_         .push_back(pfIso.sumChargedHadronPt);
@@ -230,83 +248,89 @@ void phoJetNtuplizer::fillElectrons (const edm::Event& iEvent, const edm::EventS
     elePFClusEcalIso_   .push_back(iele->ecalPFClusterIso());
     elePFClusHcalIso_   .push_back(iele->hcalPFClusterIso());
 
-    //edm::Ptr<reco::GsfElectron> recoEl(iele);      
-    //const auto el = electrons->ptrAt(nEle_);
-    const auto el = electronHandle->ptrAt(nEle_);
+    eleHEEPID_          .push_back(iele->userFloat("heepTrkPtIso"));
+    eleMVAIsoID_        .push_back(iele->userFloat("ElectronMVAEstimatorRun2Fall17IsoV1"));
+    eleMVAnoIsoID_      .push_back(iele->userFloat("ElectronMVAEstimatorRun2Fall17NoIsoV1"));
 
+    //VID decisions
     UShort_t tmpeleIDbit = 0;
+    bool isPassLoose  = iele->electronID("cutBasedElectronID-Fall17-94X-V1-loose");
+    if(isPassLoose) setbit(tmpeleIDbit, 0);
+    bool isPassMedium  = iele->electronID("cutBasedElectronID-Fall17-94X-V1-medium");
+    if(isPassMedium) setbit(tmpeleIDbit, 1);
+    bool isPassTight  = iele->electronID("cutBasedElectronID-Fall17-94X-V1-tight");
+    if(isPassTight) setbit(tmpeleIDbit, 2);
+    bool isPassVeto  = iele->electronID("cutBasedElectronID-Fall17-94X-V1-veto");
+    if(isPassVeto) setbit(tmpeleIDbit, 3);
+    bool isPassHEEP  = iele->electronID("heepElectronID-HEEPV70");
+    if(isPassHEEP) setbit(tmpeleIDbit, 4);
 
-    bool isPassVeto  = (*veto_id_decisions)[el];
-    if (isPassVeto) setbit(tmpeleIDbit, 0);
+    eleIDbit_           .push_back(tmpeleIDbit);
 
-    bool isPassLoose  = (*loose_id_decisions)[el];
-    if (isPassLoose) setbit(tmpeleIDbit, 1);
+    UShort_t tmpeleMVAIsoIDbit = 0;
+    bool isPassIsoWP80  = iele->electronID("mvaEleID-Fall17-iso-V1-wp80");
+    if(isPassIsoWP80) setbit(tmpeleMVAIsoIDbit, 0);
+    bool isPassIsoWP90  = iele->electronID("mvaEleID-Fall17-iso-V1-wp90");
+    if(isPassIsoWP90) setbit(tmpeleMVAIsoIDbit, 1);
+    bool isPassIsoLoose  = iele->electronID("mvaEleID-Fall17-iso-V1-wpLoose");
+    if(isPassIsoLoose) setbit(tmpeleMVAIsoIDbit, 2);
 
-    bool isPassMedium = (*medium_id_decisions)[el];
-    if (isPassMedium) setbit(tmpeleIDbit, 2);
+    eleMVAIsoIDbit_           .push_back(tmpeleMVAIsoIDbit);
 
-    bool isPassTight  = (*tight_id_decisions)[el];
-    if (isPassTight) setbit(tmpeleIDbit, 3);
+    UShort_t tmpeleMVAnoIsoIDbit = 0;
+    bool isPassWP80  = iele->electronID("mvaEleID-Fall17-noIso-V1-wp80");
+    if(isPassWP80) setbit(tmpeleMVAnoIsoIDbit, 0);
+    bool isPassWP90  = iele->electronID("mvaEleID-Fall17-noIso-V1-wp90");
+    if(isPassWP90) setbit(tmpeleMVAnoIsoIDbit, 1);
+    bool isPassWPloose  = iele->electronID("mvaEleID-Fall17-noIso-V1-wpLoose");
+    if(isPassWPloose) setbit(tmpeleMVAnoIsoIDbit, 2);
 
-    bool isPassHEEP = (*heep_id_decisions)[el];
-    if (isPassHEEP) setbit(tmpeleIDbit, 4);
-
-    bool isPassHLT = (*hlt_id_decisions)[el];
-    if (isPassHLT) setbit(tmpeleIDbit, 5);
-
-    eleIDMVA_    .push_back((*eleMVAValues)[el]);
-    eleIDbit_    .push_back(tmpeleIDbit);
+    eleMVAnoIsoIDbit_           .push_back(tmpeleMVAnoIsoIDbit);
 
 
-    // systematic uncertainties for energy scale and resolution
-    EcalClusterLazyTools lazyTool(iEvent, iSetup, ebReducedRecHitCollection_, eeReducedRecHitCollection_, esReducedRecHitCollection_);
-    
-    DetId seedDetId = iele->superCluster()->seed()->seed();
-    bool isBarrel = seedDetId.subdetId() == EcalBarrel;
-    const EcalRecHitCollection * recHits = (isBarrel?lazyTool.getEcalEBRecHitCollection():lazyTool.getEcalEERecHitCollection());
+    reco::GsfTrackRef gsfTrackRef = iele->gsfTrack();
+    if (iele->gsfTrack().isNonnull()) {
+      eleGSFChi2_.push_back(gsfTrackRef->normalizedChi2());
+      if (vtxHandle->size() > 0)
+	eleTrkdxy_.push_back(gsfTrackRef->dxy(vtxHandle->front().position()));
+      else
+	eleTrkdxy_.push_back(-999);
+    } else {
+      eleGSFChi2_.push_back(999.);
+      eleTrkdxy_.push_back(-999);
+    }     
 
-    float et = iele->correctedEcalEnergy() / cosh(fabs(iele->eta()));
+    reco::TrackRef kfTrackRef = iele->closestCtfTrackRef();
+    if (kfTrackRef.isAvailable() && kfTrackRef.isNonnull()) {
+      eleKFHits_.push_back(kfTrackRef->hitPattern().trackerLayersWithMeasurement());
+      eleKFChi2_.push_back(kfTrackRef->normalizedChi2());
+    } else {
+      eleKFHits_.push_back(-1.);
+      eleKFChi2_.push_back(999.);
+    }     
 
-    EcalRecHitCollection::const_iterator seedRecHit = recHits->find(seedDetId);
-    unsigned int gainSeedSC = 12;
-    if (seedRecHit != recHits->end()) { 
-      if(seedRecHit->checkFlag(EcalRecHit::kHasSwitchToGain6)) gainSeedSC = 6;
-      if(seedRecHit->checkFlag(EcalRecHit::kHasSwitchToGain1)) gainSeedSC = 1;
-    }
-    int runNumber = iEvent.id().run();
-    double scale  = egmScaler_->ScaleCorrection(runNumber, iele->isEB(), iele->full5x5_r9(), fabs(iele->eta()), et, gainSeedSC);  
-    //double smear  = egmScaler_->getSmearingSigma(runNumber, iele->isEB(), iele->full5x5_r9(), fabs(iele->eta()), et, gainSeedSC, 0., 0.);
 
-    float scale_stat_up = scale + egmScaler_->ScaleCorrectionUncertainty(runNumber, iele->isEB(), iele->full5x5_r9(), fabs(iele->eta()), et, gainSeedSC, 1);
-    float scale_stat_dn = scale - egmScaler_->ScaleCorrectionUncertainty(runNumber, iele->isEB(), iele->full5x5_r9(), fabs(iele->eta()), et, gainSeedSC, 1);
-    float scale_syst_up = scale + egmScaler_->ScaleCorrectionUncertainty(runNumber, iele->isEB(), iele->full5x5_r9(), fabs(iele->eta()), et, gainSeedSC, 2);
-    float scale_syst_dn = scale - egmScaler_->ScaleCorrectionUncertainty(runNumber, iele->isEB(), iele->full5x5_r9(), fabs(iele->eta()), et, gainSeedSC, 2);
-    float scale_gain_up = scale + egmScaler_->ScaleCorrectionUncertainty(runNumber, iele->isEB(), iele->full5x5_r9(), fabs(iele->eta()), et, gainSeedSC, 4);
-    float scale_gain_dn = scale - egmScaler_->ScaleCorrectionUncertainty(runNumber, iele->isEB(), iele->full5x5_r9(), fabs(iele->eta()), et, gainSeedSC, 4);
-    float resol_rho_up  = egmScaler_->getSmearingSigma(runNumber, iele->isEB(), iele->full5x5_r9(), fabs(iele->eta()), et, gainSeedSC, 1., 0.);
-    float resol_rho_dn  = egmScaler_->getSmearingSigma(runNumber, iele->isEB(), iele->full5x5_r9(), fabs(iele->eta()), et, gainSeedSC, -1., 0.);
-    float resol_phi_up  = egmScaler_->getSmearingSigma(runNumber, iele->isEB(), iele->full5x5_r9(), fabs(iele->eta()), et, gainSeedSC, 0., 1.);
-    float resol_phi_dn = egmScaler_->getSmearingSigma(runNumber, iele->isEB(), iele->full5x5_r9(), fabs(iele->eta()), et, gainSeedSC, 0., -1.);   
+    // ECAL scale and smearing corrections
+    eleScale_up_          .push_back(iele->userFloat("energyScaleUp"));
+    eleScale_dn_          .push_back(iele->userFloat("energyScaleDown"));
+    eleScale_stat_up_     .push_back(iele->userFloat("energyScaleStatUp"));
+    eleScale_stat_dn_     .push_back(iele->userFloat("energyScaleStatDown"));
+    eleScale_syst_up_     .push_back(iele->userFloat("energyScaleSystUp"));
+    eleScale_syst_dn_     .push_back(iele->userFloat("energyScaleSystDown"));
+    eleScale_gain_up_     .push_back(iele->userFloat("energyScaleGainUp"));
+    eleScale_gain_dn_     .push_back(iele->userFloat("energyScaleGainDown"));
 
-    eleScale_stat_up_.push_back(scale_stat_up);
-    eleScale_stat_dn_.push_back(scale_stat_dn);
-    eleScale_syst_up_.push_back(scale_syst_up);
-    eleScale_syst_dn_.push_back(scale_syst_dn);
-    eleScale_gain_up_.push_back(scale_gain_up);
-    eleScale_gain_dn_.push_back(scale_gain_dn);
-    eleResol_rho_up_.push_back(resol_rho_up);
-    eleResol_rho_dn_.push_back(resol_rho_dn);
-    eleResol_phi_up_.push_back(resol_phi_up);
-    eleResol_phi_dn_.push_back(resol_phi_dn);
-    ///////////////////////////////// END of energy and scale systematics
-
+    eleResol_up_          .push_back(iele->userFloat("energySigmaUp"));
+    eleResol_dn_          .push_back(iele->userFloat("energySigmaDown"));
+    eleResol_rho_up_      .push_back(iele->userFloat("energySigmaRhoUp"));
+    eleResol_rho_dn_      .push_back(iele->userFloat("energySigmaRhoDown"));
+    eleResol_phi_up_      .push_back(iele->userFloat("energySigmaPhiUp"));
+    eleResol_phi_dn_      .push_back(iele->userFloat("energySigmaPhiDown"));
+    //xxxxx------- END of energy and scale systematics
 
     nEle_++;
 
   }
-
-
-
 } //fillElectrons
 
 void phoJetNtuplizer::initElectrons(){
@@ -324,8 +348,16 @@ void phoJetNtuplizer::initElectrons(){
   eleDz_                    .clear();
   eleSIP_                   .clear();
 
-  eleCalibPt_               .clear();
-  eleCalibEn_               .clear();
+  eleUnCalibE_              .clear();
+  eleUnCalibESigma_         .clear();
+  eleCalibEecalonly_        .clear();
+  eleCalibE_                .clear();
+  eleCalibESigma_           .clear();
+  eleCalibEt_               .clear();
+  eleCalibEtSigma_          .clear();
+
+  eleEnergyScale_           .clear();
+  eleEnergySigma_           .clear();
 
   eleSCRawEn_               .clear();
   eleSCEn_                  .clear();
@@ -355,18 +387,32 @@ void phoJetNtuplizer::initElectrons(){
   elePFPUIso_              .clear();
   elePFClusEcalIso_        .clear();
   elePFClusHcalIso_        .clear();
-  eleIDMVA_                .clear();
-  eleIDbit_                .clear(); 
 
+  eleHEEPID_               .clear();
+  eleMVAIsoID_             .clear();
+  eleMVAnoIsoID_           .clear();
+  eleIDbit_                .clear(); 
+  eleMVAIsoIDbit_          .clear(); 
+  eleMVAnoIsoIDbit_        .clear(); 
+
+  eleTrkdxy_               .clear();
+  eleKFHits_               .clear();
+  eleKFChi2_               .clear();
+  eleGSFChi2_              .clear();
+
+  eleScale_up_             .clear();
+  eleScale_dn_             .clear();
   eleScale_stat_up_        .clear();
   eleScale_stat_dn_        .clear();
   eleScale_syst_up_        .clear();
   eleScale_syst_dn_        .clear();
   eleScale_gain_up_        .clear();
   eleScale_gain_dn_        .clear();
+
+  eleResol_up_             .clear();
+  eleResol_dn_             .clear();
   eleResol_rho_up_         .clear();
   eleResol_rho_dn_         .clear();
   eleResol_phi_up_         .clear();
-  eleResol_phi_dn_         .clear();
-
+  eleResol_phi_dn_         .clear(); 
 }

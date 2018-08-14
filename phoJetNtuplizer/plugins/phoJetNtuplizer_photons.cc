@@ -9,8 +9,15 @@ vector<float>    phoPz_;
 vector<float>    phoEt_;
 vector<float>    phoEta_;
 vector<float>    phoPhi_;
+
+vector<float>    phoUnCalibE_;
+vector<float>    phoUnCalibESigma_;
 vector<float>    phoCalibE_;
+vector<float>    phoCalibESigma_;
 vector<float>    phoCalibEt_;
+
+vector<float>    phoEnergyScale_;
+vector<float>    phoEnergySigma_;
 
 vector<float>    phoSCE_;
 vector<float>    phoSCRawE_;
@@ -25,7 +32,8 @@ vector<float>    phoR9_;
 vector<float>    phoR9Full5x5_;
 vector<float>    phoHoverE_;
 vector<float>    phoSigmaIEtaIEtaFull5x5_;
-vector<float>    phoSigmaIEtaIEtaMapFull5x5_;
+vector<float>    phoSigmaIEtaIPhiFull5x5_;
+vector<float>    phoSigmaIPhiIPhiFull5x5_;
 
 vector<float>    phoPFChIso_;
 vector<float>    phoPFChWorstIso_;
@@ -34,28 +42,33 @@ vector<float>    phoPFNeuIso_;
 
 vector<float>    phoIDMVA_;
 vector<UShort_t> phoIDbit_;
+vector<UShort_t> phoMVAIDbit_;
 
 vector<float>    phoSeedTime_;
 vector<float>    phoSeedEnergy_;
 
 vector<UInt_t>   phoFiredSingleTrgs_;
 vector<UInt_t>   phoFiredDoubleTrgs_;
+vector<UInt_t>   phoFiredTripleTrgs_;
 vector<UInt_t>   phoFiredL1Trgs_;
 
+vector<float>    phoScale_up_;
+vector<float>    phoScale_dn_;
 vector<float>    phoScale_stat_up_;
 vector<float>    phoScale_stat_dn_;
 vector<float>    phoScale_syst_up_;
 vector<float>    phoScale_syst_dn_;
 vector<float>    phoScale_gain_up_;
 vector<float>    phoScale_gain_dn_;
+
+vector<float>    phoResol_up_;
+vector<float>    phoResol_dn_;
 vector<float>    phoResol_rho_up_;
 vector<float>    phoResol_rho_dn_;
 vector<float>    phoResol_phi_up_;
 vector<float>    phoResol_phi_dn_;
 
 void phoJetNtuplizer::branchPhotons(TTree* tree){
-
-  if(debug_) std::cout<< "<<DEBUG>>:: Inside phoJetNtuplizer::branchPhotons -->BEGIN<-- "<<std::endl;
 
   tree->Branch("nPho",                     &nPho_);
   tree->Branch("phoE",                     &phoE_);
@@ -65,8 +78,15 @@ void phoJetNtuplizer::branchPhotons(TTree* tree){
   tree->Branch("phoEt",                    &phoEt_);
   tree->Branch("phoEta",                   &phoEta_);
   tree->Branch("phoPhi",                   &phoPhi_);
+  
+  tree->Branch("phoUnCalibE",              &phoUnCalibE_);
+  tree->Branch("phoUnCalibESigma",         &phoUnCalibESigma_);
   tree->Branch("phoCalibE",                &phoCalibE_);
+  tree->Branch("phoCalibESigma",           &phoCalibESigma_);
   tree->Branch("phoCalibEt",               &phoCalibEt_);
+  
+  tree->Branch("phoEnergyScale",           &phoEnergyScale_);
+  tree->Branch("phoEnergySigma",           &phoEnergySigma_);
 
   tree->Branch("phoSCE",                   &phoSCE_);
   tree->Branch("phoSCRawE",                &phoSCRawE_);
@@ -81,7 +101,8 @@ void phoJetNtuplizer::branchPhotons(TTree* tree){
   tree->Branch("phoR9Full5x5",             &phoR9Full5x5_);
   tree->Branch("phoHoverE",                &phoHoverE_);
   tree->Branch("phoSigmaIEtaIEtaFull5x5",  &phoSigmaIEtaIEtaFull5x5_);
-  tree->Branch("phoSigmaIEtaIEtaMapFull5x5",  &phoSigmaIEtaIEtaMapFull5x5_);
+  tree->Branch("phoSigmaIEtaIPhiFull5x5",  &phoSigmaIEtaIPhiFull5x5_);
+  tree->Branch("phoSigmaIPhiIPhiFull5x5",  &phoSigmaIPhiIPhiFull5x5_);
 
   tree->Branch("phoPFChIso",               &phoPFChIso_);
   tree->Branch("phoPFChWorstIso",          &phoPFChWorstIso_);
@@ -90,26 +111,32 @@ void phoJetNtuplizer::branchPhotons(TTree* tree){
 
   tree->Branch("phoIDMVA",                 &phoIDMVA_);
   tree->Branch("phoIDbit",                 &phoIDbit_);
+  tree->Branch("phoMVAIDbit",              &phoMVAIDbit_);
 
   tree->Branch("phoSeedTime",              &phoSeedTime_);
   tree->Branch("phoSeedEnergy",            &phoSeedEnergy_);
 
-  tree->Branch("phoFiredSingleTrgs",       &phoFiredSingleTrgs_);
-  tree->Branch("phoFiredDoubleTrgs",       &phoFiredDoubleTrgs_);
-  tree->Branch("phoFiredL1Trgs",           &phoFiredL1Trgs_);
+//  tree->Branch("phoFiredSingleTrgs",       &phoFiredSingleTrgs_);
+//  tree->Branch("phoFiredDoubleTrgs",       &phoFiredDoubleTrgs_);
+//  tree->Branch("phoFiredTripleTrgs",       &phoFiredTripleTrgs_);
+//  tree->Branch("phoFiredL1Trgs",           &phoFiredL1Trgs_);
 
+  tree->Branch("phoScale_up",              &phoScale_up_);
+  tree->Branch("phoScale_dn",              &phoScale_dn_);
   tree->Branch("phoScale_stat_up",         &phoScale_stat_up_);
   tree->Branch("phoScale_stat_dn",         &phoScale_stat_dn_);
   tree->Branch("phoScale_syst_up",         &phoScale_syst_up_);
   tree->Branch("phoScale_syst_dn",         &phoScale_syst_dn_);
   tree->Branch("phoScale_gain_up",         &phoScale_gain_up_);
   tree->Branch("phoScale_gain_dn",         &phoScale_gain_dn_);
+
+  tree->Branch("phoResol_up",              &phoResol_up_);
+  tree->Branch("phoResol_dn",              &phoResol_dn_);
   tree->Branch("phoResol_rho_up",          &phoResol_rho_up_);
   tree->Branch("phoResol_rho_dn",          &phoResol_rho_dn_);
   tree->Branch("phoResol_phi_up",          &phoResol_phi_up_);
   tree->Branch("phoResol_phi_dn",          &phoResol_phi_dn_);
 
-  if(debug_) std::cout<< "<<DEBUG>>:: Inside phoJetNtuplizer::branchPhotons -->END<--"<<std::endl;
 }
 
 void phoJetNtuplizer::fillPhotons(const edm::Event& iEvent, const edm::EventSetup& iSetup){
@@ -126,56 +153,19 @@ void phoJetNtuplizer::fillPhotons(const edm::Event& iEvent, const edm::EventSetu
     return;
   }
 
-  edm::Handle<edm::View<pat::Photon> > calibPhotonHandle;
-  iEvent.getByToken(calibPhotonToken_, calibPhotonHandle);
-
-  if (!calibPhotonHandle.isValid()) {
-    edm::LogWarning("phoJetNtuplizer") << "no calibrated pat::Photons in event";
-    return;
-  }
-
-  // Get the full5x5 map
-  edm::Handle<edm::ValueMap<float> > full5x5SigmaIEtaIEtaMap;
-  iEvent.getByToken(full5x5SigmaIEtaIEtaMapToken_, full5x5SigmaIEtaIEtaMap);
-
-  // photon ID isolations maps
-  edm::Handle<edm::ValueMap<float> > phoChargedIsolationMap;
-  edm::Handle<edm::ValueMap<float> > phoChargedWorstIsolationMap;
-  edm::Handle<edm::ValueMap<float> > phoNeutralHadronIsolationMap;
-  edm::Handle<edm::ValueMap<float> > phoPhotonIsolationMap;
-  iEvent.getByToken(phoChargedIsolationToken_       ,phoChargedIsolationMap);
-  iEvent.getByToken(phoChargedWorstIsolationToken_  ,phoChargedWorstIsolationMap);
-  iEvent.getByToken(phoNeutralHadronIsolationToken_ ,phoNeutralHadronIsolationMap);
-  iEvent.getByToken(phoPhotonIsolationToken_        ,phoPhotonIsolationMap);
-
-  // Get the photon ID data from the event stream.
-  // Note: this implies that the VID ID modules have been run upstream.
-  // If you need more info, check with the EGM group.
-  edm::Handle<edm::ValueMap<bool> >  loose_id_decisions;
-  edm::Handle<edm::ValueMap<bool> >  medium_id_decisions;
-  edm::Handle<edm::ValueMap<bool> >  tight_id_decisions;
-  edm::Handle<edm::ValueMap<float> > mvaValues;
-  iEvent.getByToken(phoLooseIdMapToken_   ,loose_id_decisions);
-  iEvent.getByToken(phoMediumIdMapToken_  ,medium_id_decisions);
-  iEvent.getByToken(phoTightIdMapToken_   ,tight_id_decisions);
-  iEvent.getByToken(phoMVAValuesMapToken_ ,mvaValues);
-
-  EcalClusterLazyTools lazyTool(iEvent, iSetup, ebReducedRecHitCollection_, eeReducedRecHitCollection_, esReducedRecHitCollection_);
+  EcalClusterLazyTools       lazyTool    (iEvent, iSetup, ebReducedRecHitCollection_, eeReducedRecHitCollection_, esReducedRecHitCollection_);
+  noZS::EcalClusterLazyTools lazyToolnoZS(iEvent, iSetup, ebReducedRecHitCollection_, eeReducedRecHitCollection_, esReducedRecHitCollection_);
 
   for(edm::View<pat::Photon>::const_iterator ipho = photonHandle->begin(); ipho != photonHandle->end(); ++ipho){
 
-    Float_t corrPt = -1;
-    Float_t corrEn = -1;
+    phoUnCalibE_              .push_back(ipho->userFloat("ecalEnergyPreCorr"));
+    phoUnCalibESigma_         .push_back(ipho->userFloat("ecalEnergyErrPreCorr"));
+    phoCalibE_                .push_back(ipho->userFloat("ecalEnergyPostCorr"));
+    phoCalibESigma_           .push_back(ipho->userFloat("ecalEnergyErrPostCorr"));
+    phoCalibEt_               .push_back(ipho->et()*ipho->userFloat("ecalEnergyPostCorr")/ipho->energy());
 
-    for(edm::View<pat::Photon>::const_iterator iCpho = calibPhotonHandle->begin(); iCpho != calibPhotonHandle->end(); ++iCpho){
-      if(fabs(ipho->eta() - iCpho->eta()) < 0.001 && fabs(ipho->phi() - iCpho->phi()) < 0.001){
-	corrPt = iCpho->pt();
-	corrEn = iCpho->energy();
-      }
-    }//calibPhotonHandle
-
-    phoCalibE_                .push_back(corrEn);
-    phoCalibEt_               .push_back(corrPt);
+    phoEnergyScale_           .push_back(ipho->userFloat("energyScaleValue"));
+    phoEnergySigma_           .push_back(ipho->userFloat("energySigmaValue"));
 
     phoE_                     .push_back(ipho->energy());
     phoPx_                    .push_back(ipho->px());
@@ -197,25 +187,41 @@ void phoJetNtuplizer::fillPhotons(const edm::Event& iEvent, const edm::EventSetu
     phoR9_                    .push_back(ipho->r9());
     phoR9Full5x5_             .push_back(ipho->full5x5_r9());
     phoHoverE_                .push_back(ipho->hadTowOverEm());
+
+    std::vector<float> vCov = lazyToolnoZS.localCovariances( *(ipho->superCluster()->seed()) );
+    //const float see = (isnan(vCov[0]) ? 0. : sqrt(vCov[0]));
+    const float spp = (isnan(vCov[2]) ? 0. : sqrt(vCov[2]));                            
+    const float sep = vCov[1];
+
     phoSigmaIEtaIEtaFull5x5_  .push_back(ipho->full5x5_sigmaIetaIeta());
+    phoSigmaIEtaIPhiFull5x5_  .push_back(sep);
+    phoSigmaIPhiIPhiFull5x5_  .push_back(spp);
 
-    const auto pho = photonHandle->ptrAt(nPho_);
+    phoPFChIso_               .push_back(ipho->userFloat("phoChargedIsolation"));
+    phoPFChWorstIso_          .push_back(ipho->userFloat("phoWorstChargedIsolation"));
+    phoPFPhoIso_              .push_back(ipho->userFloat("phoPhotonIsolation"));
+    phoPFNeuIso_              .push_back(ipho->userFloat("phoNeutralHadronIsolation"));
 
-    phoSigmaIEtaIEtaMapFull5x5_  .push_back( (*full5x5SigmaIEtaIEtaMap)[pho] );
-    phoPFChIso_                  .push_back( (*phoChargedIsolationMap)[pho] );
-    phoPFChWorstIso_             .push_back( (*phoChargedWorstIsolationMap)[pho] );
-    phoPFPhoIso_                 .push_back( (*phoPhotonIsolationMap)[pho] );
-    phoPFNeuIso_                 .push_back( (*phoNeutralHadronIsolationMap)[pho] );
+    phoIDMVA_                 .push_back(ipho->userFloat("PhotonMVAEstimatorRunIIFall17v1Values"));
 
-    phoIDMVA_                    .push_back( (*mvaValues)[pho] );
-
+    //VID decisions
     UShort_t tmpphoIDbit = 0;
+    bool isPassLoose  = ipho->photonID("cutBasedPhotonID-Fall17-94X-V1-loose");
+    if (isPassLoose)  setbit(tmpphoIDbit, 0);
+    bool isPassMedium = ipho->photonID("cutBasedPhotonID-Fall17-94X-V1-medium");
+    if (isPassMedium) setbit(tmpphoIDbit, 1);
+    bool isPassTight  = ipho->photonID("cutBasedPhotonID-Fall17-94X-V1-tight");
+    if (isPassTight)  setbit(tmpphoIDbit, 2);
 
-    if((*loose_id_decisions)[pho])  setbit(tmpphoIDbit, 0);
-    if((*medium_id_decisions)[pho]) setbit(tmpphoIDbit, 1);
-    if((*tight_id_decisions)[pho])  setbit(tmpphoIDbit, 2);
+    phoIDbit_                 .push_back(tmpphoIDbit);
 
-    phoIDbit_                    .push_back( tmpphoIDbit );
+    UShort_t tmpphoMVAIDbit = 0;
+    bool isPassWP80   = ipho->photonID("mvaPhoID-RunIIFall17-v1-wp80");
+    if(isPassWP80) setbit(tmpphoMVAIDbit, 0);
+    bool isPassWP90   = ipho->photonID("mvaPhoID-RunIIFall17-v1-wp90");
+    if(isPassWP90) setbit(tmpphoMVAIDbit, 1);
+
+    phoMVAIDbit_              .push_back(tmpphoMVAIDbit);
 
     ////// Seed time and energy
     DetId seed = (ipho->superCluster()->seed()->hitsAndFractions())[0].first;
@@ -229,46 +235,31 @@ void phoJetNtuplizer::fillPhotons(const edm::Event& iEvent, const edm::EventSetu
     }else{                            
       phoSeedTime_  .push_back(-99.);  
       phoSeedEnergy_.push_back(-99.);  
-    }   
+    }  
 
-    //    phoFiredSingleTrgs_       .push_back(matchSinglePhotonTriggerFilters(ipho->et(), ipho->eta(), ipho->phi()));
-    //    phoFiredDoubleTrgs_       .push_back(matchDoublePhotonTriggerFilters(ipho->et(), ipho->eta(), ipho->phi()));
-    //    phoFiredL1Trgs_           .push_back(matchL1TriggerFilters(ipho->et(), ipho->eta(), ipho->phi()));
+//    phoFiredSingleTrgs_       .push_back(matchSinglePhotonTriggerFilters(ipho->et(), ipho->eta(), ipho->phi()));
+//    phoFiredDoubleTrgs_       .push_back(matchDoublePhotonTriggerFilters(ipho->et(), ipho->eta(), ipho->phi()));
+//    phoFiredTripleTrgs_       .push_back(matchTriplePhotonTriggerFilters(ipho->et(), ipho->eta(), ipho->phi()));
+//    phoFiredL1Trgs_           .push_back(matchL1TriggerFilters(ipho->et(), ipho->eta(), ipho->phi()));
 
 
-    // ECAL scale correction and smearing
-    float et = ipho->et();
-    unsigned int gainSeedSC = 12;
-    if (theSeedHit != rechits->end()) { 
-      if(theSeedHit->checkFlag(EcalRecHit::kHasSwitchToGain6)) gainSeedSC = 6;
-      if(theSeedHit->checkFlag(EcalRecHit::kHasSwitchToGain1)) gainSeedSC = 1;
-    }
-    int runNumber = iEvent.id().run();
-    double scale = egmScaler_->ScaleCorrection(runNumber, ipho->isEB(), ipho->full5x5_r9(), fabs(ipho->eta()), et, gainSeedSC);  
-    //double smear = egmScaler_->getSmearingSigma(runNumber, ipho->isEB(), ipho->full5x5_r9(), fabs(ipho->eta()), et, gainSeedSC, 0., 0.);
+    // ECAL scale and smearing corrections
+    phoScale_up_.push_back(ipho->userFloat("energyScaleUp"));
+    phoScale_dn_.push_back(ipho->userFloat("energyScaleDown"));
+    phoScale_stat_up_.push_back(ipho->userFloat("energyScaleStatUp"));
+    phoScale_stat_dn_.push_back(ipho->userFloat("energyScaleStatDown"));
+    phoScale_syst_up_.push_back(ipho->userFloat("energyScaleSystUp"));
+    phoScale_syst_dn_.push_back(ipho->userFloat("energyScaleSystDown"));
+    phoScale_gain_up_.push_back(ipho->userFloat("energyScaleGainUp"));
+    phoScale_gain_dn_.push_back(ipho->userFloat("energyScaleGainDown"));
 
-    float scale_stat_up = scale + egmScaler_->ScaleCorrectionUncertainty(runNumber, ipho->isEB(), ipho->full5x5_r9(), fabs(ipho->eta()), et, gainSeedSC, 1);
-    float scale_stat_dn = scale - egmScaler_->ScaleCorrectionUncertainty(runNumber, ipho->isEB(), ipho->full5x5_r9(), fabs(ipho->eta()), et, gainSeedSC, 1);
-    float scale_syst_up = scale + egmScaler_->ScaleCorrectionUncertainty(runNumber, ipho->isEB(), ipho->full5x5_r9(), fabs(ipho->eta()), et, gainSeedSC, 2);
-    float scale_syst_dn = scale - egmScaler_->ScaleCorrectionUncertainty(runNumber, ipho->isEB(), ipho->full5x5_r9(), fabs(ipho->eta()), et, gainSeedSC, 2);
-    float scale_gain_up = scale + egmScaler_->ScaleCorrectionUncertainty(runNumber, ipho->isEB(), ipho->full5x5_r9(), fabs(ipho->eta()), et, gainSeedSC, 4);
-    float scale_gain_dn = scale - egmScaler_->ScaleCorrectionUncertainty(runNumber, ipho->isEB(), ipho->full5x5_r9(), fabs(ipho->eta()), et, gainSeedSC, 4);
-    float resol_rho_up  = egmScaler_->getSmearingSigma(runNumber, ipho->isEB(), ipho->full5x5_r9(), fabs(ipho->eta()), et, gainSeedSC, 1., 0.);
-    float resol_rho_dn  = egmScaler_->getSmearingSigma(runNumber, ipho->isEB(), ipho->full5x5_r9(), fabs(ipho->eta()), et, gainSeedSC, -1., 0.);
-    float resol_phi_up  = egmScaler_->getSmearingSigma(runNumber, ipho->isEB(), ipho->full5x5_r9(), fabs(ipho->eta()), et, gainSeedSC, 0., 1.);
-    float resol_phi_dn = egmScaler_->getSmearingSigma(runNumber, ipho->isEB(), ipho->full5x5_r9(), fabs(ipho->eta()), et, gainSeedSC, 0., -1.);
-
-    phoScale_stat_up_.push_back(scale_stat_up);
-    phoScale_stat_dn_.push_back(scale_stat_dn);
-    phoScale_syst_up_.push_back(scale_syst_up);
-    phoScale_syst_dn_.push_back(scale_syst_dn);
-    phoScale_gain_up_.push_back(scale_gain_up);
-    phoScale_gain_dn_.push_back(scale_gain_dn);
-    phoResol_rho_up_.push_back(resol_rho_up);
-    phoResol_rho_dn_.push_back(resol_rho_dn);
-    phoResol_phi_up_.push_back(resol_phi_up);
-    phoResol_phi_dn_.push_back(resol_phi_dn);
-    /////////////////////////////////END of energy and scale systematics
+    phoResol_up_.push_back(ipho->userFloat("energySigmaUp"));
+    phoResol_dn_.push_back(ipho->userFloat("energySigmaDown"));
+    phoResol_rho_up_.push_back(ipho->userFloat("energySigmaRhoUp"));
+    phoResol_rho_dn_.push_back(ipho->userFloat("energySigmaRhoDown"));
+    phoResol_phi_up_.push_back(ipho->userFloat("energySigmaPhiUp"));
+    phoResol_phi_dn_.push_back(ipho->userFloat("energySigmaPhiDown"));
+    //xxxxx------- END of energy and scale systematics
 
 
     nPho_++;
@@ -291,8 +282,15 @@ void phoJetNtuplizer::initPhotons(){
   phoEt_                       .clear();
   phoEta_                      .clear();
   phoPhi_                      .clear();
+
+  phoUnCalibE_                 .clear();
+  phoUnCalibESigma_            .clear();
   phoCalibE_                   .clear();
+  phoCalibESigma_              .clear();
   phoCalibEt_                  .clear();
+
+  phoEnergyScale_              .clear();
+  phoEnergySigma_              .clear();
 
   phoSCE_                      .clear();
   phoSCRawE_                   .clear();
@@ -307,7 +305,8 @@ void phoJetNtuplizer::initPhotons(){
   phoR9Full5x5_                .clear();
   phoHoverE_                   .clear();
   phoSigmaIEtaIEtaFull5x5_     .clear();
-  phoSigmaIEtaIEtaMapFull5x5_  .clear();
+  phoSigmaIEtaIPhiFull5x5_     .clear();
+  phoSigmaIPhiIPhiFull5x5_     .clear();
 
   phoPFChIso_                  .clear();
   phoPFChWorstIso_             .clear();
@@ -316,20 +315,27 @@ void phoJetNtuplizer::initPhotons(){
 
   phoIDMVA_                    .clear();
   phoIDbit_                    .clear();
+  phoMVAIDbit_                 .clear();
 
   phoSeedTime_                 .clear();
   phoSeedEnergy_               .clear();
 
   phoFiredSingleTrgs_          .clear();
   phoFiredDoubleTrgs_          .clear();
+  phoFiredTripleTrgs_          .clear();
   phoFiredL1Trgs_              .clear();
 
+  phoScale_up_                 .clear();
+  phoScale_dn_                 .clear();
   phoScale_stat_up_            .clear();
   phoScale_stat_dn_            .clear();
   phoScale_syst_up_            .clear();
   phoScale_syst_dn_            .clear();
   phoScale_gain_up_            .clear();
   phoScale_gain_dn_            .clear();
+
+  phoResol_up_                 .clear();
+  phoResol_dn_                 .clear();
   phoResol_rho_up_             .clear();
   phoResol_rho_dn_             .clear();
   phoResol_phi_up_             .clear();
