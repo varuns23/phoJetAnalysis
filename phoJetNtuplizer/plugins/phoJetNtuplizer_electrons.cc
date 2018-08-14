@@ -249,8 +249,8 @@ void phoJetNtuplizer::fillElectrons (const edm::Event& iEvent, const edm::EventS
     elePFClusHcalIso_   .push_back(iele->hcalPFClusterIso());
 
     eleHEEPID_          .push_back(iele->userFloat("heepTrkPtIso"));
-    eleMVAIsoID_        .push_back(iele->userFloat("ElectronMVAEstimatorRun2Fall17IsoV1"));
-    eleMVAnoIsoID_      .push_back(iele->userFloat("ElectronMVAEstimatorRun2Fall17NoIsoV1"));
+    eleMVAIsoID_        .push_back(iele->userFloat("ElectronMVAEstimatorRun2Fall17IsoV1Values"));
+    eleMVAnoIsoID_      .push_back(iele->userFloat("ElectronMVAEstimatorRun2Fall17NoIsoV1Values"));
 
     //VID decisions
     UShort_t tmpeleIDbit = 0;
