@@ -335,45 +335,45 @@ void phoJetNtuplizer::fillElectrons (const edm::Event& iEvent, const edm::EventS
 
 void phoJetNtuplizer::initElectrons(){
 
-  nEle_                     = 0;
-  elePt_                    .clear();
-  eleEta_                   .clear();
-  elePhi_                   .clear();
-  eleR9_                    .clear();
-  eleR9Full5x5_             .clear();
-  eleEn_                    .clear();
-  eleCharge_                .clear();
-  eleChargeConsistent_      .clear();
-  eleD0_                    .clear();
-  eleDz_                    .clear();
-  eleSIP_                   .clear();
+  nEle_                    = 0;
+  elePt_                   .clear();
+  eleEta_                  .clear();
+  elePhi_                  .clear();
+  eleR9_                   .clear();
+  eleR9Full5x5_            .clear();
+  eleEn_                   .clear();
+  eleCharge_               .clear();
+  eleChargeConsistent_     .clear();
+  eleD0_                   .clear();
+  eleDz_                   .clear();
+  eleSIP_                  .clear();
 
-  eleUnCalibE_              .clear();
-  eleUnCalibESigma_         .clear();
-  eleCalibEecalonly_        .clear();
-  eleCalibE_                .clear();
-  eleCalibESigma_           .clear();
-  eleCalibEt_               .clear();
-  eleCalibEtSigma_          .clear();
+  eleUnCalibE_             .clear();
+  eleUnCalibESigma_        .clear();
+  eleCalibEecalonly_       .clear();
+  eleCalibE_               .clear();
+  eleCalibESigma_          .clear();
+  eleCalibEt_              .clear();
+  eleCalibEtSigma_         .clear();
 
-  eleEnergyScale_           .clear();
-  eleEnergySigma_           .clear();
+  eleEnergyScale_          .clear();
+  eleEnergySigma_          .clear();
 
-  eleSCRawEn_               .clear();
-  eleSCEn_                  .clear();
-  eleSCEta_                 .clear();
-  eleSCPhi_                 .clear();
-  eleSCEtaWidth_            .clear();
-  eleSCPhiWidth_            .clear();
+  eleSCRawEn_              .clear();
+  eleSCEn_                 .clear();
+  eleSCEta_                .clear();
+  eleSCPhi_                .clear();
+  eleSCEtaWidth_           .clear();
+  eleSCPhiWidth_           .clear();
 
-  eleHoverE_                .clear();
-  eleEoverP_                .clear();
-  eleEoverPout_             .clear();
-  eleEoverPInv_             .clear();
-  eleBrem_                  .clear();
-  eledEtaAtVtx_             .clear();
-  eledPhiAtVtx_             .clear();
-  eledEtaAtCalo_            .clear();
+  eleHoverE_               .clear();
+  eleEoverP_               .clear();
+  eleEoverPout_            .clear();
+  eleEoverPInv_            .clear();
+  eleBrem_                 .clear();
+  eledEtaAtVtx_            .clear();
+  eledPhiAtVtx_            .clear();
+  eledEtaAtCalo_           .clear();
   eledEtaseedAtVtx_        .clear();
 
   eleSigmaIEtaIEtaFull5x5_ .clear();

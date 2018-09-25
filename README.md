@@ -9,12 +9,19 @@ git cms-init
 ```
 
 For Electrons and Photons:
-[1] https://twiki.cern.ch/twiki/bin/view/CMS/EgammaMiniAODV2
-[2] https://twiki.cern.ch/twiki/bin/view/CMS/Egamma2017DataRecommendations
-[3] https://twiki.cern.ch/twiki/bin/view/CMS/EgammaIDRecipesRun2
+[1]-https://twiki.cern.ch/twiki/bin/view/CMS/EgammaMiniAODV2
+[2]-https://twiki.cern.ch/twiki/bin/view/CMS/Egamma2017DataRecommendations
+[3]-https://twiki.cern.ch/twiki/bin/view/CMS/EgammaIDRecipesRun2
 
 For MET:
-[4] https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETUncertaintyPrescription#Instructions_for_9_4_X_X_9_for_2
+[4]-https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETUncertaintyPrescription#Instructions_for_9_4_X_X_9_for_2
+
+For Taus:
+[5]-https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuidePFTauID#Rerunning_of_the_tau_ID_on_M_AN1
+[6]-https://twiki.cern.ch/twiki/pub/CMSPublic/SWGuidePFTauID/2017v2-recipe.pdf
+
+For Muons:
+[7]-https://twiki.cern.ch/twiki/bin/viewauth/CMS/SWGuideMuonIdRun2
 
 ```
 git cms-merge-topic cms-egamma:EgammaPostRecoTools_940
@@ -24,7 +31,7 @@ scram b -j10
 ```
 
 ```
-git clone -b 90Xv2 https://github.com/varuns23/phoJetAnalysis.git
+git clone -b 94X https://github.com/varuns23/phoJetAnalysis.git
 ```
 
 
