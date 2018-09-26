@@ -82,9 +82,9 @@ class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
     void branchJets      (TTree*);
     void branchElectrons (TTree*);
     void branchMuons     (TTree*);
-    void branchTaus     (TTree*);
+    void branchTaus      (TTree*);
     void branchMet       (TTree*);
-  //  void branchGenInfo   (TTree*);
+    void branchGenInfo   (TTree*);
 
     void fillEventInfo  (const edm::Event&, const edm::EventSetup&);
     void fillPhotons    (const edm::Event&, const edm::EventSetup&);
@@ -93,7 +93,7 @@ class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
     void fillMuons      (const edm::Event&, math::XYZPoint&, const reco::Vertex);
     void fillTaus      (const edm::Event&);
     void fillMet        (const edm::Event&, const edm::EventSetup&);
-  //  void fillGenInfo    (const edm::Event&);
+    void fillGenInfo    (const edm::Event&);
 
     void initEventInfo();
     void initPhotons();
@@ -102,7 +102,7 @@ class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
     void initMuons();
     void initTaus();
     void initMet();
-  //  void initGenInfo();
+    void initGenInfo();
 
     bool isData_;
     bool debug_;
@@ -111,11 +111,8 @@ class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
     edm::EDGetTokenT<double>                         rhoToken_;
     edm::EDGetTokenT<double>                         rhoCentralToken_;
     edm::EDGetTokenT<reco::VertexCollection>         vtxToken_;
-    //--edm::EDGetTokenT<reco::VertexCollection>         vtxBSToken_;
 
     //Trigger Info
-    //--edm::EDGetTokenT<trigger::TriggerEvent>                  trgEventToken_;
-    //--edm::EDGetTokenT<pat::TriggerObjectStandAloneCollection> trgObjectsToken_;
     edm::EDGetTokenT<edm::TriggerResults>                    trgResultsToken_;
     edm::EDGetTokenT<edm::TriggerResults>                    patTrgResultsToken_;
     std::string                                              trgResultsProcess_;
@@ -131,18 +128,13 @@ class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
 
     //Jet Info
     bool                                             runJets_;
+    bool                                             runJetWidthCalculator_;
     edm::EDGetTokenT<edm::View<pat::Jet> >           jetsAK4Token_;
-//--    JME::JetResolution                               jetResolution_;
-//--    JME::JetResolutionScaleFactor                    jetResolutionSF_;
-//--
+
     //Electron Info
     bool                                             runEle_;
     edm::EDGetTokenT<edm::View<pat::Electron> >      electronToken_;
     edm::EDGetTokenT<pat::PackedCandidateCollection> packedPFCandsToken_;
-//--    edm::EDGetTokenT<reco::PFCandidateCollection>    pfAllCandidateToken_;
-
-//--    edm::EDGetTokenT<edm::ValueMap<float> >          elePFClusEcalIsoToken_;
-//--    edm::EDGetTokenT<edm::ValueMap<float> >          elePFClusHcalIsoToken_;
 
     //Muon Info
     bool                                             runMuon_;
@@ -152,16 +144,17 @@ class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
     bool                                             runTaus_;
     //edm::EDGetTokenT<edm::View<pat::Tau> >          tausToken_;
     edm::EDGetTokenT<vector<pat::Tau> >              tausToken_;
+
     //MET Info
     bool                                             runMet_;
     edm::EDGetTokenT<edm::View<pat::MET> >           pfmetToken_;
 
     //Gen Particle Info
     bool                                             runGenInfo_;
-//--    edm::EDGetTokenT<GenEventInfoProduct>            generatorToken_;
-//--    edm::EDGetTokenT<LHEEventProduct>                lheEventToken_;
-//--    edm::EDGetTokenT<vector<PileupSummaryInfo> >     puCollection_;
-//--    edm::EDGetTokenT<vector<reco::GenParticle> >     genParticlesToken_;
+    edm::EDGetTokenT<GenEventInfoProduct>            generatorToken_;
+    edm::EDGetTokenT<LHEEventProduct>                lheEventToken_;
+    edm::EDGetTokenT<vector<PileupSummaryInfo> >     puCollection_;
+    edm::EDGetTokenT<vector<reco::GenParticle> >     genParticlesToken_;
 
     TTree * tree_;
 };

@@ -62,13 +62,13 @@ phoJetNtuplizer::phoJetNtuplizer(const edm::ParameterSet& iConfig):
 
  //Jet Info
   runJets_                  =  iConfig.getParameter<bool>("runJets");
-///--  jetsAK4Token_             =  consumes<View<pat::Jet> >              (iConfig.getParameter<InputTag>("jetsAK4Token"));
+  runJetWidthCalculator_    =  iConfig.getParameter<bool>("runJetWidthCalculator");
+  jetsAK4Token_             =  consumes<View<pat::Jet> >              (iConfig.getParameter<InputTag>("jetsAK4Token"));
 
   //Electron Info
   runEle_                  =  iConfig.getParameter<bool>("runEle");
   electronToken_           =  consumes<View<pat::Electron> >          (iConfig.getParameter<InputTag>("electronToken"));
   packedPFCandsToken_      =  consumes<pat::PackedCandidateCollection>(iConfig.getParameter<InputTag>("packedPFCands"));
-
 ///--  pfAllCandidateToken_     =  consumes<reco::PFCandidateCollection>   (iConfig.getParameter<InputTag>("pfAllCandidate")); 
 
   //Muon Info
@@ -86,10 +86,10 @@ phoJetNtuplizer::phoJetNtuplizer(const edm::ParameterSet& iConfig):
 
   //Gen Particles
   runGenInfo_                = iConfig.getParameter<bool>("runGenInfo");
-///--  generatorToken_            = consumes<GenEventInfoProduct>        (iConfig.getParameter<InputTag>("generatorToken"));
-///--  lheEventToken_             = consumes<LHEEventProduct>            (iConfig.getParameter<InputTag>("lheEventToken"));
-///--  puCollection_              = consumes<vector<PileupSummaryInfo> > (iConfig.getParameter<InputTag>("pileupCollection"));
-///--  genParticlesToken_         = consumes<vector<reco::GenParticle> > (iConfig.getParameter<InputTag>("genParticleToken"));
+  generatorToken_            = consumes<GenEventInfoProduct>        (iConfig.getParameter<InputTag>("generatorToken"));
+  lheEventToken_             = consumes<LHEEventProduct>            (iConfig.getParameter<InputTag>("lheEventToken"));
+  puCollection_              = consumes<vector<PileupSummaryInfo> > (iConfig.getParameter<InputTag>("pileupCollection"));
+  genParticlesToken_         = consumes<vector<reco::GenParticle> > (iConfig.getParameter<InputTag>("genParticleToken"));
 
   usesResource("TFileService");
   edm::Service<TFileService> fs;
@@ -98,12 +98,12 @@ phoJetNtuplizer::phoJetNtuplizer(const edm::ParameterSet& iConfig):
 
   if(runEventInfo_) branchEventInfo (tree_);
   if(runPhotons_)   branchPhotons(tree_);
-///--  if(runJets_)      branchJets(tree_);
+  if(runJets_)      branchJets(tree_);
   if(runEle_)       branchElectrons(tree_);
   if(runMuon_)      branchMuons(tree_);
   if(runTaus_)      branchTaus(tree_);
   if(runMet_)       branchMet(tree_);
-///--  if(runGenInfo_)   branchGenInfo(tree_);
+  if(runGenInfo_)   branchGenInfo(tree_);
 
   if(debug_) std::cout<< "<<DEBUG>>:: Inside phoJetNtuplizer constructor "<<std::endl;
 }
@@ -153,8 +153,8 @@ phoJetNtuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
   if(runEle_)       fillElectrons(iEvent, iSetup, pv);
   if(runMuon_)      fillMuons(iEvent, pv, vtx);
   if(runTaus_)      fillTaus(iEvent);
-//VS  if(runGenInfo_)   fillGenInfo(iEvent);
-//VS  if(runJets_)      fillJets(iEvent, iSetup);
+  if(runGenInfo_)   fillGenInfo(iEvent);
+  if(runJets_)      fillJets(iEvent, iSetup);
 
   tree_->Fill();
 }

@@ -21,19 +21,35 @@ JetWidthCalculator::JetWidthCalculator(const pat::Jet& jet) {
   pfCand12PtSum_         = 0;
   pt12ratio_             = 0;
 
-  ConstEt_         .clear();
+  nPhotons_              = 0;
+  nCHPions_              = 0;
+  nMiscParticles_        = 0;
+
   ConstPt_         .clear();
-  ConstPdgId_ .clear();
-  
+  ConstEt_         .clear();
+  ConstEta_        .clear();
+  ConstPhi_        .clear();
+  ConstPdgId_      .clear();
+  MiscPdgId_       .clear();
+
+  std::vector<std::pair<double, const reco::Candidate*>> jetDaughters;
   const uint32_t packedCands = jet.numberOfDaughters();
   
   for(uint32_t i = 0; i < packedCands; i++) {
 
     const reco::Candidate *pfCand = jet.daughter(i);
 
-    ConstEt_    .push_back(pfCand->et());
-    ConstPt_    .push_back(pfCand->pt());
-    ConstPdgId_ .push_back(pfCand->pdgId());
+    jetDaughters.push_back({pfCand->pt(), pfCand});
+
+    if(abs(pfCand->pdgId()) == 211){
+      nCHPions_++;
+    } else if(pfCand->pdgId() == 22){
+      nPhotons_++;
+    }
+    else{
+      nMiscParticles_++;
+      MiscPdgId_ .push_back(pfCand->pdgId());
+    }
     
     etSum_ += pfCand->et();
     ptSum_ += pfCand->pt();
@@ -44,7 +60,19 @@ JetWidthCalculator::JetWidthCalculator(const pat::Jet& jet) {
     phiSum_   += (pfCand->phi() * pfCand->et());
     phiSqSum_ += (pfCand->phi() * pfCand->phi() * pfCand->et());
   }
-  
+
+  std::sort(jetDaughters.begin(),jetDaughters.end(),[](const auto& p1, const auto& p2){return p1.first>p2.first;});
+  for(uint32_t j = 0; j < jetDaughters.size(); j++){
+    const reco::Candidate *pfCand = jetDaughters.at(j).second;
+
+    ConstPt_    .push_back(pfCand->pt());
+    ConstEt_    .push_back(pfCand->et());
+    ConstEta_   .push_back(pfCand->eta());
+    ConstPhi_   .push_back(pfCand->phi());
+    ConstPdgId_ .push_back(pfCand->pdgId());
+  }
+
+ 
   if (packedCands>1){
     pfCand1pt_  = jet.daughter(0)->pt();
     pfCand2pt_  = jet.daughter(1)->pt();

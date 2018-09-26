@@ -23,9 +23,18 @@ public:
   double getPFCand12PtSum()  {return pfCand12PtSum_;}
   double getPFCand12Ratio()  {return pt12ratio_;}
 
-  vector<double> getConstEt()         {return ConstEt_;}
+
+  double getnPhotons()       {return nPhotons_;}
+  double getnCHPions()       {return nCHPions_;}
+  double getnMiscParticles() {return nMiscParticles_;}
+
+
   vector<double> getConstPt()         {return ConstPt_;}
-  vector<int>   getConstPdgId()       {return ConstPdgId_;}
+  vector<double> getConstEt()         {return ConstEt_;}
+  vector<double> getConstEta()        {return ConstEta_;}
+  vector<double> getConstPhi()        {return ConstPhi_;}
+  vector<int>    getConstPdgId()      {return ConstPdgId_;}
+  vector<int>    getMiscPdgId()       {return MiscPdgId_;}
 
 private:
                                         
@@ -45,9 +54,16 @@ private:
   double pfCand12PtSum_;
   double pt12ratio_;
 
-  vector<double> ConstEt_;
+  double nPhotons_;
+  double nCHPions_;
+  double nMiscParticles_;
+
   vector<double> ConstPt_;
-  vector<int>   ConstPdgId_;
+  vector<double> ConstEt_;
+  vector<double> ConstEta_;
+  vector<double> ConstPhi_;
+  vector<int>    ConstPdgId_;
+  vector<int>    MiscPdgId_;
   
 };
 
