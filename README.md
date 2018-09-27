@@ -1,4 +1,4 @@
-# MiniAOD analyzer for Dark photon
+#MiniAOD analyzer for all physics objects 
 
 Instructions:
 ```
@@ -6,6 +6,13 @@ cmsrel CMSSW_9_4_9
 cd CMSSW_9_4_9/src
 cmsenv
 git cms-init
+
+git cms-merge-topic cms-egamma:EgammaPostRecoTools_940
+git cms-merge-topic cms-met:METFixEE2017_949
+
+git clone -b 94X https://github.com/varuns23/phoJetAnalysis.git
+
+scram b -j10
 ```
 
 For Electrons and Photons:
@@ -22,17 +29,6 @@ For Taus:
 
 For Muons:
 [7]-https://twiki.cern.ch/twiki/bin/viewauth/CMS/SWGuideMuonIdRun2
-
-```
-git cms-merge-topic cms-egamma:EgammaPostRecoTools_940
-git cms-merge-topic cms-met:METFixEE2017_949
-
-scram b -j10
-```
-
-```
-git clone -b 94X https://github.com/varuns23/phoJetAnalysis.git
-```
 
 
 Data set Info:
