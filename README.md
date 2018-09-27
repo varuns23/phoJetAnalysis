@@ -1,4 +1,4 @@
-# MiniAOD analyzer for Dark photon
+# MiniAOD analyzer 
 
 Instructions:
 ```
