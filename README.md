@@ -8,7 +8,7 @@ cmsenv
 git cms-init
 
 git cms-merge-topic cms-egamma:EgammaPostRecoTools_940
-git cms-merge-topic cms-met:METFixEE2017_949
+git cms-merge-topic cms-met:METFixEE2017_949_v2
 
 git clone -b 94X https://github.com/varuns23/phoJetAnalysis.git
 
