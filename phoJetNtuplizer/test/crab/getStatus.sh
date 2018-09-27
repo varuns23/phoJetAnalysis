@@ -1,4 +1,4 @@
-#!/bin/tcsh                                                            
+#!/bin/bash
  
 foreach jobDir (`ls ${1}`)
    
