@@ -15,7 +15,7 @@ dataset = {
 }
 
 if __name__ == '__main__':
-from CRABAPI.RawCommand import crabCommand
+  from CRABAPI.RawCommand import crabCommand
 
 def submit(config):
   res = crabCommand('submit', config = config)
@@ -35,7 +35,7 @@ config.section_('Data')
 config.Data.publication = False
 config.Data.inputDBS = 'global'
 config.Data.splitting = 'LumiBased'
-config.Data.unitsPerJob = 50
+config.Data.unitsPerJob = 25
 config.Data.totalUnits = -1
 config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/ReReco/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt'
 
