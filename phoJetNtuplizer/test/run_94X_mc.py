@@ -24,7 +24,7 @@ process.source = cms.Source("PoolSource",
 )
 
 process.TFileService = cms.Service("TFileService", 
-    fileName = cms.string('testOutput_mc.root')
+    fileName = cms.string('Ntuple_mc.root')
     )
 
 process.load( "PhysicsTools.PatAlgos.producersLayer1.patCandidates_cff" )

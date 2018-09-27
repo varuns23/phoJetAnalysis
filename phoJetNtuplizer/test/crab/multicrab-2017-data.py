@@ -22,7 +22,7 @@ def submit(config):
 
 from CRABClient.UserUtilities import config
 config = config()
-name = 'NtuplesData31Mar2018'
+name = 'ntuple_data31Mar2018'
 config.General.workArea = 'crab_'+name
 config.General.transferOutputs = True
 config.General.transferLogs = True
@@ -35,18 +35,19 @@ config.section_('Data')
 config.Data.publication = False
 config.Data.inputDBS = 'global'
 config.Data.splitting = 'LumiBased'
-config.Data.unitsPerJob = 25
-config.Data.totalUnits = -1
 config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/ReReco/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt'
 
 config.Site.storageSite = 'T2_US_Wisconsin'
 
-listOfSamples = ['MET2017B', 'MET2017C', 'MET2017D', 'MET2017E', 'MET2017F']
+#listOfSamples = ['MET2017B', 'MET2017C', 'MET2017D', 'MET2017E', 'MET2017F']
 #listOfSamples = ['SingleEle2017B', 'SingleEle2017C', 'SingleEle2017D', 'SingleEle2017E', 'SingleEle2017F']
 
 for sample in listOfSamples:  
   config.General.requestName = 'job_'+sample
-  config.JobType.outputFiles = ['Data'+sample+'.root']
+  #config.JobType.outputFiles = ['Data'+sample+'.root']
+  config.JobType.outputFiles = ['Ntuple_data.root']
   config.Data.inputDataset   = dataset[sample]
+  config.Data.unitsPerJob = 15
+  config.Data.totalUnits = -1
   config.Data.outLFNDirBase = '/store/user/varuns/'+name
   submit(config)

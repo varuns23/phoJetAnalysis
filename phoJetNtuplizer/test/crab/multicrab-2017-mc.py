@@ -69,7 +69,7 @@ def submit(config):
 
 from CRABClient.UserUtilities import config
 config = config()
-name = 'NtuplesMC12Apr2018'
+name = 'mc12Apr2018'
 config.General.workArea = 'crab_'+name
 config.General.transferOutputs = True
 config.General.transferLogs = True
@@ -84,9 +84,10 @@ config.Data.inputDBS = 'global'
 
 config.Site.storageSite = 'T2_US_Wisconsin'
 
-listOfSamples = ['ZJetsToNuNu_HT100-200', 'ZJetsToNuNu_HT200-400', 'ZJetsToNuNu_HT400-600', 'ZJetsToNuNu_HT600-800', 'ZJetsToNuNu_HT800-1200', 'ZJetsToNuNu_HT1200-2500', 'ZJetsToNuNu_HT2500-Inf']
+#listOfSamples = ['ZJetsToNuNu_HT100-200', 'ZJetsToNuNu_HT200-400', 'ZJetsToNuNu_HT400-600', 'ZJetsToNuNu_HT600-800', 'ZJetsToNuNu_HT800-1200', 'ZJetsToNuNu_HT1200-2500', 'ZJetsToNuNu_HT2500-Inf']
+
 #listOfSamples = ['WJetsToLNu_HT100-200', 'WJetsToLNu_HT200-400', 'WJetsToLNu_HT400-600', 'WJetsToLNu_HT600-800', 'WJetsToLNu_HT800-1200', 'WJetsToLNu_HT1200-2500', 'WJetsToLNu_HT2500-Inf']
-#listOfSamples = ['DYJetsToLL_HT70-100', 'DYJetsToLL_HT100-200', 'DYJetsToLL_HT200-400', 'DYJetsToLL_HT400-600', 'DYJetsToLL_HT600-800', 'DYJetsToLL_HT800-1200, 'DYJetsToLL_HT1200-2500', 'DYJetsToLL_HT2500-Inf']
+#listOfSamples = ['DYJetsToLL_HT70-100', 'DYJetsToLL_HT100-200', 'DYJetsToLL_HT200-400', 'DYJetsToLL_HT400-600', 'DYJetsToLL_HT600-800', 'DYJetsToLL_HT800-1200', 'DYJetsToLL_HT1200-2500', 'DYJetsToLL_HT2500-Inf']
 #listOfSamples = ['GJets_HT40-100', 'GJets_HT100-200', 'GJets_HT200-400', 'GJets_HT600-Inf']
 #listOfSamples = ['TTJets_DiLept', 'TTJets_SingleLeptFromT', 'TTJets']
 #listOfSamples = ['QCD_HT100-200', 'QCD_HT200-300', 'QCD_HT300-500, 'QCD_HT500-700', 'QCD_HT700-1000', 'QCD_HT1000-1500', 'QCD_HT1500-2000', 'QCD_HT2000-Inf']
@@ -94,10 +95,11 @@ listOfSamples = ['ZJetsToNuNu_HT100-200', 'ZJetsToNuNu_HT200-400', 'ZJetsToNuNu_
 
 for sample in listOfSamples:  
   config.General.requestName = 'job_'+sample
-  config.JobType.outputFiles = ['Data'+sample+'.root']
+  #config.JobType.outputFiles = ['Data'+sample+'.root']
+  config.JobType.outputFiles = ['Ntuple_mc.root']
   config.Data.inputDataset   = dataset[sample]
-  config.Data.splitting = 'Automatic' #'FileBased'
-#  config.Data.unitsPerJob = 10
+  config.Data.splitting = 'EventAwareLumiBased' #'FileBased'
+  config.Data.unitsPerJob = 15000
   config.Data.totalUnits = -1
   config.Data.outLFNDirBase = '/store/user/varuns/'+name
   submit(config)
