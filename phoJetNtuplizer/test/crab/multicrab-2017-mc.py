@@ -1,4 +1,4 @@
-#multicrab
+import os
 
 dataset = {
 'ZJetsToNuNu_HT100-200': '/ZJetsToNuNu_HT-100To200_13TeV-madgraph/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
@@ -75,17 +75,18 @@ config.General.transferOutputs = True
 config.General.transferLogs = True
 
 config.JobType.pluginName = 'Analysis'
-config.JobType.psetName = 'run_94X_mc.py'
-#config.JobType.inputFiles = ['Summer16_23Sep2016AllV4_DATA.db','Summer16_23Sep2016BCDV4_DATA_L2Relative_AK8PFchs.txt','Summer16_23Sep2016BCDV4_DATA_L3Absolute_AK8PFchs.txt','Summer16_23Sep2016BCDV4_DATA_L2L3Residual_AK8PFchs.txt']
+#config.JobType.inputFiles = ['inputFiles']
 
 config.section_('Data') 
 config.Data.publication = False
 config.Data.inputDBS = 'global'
+config.Data.splitting = 'EventAwareLumiBased' #'FileBased'
 
 config.Site.storageSite = 'T2_US_Wisconsin'
+#config.Site.whitelist = ["T2_US_Wisconsin"]
+#config.Site.blacklist = ['T2_CH_CERN']
 
 #listOfSamples = ['ZJetsToNuNu_HT100-200', 'ZJetsToNuNu_HT200-400', 'ZJetsToNuNu_HT400-600', 'ZJetsToNuNu_HT600-800', 'ZJetsToNuNu_HT800-1200', 'ZJetsToNuNu_HT1200-2500', 'ZJetsToNuNu_HT2500-Inf']
-
 #listOfSamples = ['WJetsToLNu_HT100-200', 'WJetsToLNu_HT200-400', 'WJetsToLNu_HT400-600', 'WJetsToLNu_HT600-800', 'WJetsToLNu_HT800-1200', 'WJetsToLNu_HT1200-2500', 'WJetsToLNu_HT2500-Inf']
 #listOfSamples = ['DYJetsToLL_HT70-100', 'DYJetsToLL_HT100-200', 'DYJetsToLL_HT200-400', 'DYJetsToLL_HT400-600', 'DYJetsToLL_HT600-800', 'DYJetsToLL_HT800-1200', 'DYJetsToLL_HT1200-2500', 'DYJetsToLL_HT2500-Inf']
 #listOfSamples = ['GJets_HT40-100', 'GJets_HT100-200', 'GJets_HT200-400', 'GJets_HT600-Inf']
@@ -94,11 +95,18 @@ config.Site.storageSite = 'T2_US_Wisconsin'
 #listOfSamples = ['WW', 'WWToLNuQQ', 'WWTo2L2Nu', 'WWTo4Q', 'WZ', 'ZZ']
 
 for sample in listOfSamples:  
+  os.popen('cp run_94X_mc.py run_94X_mc_'+sample+'.py')
+  with open('run_94X_mc_'+sample+'.py') as oldFile:
+    newText = oldFile.read().replace('Ntuple_mc.root','MC_'+sample+'.root')
+  with open('run_94X_mc_'+sample+'.py', 'w') as newFile:
+    newFile.write(newText)
+
   config.General.requestName = 'job_'+sample
-  #config.JobType.outputFiles = ['Data'+sample+'.root']
-  config.JobType.outputFiles = ['Ntuple_mc.root']
+  
+  config.JobType.psetName = 'run_94X_mc_'+sample+'.py'
+  config.JobType.outputFiles = ['MC_'+sample+'.root']
+  
   config.Data.inputDataset   = dataset[sample]
-  config.Data.splitting = 'EventAwareLumiBased' #'FileBased'
   config.Data.unitsPerJob = 15000
   config.Data.totalUnits = -1
   config.Data.outLFNDirBase = '/store/user/varuns/'+name

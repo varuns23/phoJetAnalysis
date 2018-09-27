@@ -1,4 +1,4 @@
-#multicrab
+import os
 
 dataset = {
   'MET2017B' : '/MET/Run2017B-31Mar2018-v1/MINIAOD',
@@ -28,8 +28,7 @@ config.General.transferOutputs = True
 config.General.transferLogs = True
 
 config.JobType.pluginName = 'Analysis'
-config.JobType.psetName = 'run_94X_data.py'
-#config.JobType.inputFiles = ['Summer16_23Sep2016AllV4_DATA.db','Summer16_23Sep2016BCDV4_DATA_L2Relative_AK8PFchs.txt','Summer16_23Sep2016BCDV4_DATA_L3Absolute_AK8PFchs.txt','Summer16_23Sep2016BCDV4_DATA_L2L3Residual_AK8PFchs.txt']
+#config.JobType.inputFiles = ['inputFiles']
 
 config.section_('Data') 
 config.Data.publication = False
@@ -38,14 +37,25 @@ config.Data.splitting = 'LumiBased'
 config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/ReReco/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt'
 
 config.Site.storageSite = 'T2_US_Wisconsin'
+#config.Site.whitelist = ["T2_US_Wisconsin"]
+#config.Site.blacklist = ['T2_CH_CERN']
 
 #listOfSamples = ['MET2017B', 'MET2017C', 'MET2017D', 'MET2017E', 'MET2017F']
+listOfSamples = ['MET2017E', 'MET2017F']
 #listOfSamples = ['SingleEle2017B', 'SingleEle2017C', 'SingleEle2017D', 'SingleEle2017E', 'SingleEle2017F']
 
 for sample in listOfSamples:  
+  os.popen('cp run_94X_data.py run_94X_data_'+sample+'.py')
+  with open('run_94X_data_'+sample+'.py') as oldFile:
+    newText = oldFile.read().replace('Ntuple_data.root','Data_'+sample+'.root')
+  with open('run_94X_data_'+sample+'.py', 'w') as newFile:
+    newFile.write(newText)
+
   config.General.requestName = 'job_'+sample
-  #config.JobType.outputFiles = ['Data'+sample+'.root']
-  config.JobType.outputFiles = ['Ntuple_data.root']
+  
+  config.JobType.psetName = 'run_94X_data_'+sample+'.py'
+  config.JobType.outputFiles = ['Data_'+sample+'.root']
+  
   config.Data.inputDataset   = dataset[sample]
   config.Data.unitsPerJob = 15
   config.Data.totalUnits = -1
