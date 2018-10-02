@@ -45,9 +45,9 @@ from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMet
 runMetCorAndUncFromMiniAOD (
     process,
     isData = False, # false for MC
-#   fixEE2017 = True,
-#   fixEE2017Params = {'userawPt': True, 'PtThreshold':50.0, 'MinEtaThreshold':2.65, 'MaxEtaThreshold': 3.139} , 
-#   postfix = "ModifiedMET"
+    fixEE2017 = True,
+    fixEE2017Params = {'userawPt': True, 'PtThreshold':50.0, 'MinEtaThreshold':2.65, 'MaxEtaThreshold': 3.139} , 
+    postfix = "ModifiedMET"
 )
 
 from phoJetAnalysis.phoJetNtuplizer.runTauIdMVA import *
@@ -73,9 +73,10 @@ process.phoJetNtuplizer.runMuon     = cms.bool(True);
 process.phoJetNtuplizer.runTaus     = cms.bool(True);
 process.phoJetNtuplizer.runMet      = cms.bool(True);
 process.phoJetNtuplizer.runGenInfo  = cms.bool(True); # True for MC
+process.phoJetNtuplizer.pfmetToken  = cms.InputTag("slimmedMETsModifiedMET")
 
 process.p = cms.Path(
-  #  process.fullPatMetSequenceModifiedMET *
+    process.fullPatMetSequenceModifiedMET *
     process.egammaPostRecoSeq *
     process.rerunMvaIsolationSequence *
     process.NewTauIDsEmbedded *

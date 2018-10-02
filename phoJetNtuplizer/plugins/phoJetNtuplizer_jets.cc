@@ -217,6 +217,7 @@ void phoJetNtuplizer::fillJets(const edm::Event& iEvent, const edm::EventSetup& 
 
   for (edm::View<pat::Jet>::const_iterator iJet = jetHandle->begin(); iJet != jetHandle->end(); ++iJet) {
 
+    if (iJet->pt() < 20) continue;
     jetPt_                        .push_back(iJet->pt());
     jetPx_                        .push_back(iJet->px());
     jetPy_                        .push_back(iJet->py());
