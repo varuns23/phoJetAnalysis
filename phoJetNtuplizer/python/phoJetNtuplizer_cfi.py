@@ -19,6 +19,7 @@ phoJetNtuplizer = cms.EDAnalyzer('phoJetNtuplizer',
 
 				  triggerResults                       = cms.InputTag("TriggerResults", "", "HLT"),
 				  patTriggerResults                    = cms.InputTag("TriggerResults", "", "PAT"),
+				  recoTriggerResults                   = cms.InputTag("TriggerResults", "", "RECO"),
 
 				  photonToken                          =  cms.InputTag("slimmedPhotons"),
 

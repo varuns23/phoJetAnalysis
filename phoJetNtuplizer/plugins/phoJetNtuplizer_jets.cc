@@ -17,40 +17,40 @@
 
 Int_t             nJet_;
 
-vector<double>    jetPt_;
-vector<double>    jetPx_;
-vector<double>    jetPy_;
-vector<double>    jetPz_;
-vector<double>    jetEn_;
-vector<double>    jetEta_;
-vector<double>    jetPhi_;
-vector<double>    jetRawPt_;
-vector<double>    jetRawEn_;
-vector<double>    jetMt_;
-vector<double>    jetArea_;
-vector<double>    jetMass_;
-vector<double>    jetMaxDistance_;
-vector<double>    jetPhiPhiMoment_;
-vector<double>    jetConstituentEtaPhiSpread_;
-vector<double>    jetConstituentPtDistribution_;
-vector<double>    jetPileup_;
+vector<float>    jetPt_;
+vector<float>    jetPx_;
+vector<float>    jetPy_;
+vector<float>    jetPz_;
+vector<float>    jetEn_;
+vector<float>    jetEta_;
+vector<float>    jetPhi_;
+vector<float>    jetRawPt_;
+vector<float>    jetRawEn_;
+vector<float>    jetMt_;
+vector<float>    jetArea_;
+vector<float>    jetMass_;
+vector<float>    jetMaxDistance_;
+vector<float>    jetPhiPhiMoment_;
+vector<float>    jetConstituentEtaPhiSpread_;
+vector<float>    jetConstituentPtDistribution_;
+vector<float>    jetPileup_;
 vector<UShort_t>  jetID_; 
-vector<double>    jetPUID_;
+vector<float>    jetPUID_;
 vector<Int_t>     jetPUFullID_;
 vector<Int_t>     jetPartonID_;
 vector<Int_t>     jetHadFlvr_;
-vector<double>    jetJECUnc_;
+vector<float>    jetJECUnc_;
 
-vector<double>    jetCEF_;
-vector<double>    jetNEF_;
-vector<double>    jetCHF_;
-vector<double>    jetNHF_;
+vector<float>    jetCEF_;
+vector<float>    jetNEF_;
+vector<float>    jetCHF_;
+vector<float>    jetNHF_;
 vector<Int_t>     jetPhotonEnF_;
 vector<Int_t>     jetElectronEnF_;
-vector<double>    jetMuonEnF_;
-vector<double>    jetChargedMuonEnF_;
-vector<double>    jetHFHAE_;
-vector<double>    jetHFEME_;
+vector<float>    jetMuonEnF_;
+vector<float>    jetChargedMuonEnF_;
+vector<float>    jetHFHAE_;
+vector<float>    jetHFEME_;
 vector<Int_t>     jetNConst_;
 vector<Int_t>     jetNConstituents_;
 vector<Int_t>     jetNCharged_; 
@@ -61,41 +61,41 @@ vector<Int_t>     jetNPhoton_;
 vector<Int_t>     jetNElectron_;
 vector<Int_t>     jetNMuon_;
 
-vector<double>    jetCSV2BJetTags_;
-vector<double>    jetDeepCSVTags_b_;
-vector<double>    jetDeepCSVTags_bb_;
-vector<double>    jetDeepCSVTags_c_;
-vector<double>    jetDeepCSVTags_udsg_;
+vector<float>    jetCSV2BJetTags_;
+vector<float>    jetDeepCSVTags_b_;
+vector<float>    jetDeepCSVTags_bb_;
+vector<float>    jetDeepCSVTags_c_;
+vector<float>    jetDeepCSVTags_udsg_;
 
-vector<double>    jetLeadTrackPt_;
-vector<double>    jetLeadTrackEta_;
-vector<double>    jetLeadTrackPhi_;
+vector<float>    jetLeadTrackPt_;
+vector<float>    jetLeadTrackEta_;
+vector<float>    jetLeadTrackPhi_;
 vector<Int_t>     jetLepTrackPID_;
-vector<double>    jetLepTrackPt_;
-vector<double>    jetLepTrackEta_;
-vector<double>    jetLepTrackPhi_;
+vector<float>    jetLepTrackPt_;
+vector<float>    jetLepTrackEta_;
+vector<float>    jetLepTrackPhi_;
 
-vector<double>    jetetaWidth_;
-vector<double>    jetphiWidth_;
-vector<double>    jetnPhotons_;
-vector<double>    jetnCHPions_;
-vector<double>    jetnMisc_;
-vector<vector<Int_t>>  jetMiscPdgId_;
-vector<vector<double>> jetConstPt_;
-vector<vector<double>> jetConstEt_;
-vector<vector<double>> jetConstEta_;
-vector<vector<double>> jetConstPhi_;
-vector<vector<Int_t>>  jetConstPdgId_;
+vector<float>    jetetaWidth_;
+vector<float>    jetphiWidth_;
+vector<int>      jetnPhotons_;
+vector<int>      jetnCHPions_;
+vector<int>      jetnMisc_;
+vector<vector<Int_t>> jetMiscPdgId_;
+vector<vector<float>> jetConstPt_;
+vector<vector<float>> jetConstEt_;
+vector<vector<float>> jetConstEta_;
+vector<vector<float>> jetConstPhi_;
+vector<vector<Int_t>> jetConstPdgId_;
 
-vector<double>    jetGenJetEn_;
-vector<double>    jetGenJetPt_;
-vector<double>    jetGenJetEta_;
-vector<double>    jetGenJetPhi_;
+vector<float>    jetGenJetEn_;
+vector<float>    jetGenJetPt_;
+vector<float>    jetGenJetEta_;
+vector<float>    jetGenJetPhi_;
 vector<Int_t>     jetGenPartonID_;
-vector<double>    jetGenEn_;
-vector<double>    jetGenPt_;
-vector<double>    jetGenEta_;
-vector<double>    jetGenPhi_;
+vector<float>    jetGenEn_;
+vector<float>    jetGenPt_;
+vector<float>    jetGenEta_;
+vector<float>    jetGenPhi_;
 vector<Int_t>     jetGenPartonMomID_;
 
 void phoJetNtuplizer::branchJets(TTree* tree){
@@ -217,7 +217,7 @@ void phoJetNtuplizer::fillJets(const edm::Event& iEvent, const edm::EventSetup& 
 
   for (edm::View<pat::Jet>::const_iterator iJet = jetHandle->begin(); iJet != jetHandle->end(); ++iJet) {
 
-    if (iJet->pt() < 20) continue;
+    if (iJet->pt() < 20.) continue;
     jetPt_                        .push_back(iJet->pt());
     jetPx_                        .push_back(iJet->px());
     jetPy_                        .push_back(iJet->py());
@@ -238,14 +238,14 @@ void phoJetNtuplizer::fillJets(const edm::Event& iEvent, const edm::EventSetup& 
 
 
     //PF JetID
-    double NHF      = iJet->neutralHadronEnergyFraction();
-    double NEMF     = iJet->neutralEmEnergyFraction();
-    double NumConst = iJet->chargedMultiplicity()+iJet->neutralMultiplicity();
-    double CHF      = iJet->chargedHadronEnergyFraction();
-    double CHM      = iJet->chargedMultiplicity();
-    double CEMF     = iJet->chargedEmEnergyFraction();
-    double NNP      = iJet->neutralMultiplicity();
-    double MUF      = iJet->muonEnergyFraction();
+    float NHF      = iJet->neutralHadronEnergyFraction();
+    float NEMF     = iJet->neutralEmEnergyFraction();
+    float NumConst = iJet->chargedMultiplicity()+iJet->neutralMultiplicity();
+    float CHF      = iJet->chargedHadronEnergyFraction();
+    float CHM      = iJet->chargedMultiplicity();
+    float CEMF     = iJet->chargedEmEnergyFraction();
+    float NNP      = iJet->neutralMultiplicity();
+    float MUF      = iJet->muonEnergyFraction();
 
     bool tightJetID        = false;
     bool tightLepVetoJetID = false;
@@ -307,13 +307,13 @@ void phoJetNtuplizer::fillJets(const edm::Event& iEvent, const edm::EventSetup& 
     jetDeepCSVTags_udsg_         .push_back(iJet->bDiscriminator("pfDeepCSVJetTags:probudsg"));
 
     //Searching for leading track and lepton
-    double leadTrkPt  = -99;
-    double leadTrkEta = -99;
-    double leadTrkPhi = -99;
+    float leadTrkPt  = -99;
+    float leadTrkEta = -99;
+    float leadTrkPhi = -99;
     Int_t   lepTrkPID  = -99;
-    double lepTrkPt   = -99;
-    double lepTrkEta  = -99;
-    double lepTrkPhi  = -99;
+    float lepTrkPt   = -99;
+    float lepTrkEta  = -99;
+    float lepTrkPhi  = -99;
 
     for (unsigned id = 0; id < iJet->getJetConstituents().size(); id++) {
 
@@ -359,7 +359,9 @@ void phoJetNtuplizer::fillJets(const edm::Event& iEvent, const edm::EventSetup& 
       jetnPhotons_       .push_back(jwc.getnPhotons());
       jetnCHPions_       .push_back(jwc.getnCHPions());
       jetnMisc_          .push_back(jwc.getnMiscParticles());
+      jetMiscPdgId_      .push_back(jwc.getMiscPdgId());
 
+      
       jetConstPt_        .push_back(jwc.getConstPt());
       jetConstEt_        .push_back(jwc.getConstEt());
       jetConstEta_       .push_back(jwc.getConstEta());
@@ -372,10 +374,10 @@ void phoJetNtuplizer::fillJets(const edm::Event& iEvent, const edm::EventSetup& 
     if (runGenInfo_ && genParticlesHandle.isValid()) {
       Int_t  jetGenPartonID    = -99;
       Int_t  jetGenPartonMomID = -99;
-      double jetGenEn          = -999.;
-      double jetGenPt          = -999.;
-      double jetGenEta         = -999.;
-      double jetGenPhi         = -999.;      
+      float jetGenEn          = -999.;
+      float jetGenPt          = -999.;
+      float jetGenEta         = -999.;
+      float jetGenPhi         = -999.;      
       if ((*iJet).genParton()) {
 	jetGenPartonID = (*iJet).genParton()->pdgId();
 	jetGenEn       = (*iJet).genParton()->energy();
@@ -394,10 +396,10 @@ void phoJetNtuplizer::fillJets(const edm::Event& iEvent, const edm::EventSetup& 
       jetGenEta_          .push_back(jetGenEta);
       jetGenPhi_          .push_back(jetGenPhi);
 
-      double jetGenJetEn       = -999.;
-      double jetGenJetPt       = -999.;
-      double jetGenJetEta      = -999.;
-      double jetGenJetPhi      = -999.;
+      float jetGenJetEn       = -999.;
+      float jetGenJetPt       = -999.;
+      float jetGenJetEta      = -999.;
+      float jetGenJetPhi      = -999.;
       if ((*iJet).genJet()) {
 	jetGenJetEn    = (*iJet).genJet()->energy();
 	jetGenJetPt    = (*iJet).genJet()->pt();

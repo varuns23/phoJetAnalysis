@@ -104,7 +104,7 @@ class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
     void initMet();
     void initGenInfo();
 
-    bool isData_;
+    bool is_Data_;
     bool debug_;
 
     bool                                             runEventInfo_;
@@ -115,6 +115,7 @@ class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
     //Trigger Info
     edm::EDGetTokenT<edm::TriggerResults>                    trgResultsToken_;
     edm::EDGetTokenT<edm::TriggerResults>                    patTrgResultsToken_;
+    edm::EDGetTokenT<edm::TriggerResults>                    recoTrgResultsToken_;
     std::string                                              trgResultsProcess_;
     HLTPrescaleProvider                                      hltPrescaleProvider_;
 

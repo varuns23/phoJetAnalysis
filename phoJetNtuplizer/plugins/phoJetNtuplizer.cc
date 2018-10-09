@@ -39,7 +39,7 @@ phoJetNtuplizer::phoJetNtuplizer(const edm::ParameterSet& iConfig):
   //now do what ever initialization is needed
 
   debug_                = iConfig.getParameter<bool>("debug");
-  isData_               = iConfig.getParameter<bool>("isData");
+  is_Data_               = iConfig.getParameter<bool>("is_Data");
 
   runEventInfo_              = iConfig.getParameter<bool>("runEventInfo");
   rhoToken_                  = consumes<double>                       (iConfig.getParameter<InputTag>("rhoToken"));
@@ -50,6 +50,7 @@ phoJetNtuplizer::phoJetNtuplizer(const edm::ParameterSet& iConfig):
   trgResultsToken_           = consumes<edm::TriggerResults>                    (iConfig.getParameter<InputTag>("triggerResults"));
   trgResultsProcess_         =                                                   iConfig.getParameter<InputTag>("triggerResults").process();
   patTrgResultsToken_        = consumes<edm::TriggerResults>                    (iConfig.getParameter<InputTag>("patTriggerResults"));
+  recoTrgResultsToken_       = consumes<edm::TriggerResults>                    (iConfig.getParameter<InputTag>("recoTriggerResults"));
 
   //Photon Info
   runPhotons_          = iConfig.getParameter<bool>("runPhotons");

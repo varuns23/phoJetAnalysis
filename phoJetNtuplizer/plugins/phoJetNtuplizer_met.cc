@@ -2,7 +2,7 @@
 #include "phoJetAnalysis/phoJetNtuplizer/interface/phoJetNtuplizer.h"
 
 
-Int_t metFilters_;
+UShort_t metFilters_;
 float genMET_;
 float genMETPhi_;
 float pfMET_;
@@ -25,7 +25,7 @@ float pfMETPhi_T1UESDo_;
 
 void phoJetNtuplizer::branchMet(TTree* tree){
 
-  if (!isData_) {
+  if (!is_Data_) {
     tree->Branch("genMET",      &genMET_);
     tree->Branch("genMETPhi",   &genMETPhi_);
   }
@@ -53,20 +53,19 @@ void phoJetNtuplizer::fillMet(const edm::Event& iEvent, const edm::EventSetup& i
   
   initMet();
 
-  // https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2
+  // https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#Early_2018_data
   std::vector< string > metFilterNames;
-  metFilterNames.push_back("Flag_HBHENoiseFilter");  // 2**1
-  metFilterNames.push_back("Flag_HBHENoiseIsoFilter"); // 2**2
-  metFilterNames.push_back("Flag_globalSuperTightHalo2016Filter"); //2**3
-  metFilterNames.push_back("Flag_goodVertices"); //2**4
-  metFilterNames.push_back("Flag_eeBadScFilter"); //2**5
-  metFilterNames.push_back("Flag_EcalDeadCellTriggerPrimitiveFilter"); //2**6
-  metFilterNames.push_back("Flag_BadPFMuonFilter"); //2**7
-  metFilterNames.push_back("Flag_ecalBadCalibFilter"); //2**8
-  metFilterNames.push_back("Flag_BadChargedCandidateFilter"); //2**9
+  metFilterNames.push_back("Flag_goodVertices"); //1
+  metFilterNames.push_back("Flag_globalSuperTightHalo2016Filter"); //2
+  metFilterNames.push_back("Flag_HBHENoiseFilter");  // 3
+  metFilterNames.push_back("Flag_HBHENoiseIsoFilter"); // 4
+  metFilterNames.push_back("Flag_EcalDeadCellTriggerPrimitiveFilter"); //5
+  metFilterNames.push_back("Flag_BadPFMuonFilter"); //6
+  metFilterNames.push_back("Flag_BadChargedCandidateFilter"); //7
 
   edm::Handle<edm::TriggerResults> patFilterResultsHandle;                                                          
-  iEvent.getByToken(patTrgResultsToken_, patFilterResultsHandle);
+  //iEvent.getByToken(patTrgResultsToken_, patFilterResultsHandle);
+  iEvent.getByToken(recoTrgResultsToken_, patFilterResultsHandle);
   edm::TriggerResults const& patFilterResults = *patFilterResultsHandle;
 
   auto&& filterNames = iEvent.triggerNames(patFilterResults);
@@ -77,7 +76,7 @@ void phoJetNtuplizer::fillMet(const edm::Event& iEvent, const edm::EventSetup& i
       LogDebug("METFilters") << metFilterNames[iFilter] << " is missing, exiting";
     else {
       if ( !patFilterResults.accept(index) ) {
-	metFilters_ += pow(2, iFilter+1);
+	setbit(metFilters_, iFilter);
       }
     }
   }
@@ -95,7 +94,7 @@ void phoJetNtuplizer::fillMet(const edm::Event& iEvent, const edm::EventSetup& i
     pfMETmEtSig_ = (pfMET->mEtSig() < 1.e10) ? pfMET->mEtSig() : 0;
     pfMETSig_    = (pfMET->significance() < 1.e10) ? pfMET->significance() : 0;
 
-    if (!isData_) {
+    if (!is_Data_) {
       genMET_    = pfMET->genMET()->et();
       genMETPhi_ = pfMET->genMET()->phi();
     }

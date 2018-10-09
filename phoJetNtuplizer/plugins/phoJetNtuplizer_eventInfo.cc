@@ -6,15 +6,17 @@
 Int_t         run_;
 Long64_t      event_;
 Int_t         lumis_;
+Bool_t        isData_;
 Int_t         nVtx_;
-vector<float> vtxX_;
-vector<float> vtxY_;
-vector<float> vtxZ_;
-vector<int>   vtxNtrks_;
-vector<bool>  vtx_isFake_;
-vector<int>   vtx_ndof_;
-vector<float> vtx_rho_;
-vector<bool>  isGoodVtx_;
+float         vtxX_;
+float         vtxY_;
+float         vtxZ_;
+int           vtxNtrks_;
+bool          vtx_isFake_;
+int           vtx_ndof_;
+float         vtx_rho_;
+bool          isGoodVtx_;
+int           nGoodVtx_;
 float         rho_;
 float         rhoCentral_;
 
@@ -43,6 +45,7 @@ void phoJetNtuplizer::branchEventInfo(TTree* tree) {
   tree->Branch("run",                  &run_);
   tree->Branch("event",                &event_);
   tree->Branch("lumis",                &lumis_);
+  tree->Branch("isData",               &isData_);
   tree->Branch("nVtx",                 &nVtx_);
   tree->Branch("vtxX",                 &vtxX_);
   tree->Branch("vtxY",                 &vtxY_);
@@ -52,6 +55,7 @@ void phoJetNtuplizer::branchEventInfo(TTree* tree) {
   tree->Branch("vtx_ndof",             &vtx_ndof_);
   tree->Branch("vtx_rho",              &vtx_rho_);
   tree->Branch("isGoodVtx",            &isGoodVtx_);
+  tree->Branch("nGoodVtx",             &nGoodVtx_);
   tree->Branch("rho",                  &rho_);
   tree->Branch("rhoCentral",           &rhoCentral_);
   tree->Branch("HLTEleMuX",            &HLTEleMuX_);
@@ -87,6 +91,7 @@ void phoJetNtuplizer::fillEventInfo(const edm::Event& iEvent, const edm::EventSe
   run_    = iEvent.id().run();
   event_  = iEvent.id().event();
   lumis_  = iEvent.luminosityBlock();
+  isData_ = iEvent.isRealData();
   rho_    = *(rhoHandle.product());
   if (rhoCentralHandle.isValid()) 
     rhoCentral_ = *(rhoCentralHandle.product());
@@ -103,25 +108,31 @@ void phoJetNtuplizer::fillEventInfo(const edm::Event& iEvent, const edm::EventSe
   }
 
   for(reco::VertexCollection::const_iterator iv = vtxHandle->begin(); iv != vtxHandle->end(); ++iv){
-    vtxX_       .push_back(iv->x());
-    vtxY_       .push_back(iv->y());
-    vtxZ_       .push_back(iv->z());
-    vtxNtrks_   .push_back(iv->nTracks());
 
-    vtx_isFake_ .push_back(iv->isFake());
-    vtx_ndof_   .push_back(iv->ndof());
-    vtx_rho_    .push_back(iv->position().rho());
+    if(nVtx_ == 0){
+      vtxX_       = iv->x();
+      vtxY_       = iv->y();
+      vtxZ_       = iv->z();
+      vtxNtrks_   = iv->nTracks();
+
+      vtx_isFake_ = iv->isFake();
+      vtx_ndof_   = iv->ndof();
+      vtx_rho_    = iv->position().rho();
 
 
-    bool isVtxGood_ = false;
-    if (!iv->isFake() && iv->ndof() > 4. && fabs(iv->z()) <= 24. && fabs(iv->position().rho()) <= 2.) isVtxGood_ = true;
-    isGoodVtx_  .push_back(isVtxGood_);
+      isGoodVtx_ = false;
+      if (!iv->isFake() && iv->ndof() > 4. && fabs(iv->z()) <= 24. && fabs(iv->position().rho()) <= 2.)
+	isGoodVtx_ = true;
+    }
+    if (!iv->isFake() && iv->ndof() > 4. && fabs(iv->z()) <= 24. && fabs(iv->position().rho()) <= 2.) 
+      nGoodVtx_++;
+    
     nVtx_++;
   }
 
   edm::Handle<edm::TriggerResults> trgResultsHandle;
   iEvent.getByToken(trgResultsToken_, trgResultsHandle);
-  
+
   bool cfg_changed = true;
   HLTConfigProvider hltCfg;
   hltCfg.init(iEvent.getRun(), iSetup, trgResultsProcess_, cfg_changed);
@@ -354,14 +365,15 @@ void phoJetNtuplizer::initEventInfo(){
   run_       = -1;
   event_     = -1;
   lumis_     = -1;
-  vtxX_      .clear();
-  vtxY_      .clear();
-  vtxZ_      .clear();
-  vtxNtrks_  .clear();
-  vtx_isFake_.clear();
-  vtx_ndof_  .clear();
-  vtx_rho_   .clear();
-  isGoodVtx_ .clear();
+  vtxX_      = -99999.;
+  vtxY_      = -99999.;
+  vtxZ_      = -99999.;
+  vtxNtrks_  = -1;
+  vtx_isFake_= true;
+  vtx_ndof_  = -1;
+  vtx_rho_   = -1.;
+  isGoodVtx_ = false;
+  nGoodVtx_  = 0;
   rho_       = -99;
   rhoCentral_= -99;
 
