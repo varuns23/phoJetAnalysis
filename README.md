@@ -2,15 +2,12 @@
 
 Instructions:
 ```
-cmsrel CMSSW_9_4_9
-cd CMSSW_9_4_9/src
+cmsrel CMSSW_10_2_5
+cd CMSSW_10_2_5/src
 cmsenv
 git cms-init
 
-git cms-merge-topic cms-egamma:EgammaPostRecoTools_940
-git cms-merge-topic cms-met:METFixEE2017_949_v2
-
-git clone -b 94X https://github.com/varuns23/phoJetAnalysis.git
+git clone -b 102X https://github.com/varuns23/phoJetAnalysis.git
 
 scram b -j10
 ```
