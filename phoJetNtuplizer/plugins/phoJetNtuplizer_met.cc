@@ -70,6 +70,7 @@ void phoJetNtuplizer::fillMet(const edm::Event& iEvent, const edm::EventSetup& i
   metFilterNames.push_back("Flag_BadChargedCandidateFilter"); //7
 //  metFilterNames.push_back("ecalBadCalibReducedMINIAODFilter"); // Need to be RE-RUN
 
+
   edm::Handle<edm::TriggerResults> patFilterResultsHandle;                                                          
   //iEvent.getByToken(patTrgResultsToken_, patFilterResultsHandle);
   iEvent.getByToken(recoTrgResultsToken_, patFilterResultsHandle);

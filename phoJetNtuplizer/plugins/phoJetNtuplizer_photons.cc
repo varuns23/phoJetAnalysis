@@ -209,19 +209,19 @@ void phoJetNtuplizer::fillPhotons(const edm::Event& iEvent, const edm::EventSetu
 
     //VID decisions
     UShort_t tmpphoIDbit = 0;
-    bool isPassLoose  = ipho->photonID("cutBasedPhotonID-Fall17-94X-V1-loose");
+    bool isPassLoose  = ipho->photonID("cutBasedPhotonID-Fall17-94X-V2-loose");
     if (isPassLoose)  setbit(tmpphoIDbit, 0);
-    bool isPassMedium = ipho->photonID("cutBasedPhotonID-Fall17-94X-V1-medium");
+    bool isPassMedium = ipho->photonID("cutBasedPhotonID-Fall17-94X-V2-medium");
     if (isPassMedium) setbit(tmpphoIDbit, 1);
-    bool isPassTight  = ipho->photonID("cutBasedPhotonID-Fall17-94X-V1-tight");
+    bool isPassTight  = ipho->photonID("cutBasedPhotonID-Fall17-94X-V2-tight");
     if (isPassTight)  setbit(tmpphoIDbit, 2);
 
     phoIDbit_                 .push_back(tmpphoIDbit);
 
     UShort_t tmpphoMVAIDbit = 0;
-    bool isPassWP80   = ipho->photonID("mvaPhoID-RunIIFall17-v1-wp80");
+    bool isPassWP80   = ipho->photonID("mvaPhoID-Fall17-iso-V2-wp80");
     if(isPassWP80) setbit(tmpphoMVAIDbit, 0);
-    bool isPassWP90   = ipho->photonID("mvaPhoID-RunIIFall17-v1-wp90");
+    bool isPassWP90   = ipho->photonID("mvaPhoID-Fall17-iso-V2-wp90");
     if(isPassWP90) setbit(tmpphoMVAIDbit, 1);
 
     phoMVAIDbit_              .push_back(tmpphoMVAIDbit);

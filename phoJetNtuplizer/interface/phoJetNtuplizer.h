@@ -113,11 +113,14 @@ class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
     edm::EDGetTokenT<reco::VertexCollection>         vtxToken_;
 
     //Trigger Info
-    edm::EDGetTokenT<edm::TriggerResults>                    trgResultsToken_;
-    edm::EDGetTokenT<edm::TriggerResults>                    patTrgResultsToken_;
-    edm::EDGetTokenT<edm::TriggerResults>                    recoTrgResultsToken_;
-    std::string                                              trgResultsProcess_;
-    HLTPrescaleProvider                                      hltPrescaleProvider_;
+    edm::EDGetTokenT<edm::TriggerResults>            trgResultsToken_;
+    edm::EDGetTokenT<edm::TriggerResults>            patTrgResultsToken_;
+    edm::EDGetTokenT<edm::TriggerResults>            recoTrgResultsToken_;
+    std::string                                      trgResultsProcess_;
+    HLTPrescaleProvider                              hltPrescaleProvider_;
+    edm::EDGetTokenT< double >                       prefweight_token;
+    edm::EDGetTokenT< double >                       prefweightup_token;
+    edm::EDGetTokenT< double >                       prefweightdown_token;
 
     //Photon Info
     bool                                             runPhotons_;
@@ -149,6 +152,7 @@ class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
     //MET Info
     bool                                             runMet_;
     edm::EDGetTokenT<edm::View<pat::MET> >           pfmetToken_;
+
 
     //Gen Particle Info
     bool                                             runGenInfo_;

@@ -51,12 +51,25 @@ process.load( "PhysicsTools.PatAlgos.selectionLayer1.selectedPatCandidates_cff" 
 from PhysicsTools.PatAlgos.tools.coreTools import *
 runOnData( process,  names=['Photons', 'Electrons','Muons','Taus','Jets'], outputModules = [] )
 
+
+## Tau ID
 from phoJetAnalysis.phoJetNtuplizer.runTauIdMVA import *
 na = TauIDEmbedder(process, cms, # pass tour process object
      debug=True,
      toKeep = ["2017v2"] # pick the one you need: ["2017v1", "2017v2", "newDM2017v2", "dR0p32017v2", "2016v1", "newDM2016v1"]
     )
 na.runTauID()
+
+
+##L1 Prefirring
+##https://twiki.cern.ch/twiki/bin/viewauth/CMS/L1ECALPrefiringWeightRecipe
+from PhysicsTools.PatUtils.l1ECALPrefiringWeightProducer_cfi import l1ECALPrefiringWeightProducer
+process.prefiringweight = l1ECALPrefiringWeightProducer.clone(
+    DataEra = cms.string("2017BtoF"),
+    UseJetEMPt = cms.bool(False),
+    PrefiringRateSystematicUncty = cms.double(0.2),
+    SkipWarnings = False)
+
 
 #https://twiki.cern.ch/twiki/bin/viewauth/CMS/JetToolbox
 # For AK8 jets 
@@ -80,6 +93,8 @@ process.phoJetNtuplizer.runGenInfo   = cms.bool(False); # True for MC
 process.p = cms.Path(
 #    process.fullPatMetSequenceModifiedMET *
 #    process.egammaPostRecoSeq *
+#    process.ecalBadCalibReducedMINIAODFilter *
+    process.prefiringweight *
     process.rerunMvaIsolationSequence *
     process.NewTauIDsEmbedded *
     process.phoJetNtuplizer
