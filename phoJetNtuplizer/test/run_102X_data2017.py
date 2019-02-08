@@ -52,14 +52,6 @@ from PhysicsTools.PatAlgos.tools.coreTools import *
 runOnData( process,  names=['Photons', 'Electrons','Muons','Taus','Jets'], outputModules = [] )
 
 
-## Tau ID
-from phoJetAnalysis.phoJetNtuplizer.runTauIdMVA import *
-na = TauIDEmbedder(process, cms, # pass tour process object
-     debug=True,
-     toKeep = ["2017v2"] # pick the one you need: ["2017v1", "2017v2", "newDM2017v2", "dR0p32017v2", "2016v1", "newDM2016v1"]
-    )
-na.runTauID()
-
 
 ##L1 Prefirring
 ##https://twiki.cern.ch/twiki/bin/viewauth/CMS/L1ECALPrefiringWeightRecipe
@@ -69,6 +61,8 @@ process.prefiringweight = l1ECALPrefiringWeightProducer.clone(
     UseJetEMPt = cms.bool(False),
     PrefiringRateSystematicUncty = cms.double(0.2),
     SkipWarnings = False)
+
+
 
 
 ##Updating Jet collection for DeepCSV tagger
@@ -90,6 +84,15 @@ updateJetCollection(
     ],
     postfix='NewDFTraining'
     )
+
+
+## Tau ID
+from phoJetAnalysis.phoJetNtuplizer.runTauIdMVA import *
+na = TauIDEmbedder(process, cms, # pass tour process object
+     debug=True,
+     toKeep = ["2017v2"] # pick the one you need: ["2017v1", "2017v2", "newDM2017v2", "dR0p32017v2", "2016v1", "newDM2016v1"]
+    )
+na.runTauID()
 
 
 #https://twiki.cern.ch/twiki/bin/viewauth/CMS/JetToolbox
