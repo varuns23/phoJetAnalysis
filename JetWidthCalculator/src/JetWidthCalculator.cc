@@ -37,19 +37,20 @@ JetWidthCalculator::JetWidthCalculator(const pat::Jet& jet) {
   
   for(uint32_t i = 0; i < packedCands; i++) {
 
+
     const reco::Candidate *pfCand = jet.daughter(i);
 
     jetDaughters.push_back({pfCand->pt(), pfCand});
 
-    if(abs(pfCand->pdgId()) == 211){
-      nCHPions_++;
-    } else if(pfCand->pdgId() == 22){
-      nPhotons_++;
-    }
-    else{
-      nMiscParticles_++;
-      MiscPdgId_ .push_back(pfCand->pdgId());
-    }
+    //if(abs(pfCand->pdgId()) == 211){
+    //  nCHPions_++;
+    //} else if(pfCand->pdgId() == 22){
+    //  nPhotons_++;
+    //}
+    //else{
+    //  nMiscParticles_++;
+    //  MiscPdgId_ .push_back(pfCand->pdgId());
+    //}
     
     etSum_ += pfCand->et();
     ptSum_ += pfCand->pt();

@@ -77,10 +77,10 @@ vector<float>    jetLepTrackPhi_;
 
 vector<float>    jetetaWidth_;
 vector<float>    jetphiWidth_;
-vector<int>      jetnPhotons_;
-vector<int>      jetnCHPions_;
-vector<int>      jetnMisc_;
-vector<vector<Int_t>> jetMiscPdgId_;
+//vector<int>      jetnPhotons_;
+//vector<int>      jetnCHPions_;
+//vector<int>      jetnMisc_;
+//vector<vector<Int_t>> jetMiscPdgId_;
 vector<vector<float>> jetConstPt_;
 vector<vector<float>> jetConstEt_;
 vector<vector<float>> jetConstEta_;
@@ -163,10 +163,10 @@ void phoJetNtuplizer::branchJets(TTree* tree){
   if(runJetWidthCalculator_){
     tree->Branch("jetetaWidth",                  &jetetaWidth_);
     tree->Branch("jetphiWidth",                  &jetphiWidth_);
-    tree->Branch("jetnPhotons",                  &jetnPhotons_);
-    tree->Branch("jetnCHPions",                  &jetnCHPions_);
-    tree->Branch("jetnMisc",                     &jetnMisc_);
-    tree->Branch("jetMiscPdgId",                 &jetMiscPdgId_);
+    //tree->Branch("jetnPhotons",                  &jetnPhotons_);
+    //tree->Branch("jetnCHPions",                  &jetnCHPions_);
+    //tree->Branch("jetnMisc",                     &jetnMisc_);
+    //tree->Branch("jetMiscPdgId",                 &jetMiscPdgId_);
     tree->Branch("jetConstPt",                   &jetConstPt_);
     tree->Branch("jetConstEt",                   &jetConstEt_);
     tree->Branch("jetConstEta",                  &jetConstEta_);
@@ -356,10 +356,10 @@ void phoJetNtuplizer::fillJets(const edm::Event& iEvent, const edm::EventSetup& 
       JetWidthCalculator jwc(jet);
       jetetaWidth_       .push_back(jwc.getEtaWidth());
       jetphiWidth_       .push_back(jwc.getPhiWidth());
-      jetnPhotons_       .push_back(jwc.getnPhotons());
-      jetnCHPions_       .push_back(jwc.getnCHPions());
-      jetnMisc_          .push_back(jwc.getnMiscParticles());
-      jetMiscPdgId_      .push_back(jwc.getMiscPdgId());
+      //jetnPhotons_       .push_back(jwc.getnPhotons());
+      //jetnCHPions_       .push_back(jwc.getnCHPions());
+      //jetnMisc_          .push_back(jwc.getnMiscParticles());
+      //jetMiscPdgId_      .push_back(jwc.getMiscPdgId());
 
       
       jetConstPt_        .push_back(jwc.getConstPt());
@@ -481,10 +481,10 @@ void phoJetNtuplizer::initJets(){
 
   jetetaWidth_                  .clear();
   jetphiWidth_                  .clear();
-  jetnPhotons_                  .clear();
-  jetnCHPions_                  .clear();
-  jetnMisc_                     .clear();
-  jetMiscPdgId_                 .clear();
+  //jetnPhotons_                  .clear();
+  //jetnCHPions_                  .clear();
+  //jetnMisc_                     .clear();
+  //jetMiscPdgId_                 .clear();
   jetConstPt_                   .clear();
   jetConstEt_                   .clear();
   jetConstEta_                  .clear();

@@ -5,6 +5,9 @@
 UShort_t metFilters_;
 float genMET_;
 float genMETPhi_;
+float caloMET_;
+float caloMETPhi_;
+float caloMETsumEt_;
 float pfMET_;
 float pfMETPhi_;
 float pfMETsumEt_;
@@ -30,6 +33,9 @@ void phoJetNtuplizer::branchMet(TTree* tree){
     tree->Branch("genMETPhi",   &genMETPhi_);
   }
   tree->Branch("metFilters",       &metFilters_);
+  tree->Branch("caloMET",          &caloMET_);
+  tree->Branch("caloMETPhi",       &caloMETPhi_);
+  tree->Branch("caloMETsumEt",     &caloMETsumEt_);
   tree->Branch("pfMET",            &pfMET_);
   tree->Branch("pfMETPhi",         &pfMETPhi_);
   tree->Branch("pfMETsumEt",       &pfMETsumEt_);
@@ -62,6 +68,7 @@ void phoJetNtuplizer::fillMet(const edm::Event& iEvent, const edm::EventSetup& i
   metFilterNames.push_back("Flag_EcalDeadCellTriggerPrimitiveFilter"); //5
   metFilterNames.push_back("Flag_BadPFMuonFilter"); //6
   metFilterNames.push_back("Flag_BadChargedCandidateFilter"); //7
+//  metFilterNames.push_back("ecalBadCalibReducedMINIAODFilter"); // Need to be RE-RUN
 
   edm::Handle<edm::TriggerResults> patFilterResultsHandle;                                                          
   //iEvent.getByToken(patTrgResultsToken_, patFilterResultsHandle);
@@ -88,6 +95,10 @@ void phoJetNtuplizer::fillMet(const edm::Event& iEvent, const edm::EventSetup& i
     const pat::MET *pfMET = 0;
     pfMET = &(pfmetHandle->front());
 
+    caloMET_     = pfMET->caloMETPt();
+    caloMETPhi_  = pfMET->caloMETPhi();
+    caloMETsumEt_= pfMET->caloMETSumEt();
+    
     pfMET_       = pfMET->et();
     pfMETPhi_    = pfMET->phi();
     pfMETsumEt_  = pfMET->sumEt();
@@ -116,14 +127,17 @@ void phoJetNtuplizer::fillMet(const edm::Event& iEvent, const edm::EventSetup& i
 }
 
 void phoJetNtuplizer::initMet(){
-  metFilters_ = 0;
-  genMET_     = -99.;
-  genMETPhi_  = -99.;
-  pfMET_      = -99.;
-  pfMETPhi_   = -99.;
-  pfMETsumEt_ = -99.;
-  pfMETmEtSig_= -99.;
-  pfMETSig_   = -99.;
+  metFilters_       = 0;
+  genMET_           = -99.;
+  genMETPhi_        = -99.;
+  caloMET_          = -99.;
+  caloMETPhi_       = -99.;
+  caloMETsumEt_     = -99.;
+  pfMET_            = -99.;
+  pfMETPhi_         = -99.;
+  pfMETsumEt_       = -99.;
+  pfMETmEtSig_      = -99.;
+  pfMETSig_         = -99.;
   pfMET_T1JERUp_    = -99.;
   pfMET_T1JERDo_    = -99.;
   pfMET_T1JESUp_    = -99.;
