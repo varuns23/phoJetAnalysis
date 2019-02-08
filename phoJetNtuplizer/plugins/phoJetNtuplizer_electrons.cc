@@ -282,11 +282,11 @@ void phoJetNtuplizer::fillElectrons (const edm::Event& iEvent, const edm::EventS
     eleMVAIsoIDbit_           .push_back(tmpeleMVAIsoIDbit);
 
     UShort_t tmpeleMVAnoIsoIDbit = 0;
-    bool isPassWP80  = iele->electronID("mvaEleID-Fall17-noIso-V1-wp80");
+    bool isPassWP80  = iele->electronID("mvaEleID-Fall17-noIso-V2-wp80");
     if(isPassWP80) setbit(tmpeleMVAnoIsoIDbit, 0);
-    bool isPassWP90  = iele->electronID("mvaEleID-Fall17-noIso-V1-wp90");
+    bool isPassWP90  = iele->electronID("mvaEleID-Fall17-noIso-V2-wp90");
     if(isPassWP90) setbit(tmpeleMVAnoIsoIDbit, 1);
-    bool isPassWPloose  = iele->electronID("mvaEleID-Fall17-noIso-V1-wpLoose");
+    bool isPassWPloose  = iele->electronID("mvaEleID-Fall17-noIso-V2-wpLoose");
     if(isPassWPloose) setbit(tmpeleMVAnoIsoIDbit, 2);
 
     eleMVAnoIsoIDbit_           .push_back(tmpeleMVAnoIsoIDbit);

@@ -2,12 +2,18 @@
 
 Instructions:
 ```
-cmsrel CMSSW_10_2_5
-cd CMSSW_10_2_5/src
+cmsrel CMSSW_10_2_10
+cd CMSSW_10_2_10/src
 cmsenv
 git cms-init
 
-git clone -b 102X https://github.com/varuns23/phoJetAnalysis.git
+#https://twiki.cern.ch/twiki/bin/view/CMS/DeepJet#94X_installation_recipe_X_10
+#for DeepCSV
+git cms-addpkg RecoBTag/TensorFlow
+git cherry-pick 94ceae257f846998c357fcad408986cc8a039152
+
+#For 2017 data-taking
+git clone -b 102X_2017 https://github.com/varuns23/phoJetAnalysis.git
 
 scram b -j10
 ```

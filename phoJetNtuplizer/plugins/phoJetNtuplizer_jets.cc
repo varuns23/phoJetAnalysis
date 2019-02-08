@@ -67,6 +67,13 @@ vector<float>    jetDeepCSVTags_bb_;
 vector<float>    jetDeepCSVTags_c_;
 vector<float>    jetDeepCSVTags_udsg_;
 
+vector<float>   jetDeepFlavour_b_;
+vector<float>   jetDeepFlavour_bb_;
+vector<float>   jetDeepFlavour_lepb_;
+vector<float>   jetDeepFlavour_c_;
+vector<float>   jetDeepFlavour_uds_;
+vector<float>   jetDeepFlavour_g_;
+
 vector<float>    jetLeadTrackPt_;
 vector<float>    jetLeadTrackEta_;
 vector<float>    jetLeadTrackPhi_;
@@ -151,6 +158,13 @@ void phoJetNtuplizer::branchJets(TTree* tree){
   tree->Branch("jetDeepCSVTags_bb",            &jetDeepCSVTags_bb_);
   tree->Branch("jetDeepCSVTags_c",             &jetDeepCSVTags_c_);
   tree->Branch("jetDeepCSVTags_udsg",          &jetDeepCSVTags_udsg_);
+
+  tree->Branch("jetDeepFlavour_b",             &jetDeepFlavour_b_);
+  tree->Branch("jetDeepFlavour_bb",            &jetDeepFlavour_bb_);
+  tree->Branch("jetDeepFlavour_lepb",          &jetDeepFlavour_lepb_);
+  tree->Branch("jetDeepFlavour_c",             &jetDeepFlavour_c_);
+  tree->Branch("jetDeepFlavour_uds",           &jetDeepFlavour_uds_);
+  tree->Branch("jetDeepFlavour_g",             &jetDeepFlavour_g_);
 
   tree->Branch("jetLeadTrackPt",               &jetLeadTrackPt_);
   tree->Branch("jetLeadTrackEta",              &jetLeadTrackEta_);
@@ -305,6 +319,13 @@ void phoJetNtuplizer::fillJets(const edm::Event& iEvent, const edm::EventSetup& 
     jetDeepCSVTags_bb_           .push_back(iJet->bDiscriminator("pfDeepCSVJetTags:probbb"));
     jetDeepCSVTags_c_            .push_back(iJet->bDiscriminator("pfDeepCSVJetTags:probc"));
     jetDeepCSVTags_udsg_         .push_back(iJet->bDiscriminator("pfDeepCSVJetTags:probudsg"));
+
+    jetDeepFlavour_b_            .push_back(iJet->bDiscriminator("pfDeepFlavourJetTags:probb"));
+    jetDeepFlavour_bb_           .push_back(iJet->bDiscriminator("pfDeepFlavourJetTags:probbb"));
+    jetDeepFlavour_lepb_         .push_back(iJet->bDiscriminator("pfDeepFlavourJetTags:problepb"));
+    jetDeepFlavour_c_            .push_back(iJet->bDiscriminator("pfDeepFlavourJetTags:probc"));
+    jetDeepFlavour_uds_          .push_back(iJet->bDiscriminator("pfDeepFlavourJetTags:probuds"));
+    jetDeepFlavour_g_            .push_back(iJet->bDiscriminator("pfDeepFlavourJetTags:probg"));
 
     //Searching for leading track and lepton
     float leadTrkPt  = -99;
@@ -470,6 +491,13 @@ void phoJetNtuplizer::initJets(){
   jetDeepCSVTags_bb_            .clear();
   jetDeepCSVTags_c_             .clear();
   jetDeepCSVTags_udsg_          .clear();
+
+  jetDeepFlavour_b_             .clear();
+  jetDeepFlavour_bb_            .clear();
+  jetDeepFlavour_lepb_          .clear();
+  jetDeepFlavour_c_             .clear();
+  jetDeepFlavour_uds_           .clear();
+  jetDeepFlavour_g_             .clear();
 
   jetLeadTrackPt_               .clear();
   jetLeadTrackEta_              .clear();

@@ -120,11 +120,11 @@ for (edm::View<pat::Muon>::const_iterator iMu = muonHandle->begin(); iMu != muon
     if (iMu->passed(reco::Muon::PFIsoMedium))            setbit(tmpmuIDbit,  8);
     if (iMu->passed(reco::Muon::PFIsoTight))             setbit(tmpmuIDbit,  9);
     if (iMu->passed(reco::Muon::PFIsoVeryTight))         setbit(tmpmuIDbit, 10);
-//    if (iMu->passed(reco::PFIsoVeryVeryTight))           setbit(tmpmuIDbit, 11);  // available in 10_1_X
+    //if (iMu->passed(reco::PFIsoVeryVeryTight))           setbit(tmpmuIDbit, 11); 
     if (iMu->passed(reco::Muon::TkIsoLoose))             setbit(tmpmuIDbit, 12);
     if (iMu->passed(reco::Muon::TkIsoTight))             setbit(tmpmuIDbit, 13);
     if (iMu->passed(reco::Muon::SoftCutBasedId))         setbit(tmpmuIDbit, 14);
-//    if (iMu->passed(reco::Muon::SoftMvaId))              setbit(tmpmuIDbit, 15);  // available in 10_1_X
+    if (iMu->passed(reco::Muon::SoftMvaId))              setbit(tmpmuIDbit, 15);
     if (iMu->passed(reco::Muon::MvaLoose))               setbit(tmpmuIDbit, 16);
     if (iMu->passed(reco::Muon::MvaMedium))              setbit(tmpmuIDbit, 17);
     if (iMu->passed(reco::Muon::MvaTight))               setbit(tmpmuIDbit, 18);
@@ -132,10 +132,10 @@ for (edm::View<pat::Muon>::const_iterator iMu = muonHandle->begin(); iMu != muon
     if (iMu->passed(reco::Muon::MiniIsoMedium))          setbit(tmpmuIDbit, 20);
     if (iMu->passed(reco::Muon::MiniIsoTight))           setbit(tmpmuIDbit, 21);
     if (iMu->passed(reco::Muon::MiniIsoVeryTight))       setbit(tmpmuIDbit, 22);
-//    if (iMu->passed(reco::Muon::TriggerIdLoose))         setbit(tmpmuIDbit, 23);  // available in 10_1_X
-//    if (iMu->passed(reco::Muon::InTimeMuon))             setbit(tmpmuIDbit, 24);  // available in 10_1_X
-//    if (iMu->passed(reco::Muon::MultiIsoLoose))          setbit(tmpmuIDbit, 25);  // available in 10_1_X
-//    if (iMu->passed(reco::Muon::MultiIsoMedium))         setbit(tmpmuIDbit, 26);  // available in 10_1_X
+    if (iMu->passed(reco::Muon::TriggerIdLoose))         setbit(tmpmuIDbit, 23);
+    if (iMu->passed(reco::Muon::InTimeMuon))             setbit(tmpmuIDbit, 24);
+    if (iMu->passed(reco::Muon::MultiIsoLoose))          setbit(tmpmuIDbit, 25);
+    if (iMu->passed(reco::Muon::MultiIsoMedium))         setbit(tmpmuIDbit, 26);
 
     muIDbit_.push_back(tmpmuIDbit);
 
