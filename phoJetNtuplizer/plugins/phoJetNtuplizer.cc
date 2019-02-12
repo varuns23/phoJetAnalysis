@@ -51,9 +51,6 @@ phoJetNtuplizer::phoJetNtuplizer(const edm::ParameterSet& iConfig):
   trgResultsProcess_         =                                         iConfig.getParameter<InputTag>("triggerResults").process();
   patTrgResultsToken_        = consumes<edm::TriggerResults>          (iConfig.getParameter<InputTag>("patTriggerResults"));
   recoTrgResultsToken_       = consumes<edm::TriggerResults>          (iConfig.getParameter<InputTag>("recoTriggerResults"));
-  prefweight_token           = consumes< double >                     (edm::InputTag("prefiringweight:nonPrefiringProb"));
-  prefweightup_token         = consumes< double >                     (edm::InputTag("prefiringweight:nonPrefiringProbUp"));
-  prefweightdown_token       = consumes< double >                     (edm::InputTag("prefiringweight:nonPrefiringProbDown"));
 
   //Photon Info
   runPhotons_          = iConfig.getParameter<bool>("runPhotons");

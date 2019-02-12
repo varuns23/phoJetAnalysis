@@ -19,9 +19,6 @@ bool          isGoodVtx_;
 int           nGoodVtx_;
 float         rho_;
 float         rhoCentral_;
-double        prefiringweight_;
-double        prefiringweightup_;
-double        prefiringweightdown_;
 
 ULong64_t     HLTEleMuX_;
 ULong64_t     HLTEleMuXIsPrescaled_;
@@ -61,9 +58,6 @@ void phoJetNtuplizer::branchEventInfo(TTree* tree) {
   tree->Branch("nGoodVtx",             &nGoodVtx_);
   tree->Branch("rho",                  &rho_);
   tree->Branch("rhoCentral",           &rhoCentral_);
-  tree->Branch("prefiringweight",      &prefiringweight_);
-  tree->Branch("prefiringweightup",    &prefiringweightup_);
-  tree->Branch("prefiringweightdown",  &prefiringweightdown_);
   tree->Branch("HLTEleMuX",            &HLTEleMuX_);
   tree->Branch("HLTEleMuXIsPrescaled", &HLTEleMuXIsPrescaled_);
   tree->Branch("HLTEleMuXRejectedByPS",&HLTEleMuXRejectedByPS_); 
@@ -135,20 +129,6 @@ void phoJetNtuplizer::fillEventInfo(const edm::Event& iEvent, const edm::EventSe
     
     nVtx_++;
   }
-
-  //L1 ECAL Prefiring weights
-  edm::Handle< double > theprefweight;
-  iEvent.getByToken(prefweight_token, theprefweight ) ;
-  prefiringweight_ =(*theprefweight);
-
-  edm::Handle< double > theprefweightup;
-  iEvent.getByToken(prefweightup_token, theprefweightup ) ;
-  prefiringweightup_ =(*theprefweightup);
-
-  edm::Handle< double > theprefweightdown;
-  iEvent.getByToken(prefweightdown_token, theprefweightdown ) ;
-  prefiringweightdown_ =(*theprefweightdown);
-
 
   edm::Handle<edm::TriggerResults> trgResultsHandle;
   iEvent.getByToken(trgResultsToken_, trgResultsHandle);
@@ -396,9 +376,6 @@ void phoJetNtuplizer::initEventInfo(){
   nGoodVtx_  = 0;
   rho_       = -99;
   rhoCentral_= -99;
-  prefiringweight_     = -999999.;
-  prefiringweightup_   = -999999.;
-  prefiringweightdown_ = -999999.;
 
   HLTEleMuX_            = 0;
   HLTEleMuXIsPrescaled_ = 0;

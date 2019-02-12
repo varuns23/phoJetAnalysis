@@ -118,9 +118,6 @@ class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
     edm::EDGetTokenT<edm::TriggerResults>            recoTrgResultsToken_;
     std::string                                      trgResultsProcess_;
     HLTPrescaleProvider                              hltPrescaleProvider_;
-    edm::EDGetTokenT< double >                       prefweight_token;
-    edm::EDGetTokenT< double >                       prefweightup_token;
-    edm::EDGetTokenT< double >                       prefweightdown_token;
 
     //Photon Info
     bool                                             runPhotons_;

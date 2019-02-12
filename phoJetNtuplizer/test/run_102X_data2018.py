@@ -52,17 +52,11 @@ from PhysicsTools.PatAlgos.tools.coreTools import *
 runOnData( process,  names=['Photons', 'Electrons','Muons','Taus','Jets'], outputModules = [] )
 
 
-
-##L1 Prefirring
-##https://twiki.cern.ch/twiki/bin/viewauth/CMS/L1ECALPrefiringWeightRecipe
-from PhysicsTools.PatUtils.l1ECALPrefiringWeightProducer_cfi import l1ECALPrefiringWeightProducer
-process.prefiringweight = l1ECALPrefiringWeightProducer.clone(
-    DataEra = cms.string("2017BtoF"),
-    UseJetEMPt = cms.bool(False),
-    PrefiringRateSystematicUncty = cms.double(0.2),
-    SkipWarnings = False)
-
-
+from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
+setupEgammaPostRecoSeq(process,
+    runEnergyCorrections=False, #as energy corrections are not yet availible for 2018
+    era='2018-Prompt')  
+#a sequence egammaPostRecoSeq has now been created and should be added to your path, eg process.p=cms.Path(process.egammaPostRecoSeq)
 
 
 ##Updating Jet collection for DeepCSV tagger
@@ -102,7 +96,6 @@ na.runTauID()
 ### Analyzer Related
 process.load("phoJetAnalysis.phoJetNtuplizer.phoJetNtuplizer_cfi")
 process.phoJetNtuplizer.debug        = cms.bool(False);
-process.phoJetNtuplizer.is_Data      = cms.bool(True);  # False for MC
 process.phoJetNtuplizer.runEventInfo = cms.bool(True);
 process.phoJetNtuplizer.runPhotons   = cms.bool(True);
 process.phoJetNtuplizer.runJets      = cms.bool(True);
@@ -116,9 +109,8 @@ process.phoJetNtuplizer.runGenInfo   = cms.bool(False); # True for MC
 
 process.p = cms.Path(
 #    process.fullPatMetSequenceModifiedMET *
-#    process.egammaPostRecoSeq *
 #    process.ecalBadCalibReducedMINIAODFilter *
-    process.prefiringweight *
+    process.egammaPostRecoSeq *
     process.rerunMvaIsolationSequence *
     process.NewTauIDsEmbedded *
     process.phoJetNtuplizer

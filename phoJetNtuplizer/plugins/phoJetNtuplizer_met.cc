@@ -68,6 +68,7 @@ void phoJetNtuplizer::fillMet(const edm::Event& iEvent, const edm::EventSetup& i
   metFilterNames.push_back("Flag_EcalDeadCellTriggerPrimitiveFilter"); //5
   metFilterNames.push_back("Flag_BadPFMuonFilter"); //6
   metFilterNames.push_back("Flag_BadChargedCandidateFilter"); //7
+  if(is_Data_)metFilterNames.push_back("Flag_eeBadScFilter"); //8
 //  metFilterNames.push_back("ecalBadCalibReducedMINIAODFilter"); // Need to be RE-RUN
 
 
