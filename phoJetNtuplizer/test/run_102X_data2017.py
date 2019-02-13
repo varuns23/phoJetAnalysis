@@ -15,10 +15,10 @@ process.GlobalTag = GlobalTag(process.GlobalTag, '102X_dataRun2_v8')
 #process.GlobalTag = GlobalTag(process.GlobalTag, '94X_dataRun2_v6')
 
 #jec from sqlite
-process.load("CondCore.DBCommon.CondDBCommon_cfi")
-from CondCore.DBCommon.CondDBSetup_cfi import *
-process.jec = cms.ESSource("PoolDBESSource",CondDBSetup,
-    connect = cms.string('sqlite:Fall17_17Nov2017_V32_102X_DATA.db'),
+process.load("CondCore.CondDB.CondDB_cfi")
+from CondCore.CondDB.CondDB_cfi import *
+process.CondDB.connect = 'sqlite:Fall17_17Nov2017_V32_102X_DATA.db'
+process.jec = cms.ESSource("PoolDBESSource",CondDB,
     toGet = cms.VPSet(
       cms.PSet(
 	record = cms.string('JetCorrectionsRecord'),
@@ -26,8 +26,6 @@ process.jec = cms.ESSource("PoolDBESSource",CondDBSetup,
 	label = cms.untracked.string('AK4PFchs')
 	)))
 process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
-
-
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
 process.MessageLogger.cerr.FwkReport.reportEvery = 5 #1000
@@ -40,7 +38,7 @@ process.source = cms.Source("PoolSource",
 )
 
 process.TFileService = cms.Service("TFileService", 
-    fileName = cms.string('Ntuple_data2018.root')
+    fileName = cms.string('Ntuple_data2017.root')
     )
 
 process.load( "PhysicsTools.PatAlgos.producersLayer1.patCandidates_cff" )
