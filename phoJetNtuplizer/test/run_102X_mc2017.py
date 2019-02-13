@@ -82,7 +82,7 @@ na.runTauID()
 ### Analyzer Related
 process.load("phoJetAnalysis.phoJetNtuplizer.phoJetNtuplizer_cfi")
 process.phoJetNtuplizer.debug       = cms.bool(False);
-process.phoJetNtuplizer.isData      = cms.bool(False);  # False for MC
+process.phoJetNtuplizer.is_Data     = cms.bool(False);  # True for Data
 process.phoJetNtuplizer.runPhotons  = cms.bool(True);
 process.phoJetNtuplizer.runJets     = cms.bool(True);
 process.phoJetNtuplizer.runJetWidthCalculator = cms.bool(True); # needed for monoZprime Analysis [Valid only if runJets is True]

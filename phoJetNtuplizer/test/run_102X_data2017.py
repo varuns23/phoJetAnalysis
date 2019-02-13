@@ -29,8 +29,8 @@ process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
 
 
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10) )
-process.MessageLogger.cerr.FwkReport.reportEvery = 1 #1000
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
+process.MessageLogger.cerr.FwkReport.reportEvery = 5 #1000
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
@@ -102,7 +102,6 @@ na.runTauID()
 ### Analyzer Related
 process.load("phoJetAnalysis.phoJetNtuplizer.phoJetNtuplizer_cfi")
 process.phoJetNtuplizer.debug        = cms.bool(False);
-process.phoJetNtuplizer.is_Data      = cms.bool(True);  # False for MC
 process.phoJetNtuplizer.runEventInfo = cms.bool(True);
 process.phoJetNtuplizer.runPhotons   = cms.bool(True);
 process.phoJetNtuplizer.runJets      = cms.bool(True);

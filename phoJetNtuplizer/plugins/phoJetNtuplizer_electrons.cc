@@ -14,16 +14,16 @@ vector<float>    eleD0_;
 vector<float>    eleDz_;
 vector<float>    eleSIP_;
 
-//vector<float>    eleUnCalibE_;
-//vector<float>    eleUnCalibESigma_;
-//vector<float>    eleCalibEecalonly_;
-//vector<float>    eleCalibE_;
-//vector<float>    eleCalibESigma_;
-//vector<float>    eleCalibEt_;
-//vector<float>    eleCalibEtSigma_;
+vector<float>    eleUnCalibE_;
+vector<float>    eleUnCalibESigma_;
+vector<float>    eleCalibEecalonly_;
+vector<float>    eleCalibE_;
+vector<float>    eleCalibESigma_;
+vector<float>    eleCalibEt_;
+vector<float>    eleCalibEtSigma_;
 
-//vector<float>    eleEnergyScale_;
-//vector<float>    eleEnergySigma_;
+vector<float>    eleEnergyScale_;
+vector<float>    eleEnergySigma_;
 
 vector<float>    eleSCRawEn_;
 vector<float>    eleSCEn_;
@@ -66,21 +66,21 @@ vector<float>    eleKFHits_;
 vector<float>    eleKFChi2_;
 vector<float>    eleGSFChi2_;
 
-//vector<float>    eleScale_up_;
-//vector<float>    eleScale_dn_;
-//vector<float>    eleScale_stat_up_;
-//vector<float>    eleScale_stat_dn_;
-//vector<float>    eleScale_syst_up_;
-//vector<float>    eleScale_syst_dn_;
-//vector<float>    eleScale_gain_up_;
-//vector<float>    eleScale_gain_dn_;
-// 
-//vector<float>    eleResol_up_;
-//vector<float>    eleResol_dn_;
-//vector<float>    eleResol_rho_up_;
-//vector<float>    eleResol_rho_dn_;
-//vector<float>    eleResol_phi_up_;
-//vector<float>    eleResol_phi_dn_;
+vector<float>    eleScale_up_;
+vector<float>    eleScale_dn_;
+vector<float>    eleScale_stat_up_;
+vector<float>    eleScale_stat_dn_;
+vector<float>    eleScale_syst_up_;
+vector<float>    eleScale_syst_dn_;
+vector<float>    eleScale_gain_up_;
+vector<float>    eleScale_gain_dn_;
+ 
+vector<float>    eleResol_up_;
+vector<float>    eleResol_dn_;
+vector<float>    eleResol_rho_up_;
+vector<float>    eleResol_rho_dn_;
+vector<float>    eleResol_phi_up_;
+vector<float>    eleResol_phi_dn_;
 
 void phoJetNtuplizer::branchElectrons (TTree* tree){
 
@@ -97,16 +97,16 @@ void phoJetNtuplizer::branchElectrons (TTree* tree){
   tree->Branch("eleDz",                   &eleDz_);
   tree->Branch("eleSIP",                  &eleSIP_);
 
-//  tree->Branch("eleUnCalibE",             &eleUnCalibE_);
-//  tree->Branch("eleUnCalibESigma",        &eleUnCalibESigma_);
-//  tree->Branch("eleCalibEecalonly",       &eleCalibEecalonly_);
-//  tree->Branch("eleCalibE",               &eleCalibE_);
-//  tree->Branch("eleCalibESigma",          &eleCalibESigma_);
-//  tree->Branch("eleCalibEt",              &eleCalibEt_);
-//  tree->Branch("eleCalibEtSigma",         &eleCalibEtSigma_);
+  tree->Branch("eleUnCalibE",             &eleUnCalibE_);
+  tree->Branch("eleUnCalibESigma",        &eleUnCalibESigma_);
+  tree->Branch("eleCalibEecalonly",       &eleCalibEecalonly_);
+  tree->Branch("eleCalibE",               &eleCalibE_);
+  tree->Branch("eleCalibESigma",          &eleCalibESigma_);
+  tree->Branch("eleCalibEt",              &eleCalibEt_);
+  tree->Branch("eleCalibEtSigma",         &eleCalibEtSigma_);
 
-//  tree->Branch("eleEnergyScale",          &eleEnergyScale_);
-//  tree->Branch("eleEnergySigma",          &eleEnergySigma_);
+  tree->Branch("eleEnergyScale",          &eleEnergyScale_);
+  tree->Branch("eleEnergySigma",          &eleEnergySigma_);
 
   tree->Branch("eleSCRawEn",              &eleSCRawEn_);
   tree->Branch("eleSCEn",                 &eleSCEn_);
@@ -149,21 +149,21 @@ void phoJetNtuplizer::branchElectrons (TTree* tree){
   tree->Branch("eleKFChi2",               &eleKFChi2_);
   tree->Branch("eleGSFChi2",              &eleGSFChi2_);
 
-//  tree->Branch("eleScale_up",             &eleScale_up_);
-//  tree->Branch("eleScale_dn",             &eleScale_dn_);
-//  tree->Branch("eleScale_stat_up",        &eleScale_stat_up_);
-//  tree->Branch("eleScale_stat_dn",        &eleScale_stat_dn_);
-//  tree->Branch("eleScale_syst_up",        &eleScale_syst_up_);
-//  tree->Branch("eleScale_syst_dn",        &eleScale_syst_dn_);
-//  tree->Branch("eleScale_gain_up",        &eleScale_gain_up_);
-//  tree->Branch("eleScale_gain_dn",        &eleScale_gain_dn_);
+  tree->Branch("eleScale_up",             &eleScale_up_);
+  tree->Branch("eleScale_dn",             &eleScale_dn_);
+  tree->Branch("eleScale_stat_up",        &eleScale_stat_up_);
+  tree->Branch("eleScale_stat_dn",        &eleScale_stat_dn_);
+  tree->Branch("eleScale_syst_up",        &eleScale_syst_up_);
+  tree->Branch("eleScale_syst_dn",        &eleScale_syst_dn_);
+  tree->Branch("eleScale_gain_up",        &eleScale_gain_up_);
+  tree->Branch("eleScale_gain_dn",        &eleScale_gain_dn_);
 
-//  tree->Branch("eleResol_up",             &eleResol_up_);
-//  tree->Branch("eleResol_dn",             &eleResol_dn_);
-//  tree->Branch("eleResol_rho_up",         &eleResol_rho_up_);
-//  tree->Branch("eleResol_rho_dn",         &eleResol_rho_dn_);
-//  tree->Branch("eleResol_phi_up",         &eleResol_phi_up_);
-//  tree->Branch("eleResol_phi_dn",         &eleResol_phi_dn_);
+  tree->Branch("eleResol_up",             &eleResol_up_);
+  tree->Branch("eleResol_dn",             &eleResol_dn_);
+  tree->Branch("eleResol_rho_up",         &eleResol_rho_up_);
+  tree->Branch("eleResol_rho_dn",         &eleResol_rho_dn_);
+  tree->Branch("eleResol_phi_up",         &eleResol_phi_up_);
+  tree->Branch("eleResol_phi_dn",         &eleResol_phi_dn_);
 }
 
 void phoJetNtuplizer::fillElectrons (const edm::Event& iEvent, const edm::EventSetup& iSetup, math::XYZPoint &ipv){
@@ -186,16 +186,16 @@ void phoJetNtuplizer::fillElectrons (const edm::Event& iEvent, const edm::EventS
 
   for(edm::View<pat::Electron>::const_iterator iele = electronHandle->begin(); iele != electronHandle->end(); ++iele){
 
-//    eleUnCalibE_         .push_back(iele->userFloat("ecalTrkEnergyPreCorr"));
-//    eleUnCalibESigma_    .push_back(iele->userFloat("ecalTrkEnergyErrPreCorr"));
-//    eleCalibEecalonly_   .push_back(iele->userFloat("ecalEnergyPostCorr"));
-//    eleCalibE_           .push_back(iele->userFloat("ecalTrkEnergyPostCorr"));
-//    eleCalibESigma_      .push_back(iele->userFloat("ecalTrkEnergyErrPostCorr"));
-//    eleCalibEt_          .push_back(iele->pt()*iele->userFloat("ecalTrkEnergyPostCorr")/iele->p());
-//    eleCalibEtSigma_     .push_back(iele->pt()*iele->userFloat("ecalTrkEnergyErrPostCorr")/iele->p());
+    eleUnCalibE_         .push_back(iele->userFloat("ecalTrkEnergyPreCorr"));
+    eleUnCalibESigma_    .push_back(iele->userFloat("ecalTrkEnergyErrPreCorr"));
+    eleCalibEecalonly_   .push_back(iele->userFloat("ecalEnergyPostCorr"));
+    eleCalibE_           .push_back(iele->userFloat("ecalTrkEnergyPostCorr"));
+    eleCalibESigma_      .push_back(iele->userFloat("ecalTrkEnergyErrPostCorr"));
+    eleCalibEt_          .push_back(iele->pt()*iele->userFloat("ecalTrkEnergyPostCorr")/iele->p());
+    eleCalibEtSigma_     .push_back(iele->pt()*iele->userFloat("ecalTrkEnergyErrPostCorr")/iele->p());
 
-//    eleEnergyScale_      .push_back(iele->userFloat("energyScaleValue"));
-//    eleEnergySigma_      .push_back(iele->userFloat("energySigmaValue"));
+    eleEnergyScale_      .push_back(iele->userFloat("energyScaleValue"));
+    eleEnergySigma_      .push_back(iele->userFloat("energySigmaValue"));
 
     elePt_               .push_back(iele->pt());
     eleEta_              .push_back(iele->eta());
@@ -311,21 +311,21 @@ void phoJetNtuplizer::fillElectrons (const edm::Event& iEvent, const edm::EventS
 
 
     // ECAL scale and smearing corrections
-//    eleScale_up_          .push_back(iele->userFloat("energyScaleUp"));
-//    eleScale_dn_          .push_back(iele->userFloat("energyScaleDown"));
-//    eleScale_stat_up_     .push_back(iele->userFloat("energyScaleStatUp"));
-//    eleScale_stat_dn_     .push_back(iele->userFloat("energyScaleStatDown"));
-//    eleScale_syst_up_     .push_back(iele->userFloat("energyScaleSystUp"));
-//    eleScale_syst_dn_     .push_back(iele->userFloat("energyScaleSystDown"));
-//    eleScale_gain_up_     .push_back(iele->userFloat("energyScaleGainUp"));
-//    eleScale_gain_dn_     .push_back(iele->userFloat("energyScaleGainDown"));
+    eleScale_up_          .push_back(iele->userFloat("energyScaleUp"));
+    eleScale_dn_          .push_back(iele->userFloat("energyScaleDown"));
+    eleScale_stat_up_     .push_back(iele->userFloat("energyScaleStatUp"));
+    eleScale_stat_dn_     .push_back(iele->userFloat("energyScaleStatDown"));
+    eleScale_syst_up_     .push_back(iele->userFloat("energyScaleSystUp"));
+    eleScale_syst_dn_     .push_back(iele->userFloat("energyScaleSystDown"));
+    eleScale_gain_up_     .push_back(iele->userFloat("energyScaleGainUp"));
+    eleScale_gain_dn_     .push_back(iele->userFloat("energyScaleGainDown"));
 
-//    eleResol_up_          .push_back(iele->userFloat("energySigmaUp"));
-//    eleResol_dn_          .push_back(iele->userFloat("energySigmaDown"));
-//    eleResol_rho_up_      .push_back(iele->userFloat("energySigmaRhoUp"));
-//    eleResol_rho_dn_      .push_back(iele->userFloat("energySigmaRhoDown"));
-//    eleResol_phi_up_      .push_back(iele->userFloat("energySigmaPhiUp"));
-//    eleResol_phi_dn_      .push_back(iele->userFloat("energySigmaPhiDown"));
+    eleResol_up_          .push_back(iele->userFloat("energySigmaUp"));
+    eleResol_dn_          .push_back(iele->userFloat("energySigmaDown"));
+    eleResol_rho_up_      .push_back(iele->userFloat("energySigmaRhoUp"));
+    eleResol_rho_dn_      .push_back(iele->userFloat("energySigmaRhoDown"));
+    eleResol_phi_up_      .push_back(iele->userFloat("energySigmaPhiUp"));
+    eleResol_phi_dn_      .push_back(iele->userFloat("energySigmaPhiDown"));
     //xxxxx------- END of energy and scale systematics
 
     nEle_++;
@@ -348,16 +348,16 @@ void phoJetNtuplizer::initElectrons(){
   eleDz_                   .clear();
   eleSIP_                  .clear();
 
-//  eleUnCalibE_             .clear();
-//  eleUnCalibESigma_        .clear();
-//  eleCalibEecalonly_       .clear();
-//  eleCalibE_               .clear();
-//  eleCalibESigma_          .clear();
-//  eleCalibEt_              .clear();
-//  eleCalibEtSigma_         .clear();
+  eleUnCalibE_             .clear();
+  eleUnCalibESigma_        .clear();
+  eleCalibEecalonly_       .clear();
+  eleCalibE_               .clear();
+  eleCalibESigma_          .clear();
+  eleCalibEt_              .clear();
+  eleCalibEtSigma_         .clear();
 
-//  eleEnergyScale_          .clear();
-//  eleEnergySigma_          .clear();
+  eleEnergyScale_          .clear();
+  eleEnergySigma_          .clear();
 
   eleSCRawEn_              .clear();
   eleSCEn_                 .clear();
@@ -400,19 +400,19 @@ void phoJetNtuplizer::initElectrons(){
   eleKFChi2_               .clear();
   eleGSFChi2_              .clear();
 
-//  eleScale_up_             .clear();
-//  eleScale_dn_             .clear();
-//  eleScale_stat_up_        .clear();
-//  eleScale_stat_dn_        .clear();
-//  eleScale_syst_up_        .clear();
-//  eleScale_syst_dn_        .clear();
-//  eleScale_gain_up_        .clear();
-//  eleScale_gain_dn_        .clear();
+  eleScale_up_             .clear();
+  eleScale_dn_             .clear();
+  eleScale_stat_up_        .clear();
+  eleScale_stat_dn_        .clear();
+  eleScale_syst_up_        .clear();
+  eleScale_syst_dn_        .clear();
+  eleScale_gain_up_        .clear();
+  eleScale_gain_dn_        .clear();
 
-//  eleResol_up_             .clear();
-//  eleResol_dn_             .clear();
-//  eleResol_rho_up_         .clear();
-//  eleResol_rho_dn_         .clear();
-//  eleResol_phi_up_         .clear();
-//  eleResol_phi_dn_         .clear(); 
+  eleResol_up_             .clear();
+  eleResol_dn_             .clear();
+  eleResol_rho_up_         .clear();
+  eleResol_rho_dn_         .clear();
+  eleResol_phi_up_         .clear();
+  eleResol_phi_dn_         .clear(); 
 }

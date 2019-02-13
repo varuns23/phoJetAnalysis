@@ -2,7 +2,7 @@ import FWCore.ParameterSet.Config as cms
 
 phoJetNtuplizer = cms.EDAnalyzer('phoJetNtuplizer',
                                   debug                                = cms.bool(False),
-                                  isData                               = cms.bool(True),
+                                  is_Data                              = cms.bool(True),
                                   runEventInfo                         = cms.bool(True),
                                   runPhotons                           = cms.bool(False),
                                   runJets                              = cms.bool(False),
