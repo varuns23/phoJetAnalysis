@@ -11,8 +11,8 @@ process.load("Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cf
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
 #process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc', '')
-#process.GlobalTag = GlobalTag(process.GlobalTag, '102X_mc2017_realistic_v6')
-process.GlobalTag = GlobalTag(process.GlobalTag, '94X_mc2017_realistic_v17')
+process.GlobalTag = GlobalTag(process.GlobalTag, '102X_mc2017_realistic_v6')
+#process.GlobalTag = GlobalTag(process.GlobalTag, '94X_mc2017_realistic_v17')
 
 #jec from sqlite
 process.load("CondCore.CondDB.CondDB_cfi")
