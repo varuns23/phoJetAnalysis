@@ -49,7 +49,16 @@ process.load( "PhysicsTools.PatAlgos.selectionLayer1.selectedPatCandidates_cff" 
 from PhysicsTools.PatAlgos.tools.coreTools import *
 runOnData( process,  names=['Photons', 'Electrons','Muons','Taus','Jets'], outputModules = [] )
 
-
+## EE noise mitigation
+## https://twiki.cern.ch/twiki/bin/view/CMS/MissingETUncertaintyPrescription#Instructions_for_9_4_X_X_9_or_10
+from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
+runMetCorAndUncFromMiniAOD (
+    process,
+    isData = True, # false for MC
+    fixEE2017 = True,
+    fixEE2017Params = {'userawPt': True, 'ptThreshold':50.0, 'minEtaThreshold':2.65, 'maxEtaThreshold': 3.139} ,
+    postfix = "ModifiedMET"
+    )
 
 ##L1 Prefirring
 ##https://twiki.cern.ch/twiki/bin/viewauth/CMS/L1ECALPrefiringWeightRecipe
@@ -60,8 +69,11 @@ process.prefiringweight = l1ECALPrefiringWeightProducer.clone(
     PrefiringRateSystematicUncty = cms.double(0.2),
     SkipWarnings = False)
 
-
-
+##https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaMiniAODV2#2017_MiniAOD_V2
+from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
+setupEgammaPostRecoSeq(process,
+    runVID=False, #saves CPU time by not needlessly re-running VID, if you want the Fall17V2 IDs, set this to True or remove (default is True)
+    era='2017-Nov17ReReco') 
 
 ##Updating Jet collection for DeepCSV tagger
 # https://twiki.cern.ch/twiki/bin/view/CMS/DeepJet#94X_installation_recipe_X_10
@@ -83,7 +95,6 @@ updateJetCollection(
     postfix='NewDFTraining'
     )
 
-
 ## Tau ID
 from phoJetAnalysis.phoJetNtuplizer.runTauIdMVA import *
 na = TauIDEmbedder(process, cms, # pass tour process object
@@ -92,10 +103,8 @@ na = TauIDEmbedder(process, cms, # pass tour process object
     )
 na.runTauID()
 
-
 #https://twiki.cern.ch/twiki/bin/viewauth/CMS/JetToolbox
 # For AK8 jets 
-
 
 ### Analyzer Related
 process.load("phoJetAnalysis.phoJetNtuplizer.phoJetNtuplizer_cfi")
@@ -112,8 +121,8 @@ process.phoJetNtuplizer.runGenInfo   = cms.bool(False); # True for MC
 #process.phoJetNtuplizer.pfmetToken  = cms.InputTag("slimmedMETsModifiedMET")
 
 process.p = cms.Path(
-#    process.fullPatMetSequenceModifiedMET *
-#    process.egammaPostRecoSeq *
+    process.fullPatMetSequenceModifiedMET *
+    process.egammaPostRecoSeq *
 #    process.ecalBadCalibReducedMINIAODFilter *
     process.prefiringweight *
     process.rerunMvaIsolationSequence *

@@ -75,6 +75,7 @@ config.General.transferOutputs = True
 config.General.transferLogs = True
 
 config.JobType.pluginName = 'Analysis'
+config.JobType.inputFiles = ['Fall17_17Nov2017_V32_102X_MC.db']
 #config.JobType.inputFiles = ['inputFiles']
 
 config.section_('Data') 
@@ -87,7 +88,7 @@ config.Site.storageSite = 'T2_US_Wisconsin'
 #config.Site.blacklist = ['T2_CH_CERN']
 
 #listOfSamples = ['ZJetsToNuNu_HT100-200', 'ZJetsToNuNu_HT200-400', 'ZJetsToNuNu_HT400-600', 'ZJetsToNuNu_HT600-800', 'ZJetsToNuNu_HT800-1200', 'ZJetsToNuNu_HT1200-2500', 'ZJetsToNuNu_HT2500-Inf']
-#listOfSamples = ['WJetsToLNu_HT100-200', 'WJetsToLNu_HT200-400', 'WJetsToLNu_HT400-600', 'WJetsToLNu_HT600-800', 'WJetsToLNu_HT800-1200', 'WJetsToLNu_HT1200-2500', 'WJetsToLNu_HT2500-Inf']
+listOfSamples = ['WJetsToLNu_HT100-200', 'WJetsToLNu_HT200-400', 'WJetsToLNu_HT400-600', 'WJetsToLNu_HT600-800', 'WJetsToLNu_HT800-1200', 'WJetsToLNu_HT1200-2500', 'WJetsToLNu_HT2500-Inf']
 #listOfSamples = ['DYJetsToLL_HT70-100', 'DYJetsToLL_HT100-200', 'DYJetsToLL_HT200-400', 'DYJetsToLL_HT400-600', 'DYJetsToLL_HT600-800', 'DYJetsToLL_HT800-1200', 'DYJetsToLL_HT1200-2500', 'DYJetsToLL_HT2500-Inf']
 #listOfSamples = ['GJets_HT40-100', 'GJets_HT100-200', 'GJets_HT200-400', 'GJets_HT600-Inf']
 #listOfSamples = ['TTJets_DiLept', 'TTJets_SingleLeptFromT', 'TTJets']
@@ -107,7 +108,7 @@ for sample in listOfSamples:
   config.JobType.outputFiles = ['MC_'+sample+'.root']
   
   config.Data.inputDataset   = dataset[sample]
-  config.Data.unitsPerJob = 15000
+  config.Data.unitsPerJob = 8000
   config.Data.totalUnits = -1
   config.Data.outLFNDirBase = '/store/user/varuns/'+name
   submit(config)

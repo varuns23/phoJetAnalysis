@@ -27,7 +27,6 @@ process.jec = cms.ESSource("PoolDBESSource",CondDB,
 	)))
 process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
 
-
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
 process.MessageLogger.cerr.FwkReport.reportEvery = 1 #1000
 
@@ -45,6 +44,23 @@ process.TFileService = cms.Service("TFileService",
 process.load( "PhysicsTools.PatAlgos.producersLayer1.patCandidates_cff" )
 process.load( "PhysicsTools.PatAlgos.triggerLayer1.triggerProducer_cff" )
 process.load( "PhysicsTools.PatAlgos.selectionLayer1.selectedPatCandidates_cff" )
+
+## EE noise mitigation
+## https://twiki.cern.ch/twiki/bin/view/CMS/MissingETUncertaintyPrescription#Instructions_for_9_4_X_X_9_or_10
+from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
+runMetCorAndUncFromMiniAOD (
+    process,
+    isData = False, # false for MC
+    fixEE2017 = True,
+    fixEE2017Params = {'userawPt': True, 'ptThreshold':50.0, 'minEtaThreshold':2.65, 'maxEtaThreshold': 3.139} ,
+    postfix = "ModifiedMET"
+    )
+
+##https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaMiniAODV2#2017_MiniAOD_V2
+from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
+setupEgammaPostRecoSeq(process,
+    runVID=False, #saves CPU time by not needlessly re-running VID, if you want the Fall17V2 IDs, set this to True or remove (default is True)
+    era='2017-Nov17ReReco') 
 
 ##Updating Jet collection for DeepCSV tagger
 # https://twiki.cern.ch/twiki/bin/view/CMS/DeepJet#94X_installation_recipe_X_10
@@ -77,7 +93,6 @@ na.runTauID()
 #https://twiki.cern.ch/twiki/bin/viewauth/CMS/JetToolbox
 # For AK8 jets 
 
-
 ### Analyzer Related
 process.load("phoJetAnalysis.phoJetNtuplizer.phoJetNtuplizer_cfi")
 process.phoJetNtuplizer.debug       = cms.bool(False);
@@ -92,6 +107,8 @@ process.phoJetNtuplizer.runMet      = cms.bool(True);
 process.phoJetNtuplizer.runGenInfo  = cms.bool(True); # True for MC
 
 process.p = cms.Path(
+    process.fullPatMetSequenceModifiedMET *
+    process.egammaPostRecoSeq *
     process.rerunMvaIsolationSequence *
     process.NewTauIDsEmbedded *
     process.phoJetNtuplizer
