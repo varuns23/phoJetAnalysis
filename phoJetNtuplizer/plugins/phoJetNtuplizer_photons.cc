@@ -48,10 +48,10 @@ vector<UShort_t> phoMVAIDbit_;
 vector<float>    phoSeedTime_;
 vector<float>    phoSeedEnergy_;
 
-// vector<UInt_t>   phoFiredSingleTrgs_;
-// vector<UInt_t>   phoFiredDoubleTrgs_;
-// vector<UInt_t>   phoFiredTripleTrgs_;
-// vector<UInt_t>   phoFiredL1Trgs_;
+//vector<UInt_t>   phoFiredSingleTrgs_;
+//vector<UInt_t>   phoFiredDoubleTrgs_;
+//vector<UInt_t>   phoFiredTripleTrgs_;
+//vector<UInt_t>   phoFiredL1Trgs_;
 
 vector<float>    phoScale_up_;
 vector<float>    phoScale_dn_;
