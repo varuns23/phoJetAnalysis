@@ -254,13 +254,13 @@ void phoJetNtuplizer::fillElectrons (const edm::Event& iEvent, const edm::EventS
 
     //VID decisions
     UShort_t tmpeleIDbit = 0;
-    bool isPassLoose  = iele->electronID("cutBasedElectronID-Fall17-94X-V2-loose");
+    bool isPassLoose  = iele->electronID("cutBasedElectronID-Fall17-94X-V1-loose");
     if(isPassLoose) setbit(tmpeleIDbit, 0);
-    bool isPassMedium  = iele->electronID("cutBasedElectronID-Fall17-94X-V2-medium");
+    bool isPassMedium  = iele->electronID("cutBasedElectronID-Fall17-94X-V1-medium");
     if(isPassMedium) setbit(tmpeleIDbit, 1);
-    bool isPassTight  = iele->electronID("cutBasedElectronID-Fall17-94X-V2-tight");
+    bool isPassTight  = iele->electronID("cutBasedElectronID-Fall17-94X-V1-tight");
     if(isPassTight) setbit(tmpeleIDbit, 2);
-    bool isPassVeto  = iele->electronID("cutBasedElectronID-Fall17-94X-V2-veto");
+    bool isPassVeto  = iele->electronID("cutBasedElectronID-Fall17-94X-V1-veto");
     if(isPassVeto) setbit(tmpeleIDbit, 3);
     bool isPassHEEP  = iele->electronID("heepElectronID-HEEPV70");
     if(isPassHEEP) setbit(tmpeleIDbit, 4);
@@ -268,25 +268,21 @@ void phoJetNtuplizer::fillElectrons (const edm::Event& iEvent, const edm::EventS
     eleIDbit_           .push_back(tmpeleIDbit);
 
     UShort_t tmpeleMVAIsoIDbit = 0;
-    bool isPassIsoWP80  = iele->electronID("mvaEleID-Fall17-iso-V2-wp80");
+    bool isPassIsoWP80  = iele->electronID("mvaEleID-Fall17-iso-V1-wp80");
     if(isPassIsoWP80) setbit(tmpeleMVAIsoIDbit, 0);
-    bool isPassIsoWP90  = iele->electronID("mvaEleID-Fall17-iso-V2-wp90");
+    bool isPassIsoWP90  = iele->electronID("mvaEleID-Fall17-iso-V1-wp90");
     if(isPassIsoWP90) setbit(tmpeleMVAIsoIDbit, 1);
-    bool isPassnoIsoWP80  = iele->electronID("mvaEleID-Fall17-noIso-V2-wp80");
-    if(isPassnoIsoWP80) setbit(tmpeleMVAIsoIDbit, 2);
-    bool isPassnoIsoWP90  = iele->electronID("mvaEleID-Fall17-noIso-V2-wp90");
-    if(isPassnoIsoWP90) setbit(tmpeleMVAIsoIDbit, 3);
-//    bool isPassIsoLoose  = iele->electronID("mvaEleID-Fall17-iso-V1-wpLoose");
-//    if(isPassIsoLoose) setbit(tmpeleMVAIsoIDbit, 2);
+    bool isPassIsoLoose  = iele->electronID("mvaEleID-Fall17-iso-V1-wpLoose");
+    if(isPassIsoLoose) setbit(tmpeleMVAIsoIDbit, 2);
 
     eleMVAIsoIDbit_           .push_back(tmpeleMVAIsoIDbit);
 
     UShort_t tmpeleMVAnoIsoIDbit = 0;
-    bool isPassWP80  = iele->electronID("mvaEleID-Fall17-noIso-V2-wp80");
+    bool isPassWP80  = iele->electronID("mvaEleID-Fall17-noIso-V1-wp80");
     if(isPassWP80) setbit(tmpeleMVAnoIsoIDbit, 0);
-    bool isPassWP90  = iele->electronID("mvaEleID-Fall17-noIso-V2-wp90");
+    bool isPassWP90  = iele->electronID("mvaEleID-Fall17-noIso-V1-wp90");
     if(isPassWP90) setbit(tmpeleMVAnoIsoIDbit, 1);
-    bool isPassWPloose  = iele->electronID("mvaEleID-Fall17-noIso-V2-wpLoose");
+    bool isPassWPloose  = iele->electronID("mvaEleID-Fall17-noIso-V1-wpLoose");
     if(isPassWPloose) setbit(tmpeleMVAnoIsoIDbit, 2);
 
     eleMVAnoIsoIDbit_           .push_back(tmpeleMVAnoIsoIDbit);

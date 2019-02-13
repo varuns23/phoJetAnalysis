@@ -42,7 +42,6 @@ vector<float>  tau_dz_;
 vector<float>  tau_dxy_;
 
 vector<bool>   tau_decayModeFinding_;
-vector<bool>   tau_decayModeFindingOldDMs_;
 vector<bool>   tau_decayModeFindingNewDMs_;
 //Muon rejection
 vector<bool>   tau_LooseMuonRejection3_;
@@ -139,7 +138,6 @@ void phoJetNtuplizer::branchTaus (TTree* tree){
   
     //Tau Id & Isolation
     tree->Branch("tau_decayModeFinding",                                  &tau_decayModeFinding_);
-    tree->Branch("tau_decayModeFindingOldDMs",                            &tau_decayModeFindingOldDMs_);
     tree->Branch("tau_decayModeFindingNewDMs",                            &tau_decayModeFindingNewDMs_);
     tree->Branch("tau_VLooseMVA6ElectronRejection",                       &tau_VLooseMVA6ElectronRejection_);
     tree->Branch("tau_LooseMVA6ElectronRejection",                        &tau_LooseMVA6ElectronRejection_);
@@ -253,7 +251,6 @@ void phoJetNtuplizer::fillTaus (const edm::Event& iEvent){
     }
 
     tau_decayModeFinding_                                  .push_back(itau->tauID("decayModeFinding"));
-    tau_decayModeFindingOldDMs_                            .push_back(itau->tauID("decayModeFindingOldDMs"));
     tau_decayModeFindingNewDMs_                            .push_back(itau->tauID("decayModeFindingNewDMs"));
    
     //Muon rejection
@@ -359,7 +356,6 @@ void phoJetNtuplizer::initTaus(){
   tau_dxy_                                            .clear();
 
   tau_decayModeFinding_                              .clear();
-  tau_decayModeFindingOldDMs_                        .clear();
   tau_decayModeFindingNewDMs_                        .clear();
   tau_VLooseMVA6ElectronRejection_                   .clear();
   tau_LooseMVA6ElectronRejection_                    .clear();
