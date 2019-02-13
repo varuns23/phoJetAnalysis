@@ -11,18 +11,20 @@ process.load("Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cf
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
 #process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc', '')
-process.GlobalTag = GlobalTag(process.GlobalTag, '102X_mc2017_realistic_v6')
-#process.GlobalTag = GlobalTag(process.GlobalTag, '94X_mc2017_realistic_v14')
+#process.GlobalTag = GlobalTag(process.GlobalTag, '102X_mc2017_realistic_v6')
+process.GlobalTag = GlobalTag(process.GlobalTag, '94X_mc2017_realistic_v17')
 
 #jec from sqlite
 process.load("CondCore.DBCommon.CondDBCommon_cfi")
 from CondCore.DBCommon.CondDBSetup_cfi import *
 process.jec = cms.ESSource("PoolDBESSource",CondDBSetup,
     connect = cms.string('sqlite:Fall17_17Nov2017_V32_102X_MC.db'),
+    #connect = cms.string('sqlite:Fall17_17Nov2017_V32_94X_MC.db'),
     toGet = cms.VPSet(
       cms.PSet(
 	record = cms.string('JetCorrectionsRecord'),
 	tag = cms.string('JetCorrectorParametersCollection_Fall17_17Nov2017_V32_102X_MC_AK4PFchs'),
+	#tag = cms.string('JetCorrectorParametersCollection_Fall17_17Nov2017_V32_94X_MC_AK4PFchs'),
 	label = cms.untracked.string('AK4PFchs')
 	)))
 process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
@@ -34,8 +36,8 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 1 #1000
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
     fileNames = cms.untracked.vstring(
-        #'file:/hdfs/store/user/varuns/monoZprime/TEST-INPUTFILES/test_mc_12Apr2018_94X.root'
-        'file:test-mc12Apr18.root'
+        'file:/hdfs/store/user/varuns/monoZprime/TEST-INPUTFILES/test_mc_12Apr2018_94X.root'
+        #'file:test-mc12Apr18.root'
     )
 )
 
