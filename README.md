@@ -8,7 +8,7 @@ cmsenv
 git cms-init
 
 #For 2017 data-taking
-git clone -b 102X_2017 https://github.com/varuns23/phoJetAnalysis.git
+git clone https://github.com/varuns23/phoJetAnalysis.git
 
 scram b -j10
 ```
