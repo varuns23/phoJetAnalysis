@@ -11,31 +11,17 @@ process.load("Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cf
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
 #process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_data', '')
-process.GlobalTag = GlobalTag(process.GlobalTag, '102X_dataRun2_v8')
-#process.GlobalTag = GlobalTag(process.GlobalTag, '94X_dataRun2_v6')
-
-#jec from sqlite
-process.load("CondCore.DBCommon.CondDBCommon_cfi")
-from CondCore.DBCommon.CondDBSetup_cfi import *
-process.jec = cms.ESSource("PoolDBESSource",CondDBSetup,
-    connect = cms.string('sqlite:Fall17_17Nov2017_V32_102X_DATA.db'),
-    toGet = cms.VPSet(
-      cms.PSet(
-	record = cms.string('JetCorrectionsRecord'),
-	tag = cms.string('JetCorrectorParametersCollection_Fall17_17Nov2017_V32_102X_DATA_AK4PFchs'),
-	label = cms.untracked.string('AK4PFchs')
-	)))
-process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
+process.GlobalTag = GlobalTag(process.GlobalTag, '102X_dataRun2_Sep2018Rereco_v1')
+#process.GlobalTag = GlobalTag(process.GlobalTag, '102X_dataRun2_Prompt_v11')
 
 
-
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10) )
-process.MessageLogger.cerr.FwkReport.reportEvery = 1 #1000
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
+process.MessageLogger.cerr.FwkReport.reportEvery = 1000 #1000
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
     fileNames = cms.untracked.vstring(
-        'file:/hdfs/store/user/varuns/monoZprime/TEST-INPUTFILES/test_data_MET-2017B-31March18.root'
+        'file:/hdfs/store/user/varuns/monoZprime/TEST-INPUTFILES/test-data2018-17Sep2018.root'
     )
 )
 
@@ -56,8 +42,6 @@ from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
 setupEgammaPostRecoSeq(process,
     runEnergyCorrections=False, #as energy corrections are not yet availible for 2018
     era='2018-Prompt')  
-#a sequence egammaPostRecoSeq has now been created and should be added to your path, eg process.p=cms.Path(process.egammaPostRecoSeq)
-
 
 ##Updating Jet collection for DeepCSV tagger
 # https://twiki.cern.ch/twiki/bin/view/CMS/DeepJet#94X_installation_recipe_X_10

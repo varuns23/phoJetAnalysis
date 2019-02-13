@@ -2,19 +2,11 @@ import os
 
 dataset = {
   'MET2018A' : '/MET/Run2018A-17Sep2018-v1/MINIAOD',
-  'MET2018C' : '/MET/Run2018C-17Sep2018-v1/MINIAOD'
-
-  'MET2018Bv1' : '/MET/Run2018B-PromptReco-v1/MINIAOD',
-  'MET2018Bv2' : '/MET/Run2018B-PromptReco-v2/MINIAOD',
-  'MET2018Dv1' : '/MET/Run2018D-PromptReco-v1/MINIAOD',
-  'MET2018Dv2' : '/MET/Run2018D-PromptReco-v2/MINIAOD',
+  'MET2018C' : '/MET/Run2018C-17Sep2018-v1/MINIAOD',
 
   'EGamma2018A' : '/EGamma/Run2018A-17Sep2018-v2/MINIAOD',
   'EGamma2018B' : '/EGamma/Run2018B-17Sep2018-v1/MINIAOD',
   'EGamma2018C' : '/EGamma/Run2018C-17Sep2018-v1/MINIAOD',
-
-  'EGamma2018Dv1' : '/EGamma/Run2018D-PromptReco-v1/MINIAOD',
-  'EGamma2018Dv2' : '/EGamma/Run2018D-PromptReco-v2/MINIAOD',
 }
 
 if __name__ == '__main__':
@@ -25,7 +17,7 @@ def submit(config):
 
 from CRABClient.UserUtilities import config
 config = config()
-name = 'ntuple_data2018'
+name = 'data2018_17Sep2018'
 config.General.workArea = 'crab_'+name
 config.General.transferOutputs = True
 config.General.transferLogs = True
@@ -44,15 +36,13 @@ config.Site.storageSite = 'T2_US_Wisconsin'
 #config.Site.blacklist = ['T2_CH_CERN']
 
 #listOfSamples = ['MET2018A', 'MET2018C']
-#listOfSamples = ['MET2018Bv1', 'MET2018Bv2', 'MET2018Dv1', 'MET2018Dv2']
-#listOfSamples = ['EGamma2018A', 'EGamma2018B', 'EGamma2018C']
-#listOfSamples = ['EGamma2018Dv1', 'EGamma2018Dv2']
+listOfSamples = ['EGamma2018A', 'EGamma2018B', 'EGamma2018C']
 
 
 for sample in listOfSamples:  
   os.popen('cp run_102X_data2018.py run_102X_data2018_'+sample+'.py')
   with open('run_102X_data2018_'+sample+'.py') as oldFile:
-    newText = oldFile.read().replace('Ntuple_data.root','Data_'+sample+'.root')
+    newText = oldFile.read().replace('Ntuple_data2018.root','Data_'+sample+'.root')
   with open('run_102X_data2018_'+sample+'.py', 'w') as newFile:
     newFile.write(newText)
 
@@ -62,7 +52,7 @@ for sample in listOfSamples:
   config.JobType.outputFiles = ['Data_'+sample+'.root']
   
   config.Data.inputDataset   = dataset[sample]
-  config.Data.unitsPerJob = 15
+  config.Data.unitsPerJob = 6
   config.Data.totalUnits = -1
   config.Data.outLFNDirBase = '/store/user/varuns/'+name
   submit(config)

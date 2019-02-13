@@ -219,9 +219,9 @@ void phoJetNtuplizer::fillPhotons(const edm::Event& iEvent, const edm::EventSetu
     phoIDbit_                 .push_back(tmpphoIDbit);
 
     UShort_t tmpphoMVAIDbit = 0;
-    bool isPassWP80   = ipho->photonID("mvaPhoID-Fall17-iso-V2-wp80");
+    bool isPassWP80   = ipho->photonID("mvaPhoID-RunIIFall17-v2-wp80");
     if(isPassWP80) setbit(tmpphoMVAIDbit, 0);
-    bool isPassWP90   = ipho->photonID("mvaPhoID-Fall17-iso-V2-wp90");
+    bool isPassWP90   = ipho->photonID("mvaPhoID-RunIIFall17-v2-wp90"); 
     if(isPassWP90) setbit(tmpphoMVAIDbit, 1);
 
     phoMVAIDbit_              .push_back(tmpphoMVAIDbit);
