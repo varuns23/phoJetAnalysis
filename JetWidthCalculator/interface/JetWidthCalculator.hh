@@ -16,16 +16,25 @@ public:
   
   virtual ~JetWidthCalculator();
 
-  double getEtaWidth()       {return etaWidth_;}
-  double getPhiWidth()       {return phiWidth_;}
+  float getEtaWidth()       {return etaWidth_;}
+  float getPhiWidth()       {return phiWidth_;}
 
-  double getPFCandsPtSum()   {return ptSum_;}
-  double getPFCand12PtSum()  {return pfCand12PtSum_;}
-  double getPFCand12Ratio()  {return pt12ratio_;}
+  float getPFCandsPtSum()   {return ptSum_;}
+  float getPFCand12PtSum()  {return pfCand12PtSum_;}
+  float getPFCand12Ratio()  {return pt12ratio_;}
 
-  vector<double> getConstEt()         {return ConstEt_;}
-  vector<double> getConstPt()         {return ConstPt_;}
-  vector<int>   getConstPdgId()       {return ConstPdgId_;}
+
+  int getnPhotons()       {return nPhotons_;}
+  int getnCHPions()       {return nCHPions_;}
+  int getnMiscParticles() {return nMiscParticles_;}
+
+
+  vector<float> getConstPt()         {return ConstPt_;}
+  vector<float> getConstEt()         {return ConstEt_;}
+  vector<float> getConstEta()        {return ConstEta_;}
+  vector<float> getConstPhi()        {return ConstPhi_;}
+  vector<int>   getConstPdgId()      {return ConstPdgId_;}
+  vector<int>   getMiscPdgId()       {return MiscPdgId_;}
 
 private:
                                         
@@ -38,16 +47,23 @@ private:
   // No equality operator is needed
   const JetWidthCalculator& operator=(const JetWidthCalculator&);
 
-  double etaWidth_;
-  double phiWidth_;
+  float etaWidth_;
+  float phiWidth_;
 
-  double ptSum_;
-  double pfCand12PtSum_;
-  double pt12ratio_;
+  float ptSum_;
+  float pfCand12PtSum_;
+  float pt12ratio_;
 
-  vector<double> ConstEt_;
-  vector<double> ConstPt_;
+  int nPhotons_;
+  int nCHPions_;
+  int nMiscParticles_;
+
+  vector<float> ConstPt_;
+  vector<float> ConstEt_;
+  vector<float> ConstEta_;
+  vector<float> ConstPhi_;
   vector<int>   ConstPdgId_;
+  vector<int>   MiscPdgId_;
   
 };
 

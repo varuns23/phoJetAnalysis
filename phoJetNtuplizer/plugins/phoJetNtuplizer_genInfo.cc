@@ -68,8 +68,7 @@ void phoJetNtuplizer::fillGenInfo(const edm::Event& iEvent){
   edm::Handle<GenEventInfoProduct> genEventInfoHandle;
   iEvent.getByToken(generatorToken_, genEventInfoHandle);
 
-  if (!genEventInfoHandle.isValid()) {
-
+  if (genEventInfoHandle.isValid()) {
     if (genEventInfoHandle->pdf()) {
       pdf_.push_back(genEventInfoHandle->pdf()->id.first);    //[0] PDG ID of incoming parton #1
       pdf_.push_back(genEventInfoHandle->pdf()->id.second);   //[1] PDG ID of incoming parton #2
@@ -84,8 +83,9 @@ void phoJetNtuplizer::fillGenInfo(const edm::Event& iEvent){
       pthat_ = genEventInfoHandle->binningValues()[0];
     processID_ = genEventInfoHandle->signalProcessID();
     genWeight_ = genEventInfoHandle->weight();
-  }else
+  }else{
     edm::LogWarning("phoJetNtuplizer") << "no generator info in event";
+  }
 
   // access generator level HT  
   edm::Handle<LHEEventProduct> lheEventProduct;
@@ -103,15 +103,15 @@ void phoJetNtuplizer::fillGenInfo(const edm::Event& iEvent){
       if ( status == 1 && ((absPdgId >= 1 && absPdgId <= 6) || absPdgId == 21) ) { // quarks and gluons
 	lheHt += TMath::Sqrt(TMath::Power(lheParticles[idxParticle][0], 2.) + TMath::Power(lheParticles[idxParticle][1], 2.)); // first entry is px, second py
       }                          
-
-    }                            
+    }
 
     pdfWeight_ = lheEventProduct->originalXWGTUP(); // PDF weight of this event !
     for (unsigned i = 0; i < lheEventProduct->weights().size(); ++i) {
       pdfSystWeight_.push_back(lheEventProduct->weights()[i].wgt);
     }
-  } else 
+  } else{ 
     edm::LogWarning("phoJetNtuplizer") << "no lheEventProduct info in event";
+  }
   genHT_=lheHt;
 
   edm::Handle<vector<PileupSummaryInfo> > genPileupHandle;           
@@ -146,9 +146,10 @@ void phoJetNtuplizer::fillGenInfo(const edm::Event& iEvent){
   for (vector<reco::GenParticle>::const_iterator ip = genParticlesHandle->begin(); ip != genParticlesHandle->end(); ++ip) {
     genIndex++;
 
+    /*
     int status = ip->status();
     //bool stableFinalStateParticle = status == 1 && ip->pt() > 5.0;
-       
+    
     bool quarks = abs(ip->pdgId())<7;
        
     // keep non-FSR photons with pT > 5.0 and all leptons with pT > 3.0;
@@ -167,7 +168,7 @@ void phoJetNtuplizer::fillGenInfo(const edm::Event& iEvent){
        (    ip->pdgId()  == 25 && ip->isHardProcess()) ||
        (abs(ip->pdgId()) ==  6 && ip->isHardProcess()) || 
        (abs(ip->pdgId()) ==  5 && ip->isHardProcess()));
-
+       */
 
     const reco::Candidate *p = (const reco::Candidate*)&(*ip);
     if (!p->mother()) continue;

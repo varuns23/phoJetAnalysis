@@ -24,6 +24,7 @@
 #include "DataFormats/HLTReco/interface/TriggerEvent.h"
 #include "DataFormats/PatCandidates/interface/TriggerObjectStandAlone.h"
 #include "DataFormats/Common/interface/TriggerResults.h"
+#include "HLTrigger/HLTcore/interface/HLTPrescaleProvider.h"
 //Photons
 #include "DataFormats/EgammaCandidates/interface/Photon.h"
 #include "DataFormats/PatCandidates/interface/Photon.h"
@@ -48,8 +49,10 @@
 //#include "PhysicsTools/SelectorUtils/interface/PFJetIDSelectionFunctor.h"
 //MET
 #include "DataFormats/PatCandidates/interface/MET.h"
-//Muons Taus
+//Muons
 #include "DataFormats/PatCandidates/interface/Muon.h"
+#include "DataFormats/MuonReco/interface/MuonSelectors.h"
+//Taus
 #include "DataFormats/PatCandidates/interface/Tau.h"
 
 #include "FWCore/Framework/interface/ESHandle.h"
@@ -63,6 +66,7 @@
 using namespace std;
 
 void setbit(UShort_t& x, UShort_t bit);
+void setbit(ULong64_t& x, UShort_t bit);
 
 class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
   public:
@@ -78,6 +82,7 @@ class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
     void branchJets      (TTree*);
     void branchElectrons (TTree*);
     void branchMuons     (TTree*);
+    void branchTaus      (TTree*);
     void branchMet       (TTree*);
     void branchGenInfo   (TTree*);
 
@@ -86,6 +91,7 @@ class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
     void fillJets       (const edm::Event&, const edm::EventSetup&);
     void fillElectrons  (const edm::Event&, const edm::EventSetup&, math::XYZPoint&);
     void fillMuons      (const edm::Event&, math::XYZPoint&, const reco::Vertex);
+    void fillTaus      (const edm::Event&);
     void fillMet        (const edm::Event&, const edm::EventSetup&);
     void fillGenInfo    (const edm::Event&);
 
@@ -94,81 +100,59 @@ class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
     void initJets();
     void initElectrons();
     void initMuons();
+    void initTaus();
     void initMet();
     void initGenInfo();
 
-    bool isData_;
+    bool is_Data_;
     bool debug_;
 
     bool                                             runEventInfo_;
     edm::EDGetTokenT<double>                         rhoToken_;
     edm::EDGetTokenT<double>                         rhoCentralToken_;
     edm::EDGetTokenT<reco::VertexCollection>         vtxToken_;
-    edm::EDGetTokenT<reco::VertexCollection>         vtxBSToken_;
 
     //Trigger Info
-    edm::EDGetTokenT<trigger::TriggerEvent>                  trgEventToken_;
-    edm::EDGetTokenT<pat::TriggerObjectStandAloneCollection> trgObjectsToken_;
-    edm::EDGetTokenT<edm::TriggerResults>                    trgResultsToken_;
-    edm::EDGetTokenT<edm::TriggerResults>                    patTrgResultsToken_;
-    std::string                                              trgResultsProcess_;
+    edm::EDGetTokenT<edm::TriggerResults>            trgResultsToken_;
+    edm::EDGetTokenT<edm::TriggerResults>            patTrgResultsToken_;
+    edm::EDGetTokenT<edm::TriggerResults>            recoTrgResultsToken_;
+    std::string                                      trgResultsProcess_;
+    HLTPrescaleProvider                              hltPrescaleProvider_;
+    edm::EDGetTokenT< double >                       prefweight_token;
+    edm::EDGetTokenT< double >                       prefweightup_token;
+    edm::EDGetTokenT< double >                       prefweightdown_token;
 
     //Photon Info
     bool                                             runPhotons_;
     edm::EDGetTokenT<edm::View<pat::Photon> >        photonToken_;
-    edm::EDGetTokenT<edm::View<pat::Photon> >        calibPhotonToken_;
-    EnergyScaleCorrection_class                      *egmScaler_;
 
     edm::EDGetTokenT<EcalRecHitCollection>           ebReducedRecHitCollection_;
     edm::EDGetTokenT<EcalRecHitCollection>           eeReducedRecHitCollection_;
     edm::EDGetTokenT<EcalRecHitCollection>           esReducedRecHitCollection_;
 
-    //photon ID Map for full5x5
-    edm::EDGetTokenT<edm::ValueMap<float> >          full5x5SigmaIEtaIEtaMapToken_;
-    //photon ID isolations maps
-    edm::EDGetTokenT<edm::ValueMap<float> >          phoChargedIsolationToken_; 
-    edm::EDGetTokenT<edm::ValueMap<float> >          phoChargedWorstIsolationToken_; 
-    edm::EDGetTokenT<edm::ValueMap<float> >          phoNeutralHadronIsolationToken_; 
-    edm::EDGetTokenT<edm::ValueMap<float> >          phoPhotonIsolationToken_; 
-    // photon VID decision objects
-    edm::EDGetTokenT<edm::ValueMap<bool> >           phoLooseIdMapToken_;
-    edm::EDGetTokenT<edm::ValueMap<bool> >           phoMediumIdMapToken_;
-    edm::EDGetTokenT<edm::ValueMap<bool> >           phoTightIdMapToken_;
-    edm::EDGetTokenT<edm::ValueMap<float> >          phoMVAValuesMapToken_;
-
     //Jet Info
     bool                                             runJets_;
+    bool                                             runJetWidthCalculator_;
     edm::EDGetTokenT<edm::View<pat::Jet> >           jetsAK4Token_;
-    JME::JetResolution                               jetResolution_;
-    JME::JetResolutionScaleFactor                    jetResolutionSF_;
 
     //Electron Info
     bool                                             runEle_;
     edm::EDGetTokenT<edm::View<pat::Electron> >      electronToken_;
-    edm::EDGetTokenT<edm::View<pat::Electron> >      calibelectronToken_;
     edm::EDGetTokenT<pat::PackedCandidateCollection> packedPFCandsToken_;
-    edm::EDGetTokenT<reco::PFCandidateCollection>    pfAllCandidateToken_;
-
-    // elecontr ID decisions objects
-    edm::EDGetTokenT<edm::ValueMap<bool> >           eleVetoIdMapToken_;
-    edm::EDGetTokenT<edm::ValueMap<bool> >           eleLooseIdMapToken_;
-    edm::EDGetTokenT<edm::ValueMap<bool> >           eleMediumIdMapToken_;
-    edm::EDGetTokenT<edm::ValueMap<bool> >           eleTightIdMapToken_;
-    edm::EDGetTokenT<edm::ValueMap<bool> >           eleHLTIdMapToken_;
-    edm::EDGetTokenT<edm::ValueMap<bool> >           eleHEEPIdMapToken_;
-    edm::EDGetTokenT<edm::ValueMap<float> >          eleMVAValuesMapToken_;
-    edm::EDGetTokenT<edm::ValueMap<float> >          elePFClusEcalIsoToken_;
-    edm::EDGetTokenT<edm::ValueMap<float> >          elePFClusHcalIsoToken_;
 
     //Muon Info
     bool                                             runMuon_;
     edm::EDGetTokenT<edm::View<pat::Muon> >          muonToken_;
 
+    //Taus Info
+    bool                                             runTaus_;
+    //edm::EDGetTokenT<edm::View<pat::Tau> >          tausToken_;
+    edm::EDGetTokenT<vector<pat::Tau> >              tausToken_;
+
     //MET Info
     bool                                             runMet_;
     edm::EDGetTokenT<edm::View<pat::MET> >           pfmetToken_;
-    edm::EDGetTokenT<bool>                           BadChCandFilterToken_;
-    edm::EDGetTokenT<bool>                           BadPFMuonFilterToken_;
+
 
     //Gen Particle Info
     bool                                             runGenInfo_;

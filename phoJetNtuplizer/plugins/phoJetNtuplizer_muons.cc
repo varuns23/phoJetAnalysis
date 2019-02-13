@@ -1,3 +1,4 @@
+// https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2
 #include "phoJetAnalysis/phoJetNtuplizer/interface/phoJetNtuplizer.h"
 
 Int_t            nMu_;
@@ -32,6 +33,7 @@ vector<float>    muchi2LocalPosition_;
 vector<float>    mutrkKink_;
 vector<float>    muBestTrkPtError_;
 vector<float>    muBestTrkPt_;
+vector<int>      muBestTrkType_;
 
 void phoJetNtuplizer::branchMuons(TTree* tree){
 
@@ -69,6 +71,7 @@ void phoJetNtuplizer::branchMuons(TTree* tree){
   tree->Branch("mutrkKink",              &mutrkKink_);
   tree->Branch("muBestTrkPtError",       &muBestTrkPtError_);
   tree->Branch("muBestTrkPt",            &muBestTrkPt_);
+  tree->Branch("muBestTrkType",          &muBestTrkType_);
 
   if(debug_) std::cout<< "<<DEBUG>>:: Inside phoJetNtuplizer::branchMuons -->END<--"<<std::endl;
 }                                                                                                                                                                                    
@@ -93,7 +96,7 @@ void phoJetNtuplizer::fillMuons(const edm::Event& iEvent, math::XYZPoint& ipv, r
 for (edm::View<pat::Muon>::const_iterator iMu = muonHandle->begin(); iMu != muonHandle->end(); ++iMu){
 
     if (iMu->pt() < 3) continue;
-    if (! (iMu->isPFMuon() || iMu->isGlobalMuon() || iMu->isTrackerMuon())) continue;
+    if (!(iMu->isPFMuon() || iMu->isGlobalMuon() || iMu->isTrackerMuon())) continue;
                                
     muPt_    .push_back(iMu->pt());                                                 
     muEn_    .push_back(iMu->energy());                                             
@@ -105,17 +108,40 @@ for (edm::View<pat::Muon>::const_iterator iMu = muonHandle->begin(); iMu != muon
     muDz_    .push_back(iMu->muonBestTrack()->dz(ipv));                              
     muSIP_   .push_back(fabs(iMu->dB(pat::Muon::PV3D))/iMu->edB(pat::Muon::PV3D));  
                                
-    UShort_t tmpmuIDbit = 0;   
-                               
-    if (iMu->isLooseMuon())     setbit(tmpmuIDbit, 0);
-    if (iMu->isMediumMuon())    setbit(tmpmuIDbit, 1);
-    if (iMu->isTightMuon(ivtx))  setbit(tmpmuIDbit, 2);
-    if (iMu->isSoftMuon(ivtx))   setbit(tmpmuIDbit, 3);
-    if (iMu->isHighPtMuon(ivtx)) setbit(tmpmuIDbit, 4);
+    ULong64_t tmpmuIDbit = 0;   
+    if (iMu->passed(reco::Muon::CutBasedIdLoose))        setbit(tmpmuIDbit,  0);
+    if (iMu->passed(reco::Muon::CutBasedIdMedium))       setbit(tmpmuIDbit,  1);
+    if (iMu->passed(reco::Muon::CutBasedIdMediumPrompt)) setbit(tmpmuIDbit,  2);
+    if (iMu->passed(reco::Muon::CutBasedIdTight))        setbit(tmpmuIDbit,  3);
+    if (iMu->passed(reco::Muon::CutBasedIdGlobalHighPt)) setbit(tmpmuIDbit,  4);
+    if (iMu->passed(reco::Muon::CutBasedIdTrkHighPt))    setbit(tmpmuIDbit,  5);
+    if (iMu->passed(reco::Muon::PFIsoVeryLoose))         setbit(tmpmuIDbit,  6);
+    if (iMu->passed(reco::Muon::PFIsoLoose))             setbit(tmpmuIDbit,  7);
+    if (iMu->passed(reco::Muon::PFIsoMedium))            setbit(tmpmuIDbit,  8);
+    if (iMu->passed(reco::Muon::PFIsoTight))             setbit(tmpmuIDbit,  9);
+    if (iMu->passed(reco::Muon::PFIsoVeryTight))         setbit(tmpmuIDbit, 10);
+    //if (iMu->passed(reco::PFIsoVeryVeryTight))           setbit(tmpmuIDbit, 11); 
+    if (iMu->passed(reco::Muon::TkIsoLoose))             setbit(tmpmuIDbit, 12);
+    if (iMu->passed(reco::Muon::TkIsoTight))             setbit(tmpmuIDbit, 13);
+    if (iMu->passed(reco::Muon::SoftCutBasedId))         setbit(tmpmuIDbit, 14);
+    if (iMu->passed(reco::Muon::SoftMvaId))              setbit(tmpmuIDbit, 15);
+    if (iMu->passed(reco::Muon::MvaLoose))               setbit(tmpmuIDbit, 16);
+    if (iMu->passed(reco::Muon::MvaMedium))              setbit(tmpmuIDbit, 17);
+    if (iMu->passed(reco::Muon::MvaTight))               setbit(tmpmuIDbit, 18);
+    if (iMu->passed(reco::Muon::MiniIsoLoose))           setbit(tmpmuIDbit, 19);
+    if (iMu->passed(reco::Muon::MiniIsoMedium))          setbit(tmpmuIDbit, 20);
+    if (iMu->passed(reco::Muon::MiniIsoTight))           setbit(tmpmuIDbit, 21);
+    if (iMu->passed(reco::Muon::MiniIsoVeryTight))       setbit(tmpmuIDbit, 22);
+    if (iMu->passed(reco::Muon::TriggerIdLoose))         setbit(tmpmuIDbit, 23);
+    if (iMu->passed(reco::Muon::InTimeMuon))             setbit(tmpmuIDbit, 24);
+    if (iMu->passed(reco::Muon::MultiIsoLoose))          setbit(tmpmuIDbit, 25);
+    if (iMu->passed(reco::Muon::MultiIsoMedium))         setbit(tmpmuIDbit, 26);
+
     muIDbit_.push_back(tmpmuIDbit);
 
     muBestTrkPtError_        .push_back(iMu->muonBestTrack()->ptError());
     muBestTrkPt_             .push_back(iMu->muonBestTrack()->pt());
+    muBestTrkType_           .push_back(iMu->muonBestTrackType());
     musegmentCompatibility_  .push_back(iMu->segmentCompatibility());
     muchi2LocalPosition_     .push_back(iMu->combinedQuality().chi2LocalPosition);
     mutrkKink_               .push_back(iMu->combinedQuality().trkKink);
@@ -137,7 +163,7 @@ for (edm::View<pat::Muon>::const_iterator iMu = muonHandle->begin(); iMu != muon
       muPixelLayers_ .push_back(-99);                    
       muPixelHits_   .push_back(-99);                    
       muTrkQuality_  .push_back(-99);                    
-  
+
       muInnervalidFraction_ .push_back(-99);             
     } else {                                             
       muInnerD0_     .push_back(innmu->dxy(ipv));         
@@ -146,10 +172,10 @@ for (edm::View<pat::Muon>::const_iterator iMu = muonHandle->begin(); iMu != muon
       muPixelLayers_ .push_back(innmu->hitPattern().pixelLayersWithMeasurement());
       muPixelHits_   .push_back(innmu->hitPattern().numberOfValidPixelHits());
       muTrkQuality_  .push_back(innmu->quality(reco::TrackBase::highPurity));
-  
+
       muInnervalidFraction_ .push_back(innmu->validFraction());     
     }     
-  
+
     muStations_ .push_back(iMu->numberOfMatchedStations());         
     muMatches_  .push_back(iMu->numberOfMatches());      
     muIsoTrk_   .push_back(iMu->trackIso());             
@@ -157,11 +183,11 @@ for (edm::View<pat::Muon>::const_iterator iMu = muonHandle->begin(); iMu != muon
     muPFPhoIso_ .push_back(iMu->pfIsolationR04().sumPhotonEt);      
     muPFNeuIso_ .push_back(iMu->pfIsolationR04().sumNeutralHadronEt);
     muPFPUIso_  .push_back(iMu->pfIsolationR04().sumPUPt);
-  
-    nMu_++;
-  }
 
-  if(debug_) std::cout<< "<<DEBUG>>:: Inside phoJetNtuplizer::fillMuons -->END<--"<<std::endl;
+    nMu_++;
+}
+
+if(debug_) std::cout<< "<<DEBUG>>:: Inside phoJetNtuplizer::fillMuons -->END<--"<<std::endl;
 }
 
 
@@ -199,8 +225,6 @@ void phoJetNtuplizer::initMuons(){
   mutrkKink_              .clear();
   muBestTrkPtError_       .clear();
   muBestTrkPt_            .clear();
+  muBestTrkType_          .clear();
 
 }
-
-
-
