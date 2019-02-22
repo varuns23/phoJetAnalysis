@@ -22,6 +22,7 @@ process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
     fileNames = cms.untracked.vstring(
         'file:/hdfs/store/user/varuns/monoZprime/TEST-INPUTFILES/test-data2018-17Sep2018.root'
+        #'file:/hdfs/store/user/varuns/monoZprime/TEST-INPUTFILES/test-data2018-prompt.root'
     )
 )
 
@@ -36,7 +37,6 @@ process.load( "PhysicsTools.PatAlgos.selectionLayer1.selectedPatCandidates_cff" 
 ##MET Corrections: Type-1
 from PhysicsTools.PatAlgos.tools.coreTools import *
 runOnData( process,  names=['Photons', 'Electrons','Muons','Taus','Jets'], outputModules = [] )
-
 
 from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
 setupEgammaPostRecoSeq(process,
@@ -62,7 +62,6 @@ updateJetCollection(
     ],
     postfix='NewDFTraining'
     )
-
 
 ## Tau ID
 from phoJetAnalysis.phoJetNtuplizer.runTauIdMVA import *

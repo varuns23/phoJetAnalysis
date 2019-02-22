@@ -11,7 +11,7 @@ process.load("Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cf
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
 #process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc', '')
-process.GlobalTag = GlobalTag(process.GlobalTag, '94X_mc2017_realistic_v14')
+process.GlobalTag = GlobalTag(process.GlobalTag, '102X_upgrade2018_realistic_v12')
  
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
 process.MessageLogger.cerr.FwkReport.reportEvery = 10 #1000
@@ -19,7 +19,7 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 10 #1000
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
     fileNames = cms.untracked.vstring(
-        'file:/hdfs/store/user/varuns/monoZprime/TEST-INPUTFILES/test_mc_12Apr2018_94X.root'
+        'file:/hdfs/store/user/varuns/TEST-INPUTFILES/test-mc2018_RunIIAutumn18MiniAOD.root'
     )
 )
 
@@ -31,25 +31,32 @@ process.load( "PhysicsTools.PatAlgos.producersLayer1.patCandidates_cff" )
 process.load( "PhysicsTools.PatAlgos.triggerLayer1.triggerProducer_cff" )
 process.load( "PhysicsTools.PatAlgos.selectionLayer1.selectedPatCandidates_cff" )
 
-#https://twiki.cern.ch/twiki/bin/view/CMS/EgammaPostRecoRecipes
-#fix a bug in the ECAL-Tracker momentum combination when applying the scale and smearing
 from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
 setupEgammaPostRecoSeq(process,
-    runVID=False,
-    era='2017-Nov17ReReco'  #era is new to select between 2016 / 2017,  it defaults to 2017
-)
-#a sequence egammaPostRecoSeq has now been created and should be added to your path, eg process.p=cms.Path(process.egammaPostRecoSeq)
+    runEnergyCorrections=False, #as energy corrections are not yet availible for 2018
+    era='2018-Prompt')  
 
-#https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETUncertaintyPrescription#Instructions_for_9_4_X_X_9_for_2
-from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
-runMetCorAndUncFromMiniAOD (
+##Updating Jet collection for DeepCSV tagger
+# https://twiki.cern.ch/twiki/bin/view/CMS/DeepJet#94X_installation_recipe_X_10
+from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
+updateJetCollection(
     process,
-    isData = False, # false for MC
-    fixEE2017 = True,
-    fixEE2017Params = {'userawPt': True, 'PtThreshold':50.0, 'MinEtaThreshold':2.65, 'MaxEtaThreshold': 3.139} , 
-    postfix = "ModifiedMET"
-)
+    jetSource = cms.InputTag('slimmedJets'),
+    pvSource = cms.InputTag('offlineSlimmedPrimaryVertices'),
+    svSource = cms.InputTag('slimmedSecondaryVertices'),
+    jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute']), 'None'),
+    btagDiscriminators = [
+    'pfDeepFlavourJetTags:probb',
+    'pfDeepFlavourJetTags:probbb',
+    'pfDeepFlavourJetTags:problepb',
+    'pfDeepFlavourJetTags:probc',
+    'pfDeepFlavourJetTags:probuds',
+    'pfDeepFlavourJetTags:probg'
+    ],
+    postfix='NewDFTraining'
+    )
 
+#Tau ID
 from phoJetAnalysis.phoJetNtuplizer.runTauIdMVA import *
 na = TauIDEmbedder(process, cms, # pass tour process object
      debug=True,
@@ -73,10 +80,8 @@ process.phoJetNtuplizer.runMuon     = cms.bool(True);
 process.phoJetNtuplizer.runTaus     = cms.bool(True);
 process.phoJetNtuplizer.runMet      = cms.bool(True);
 process.phoJetNtuplizer.runGenInfo  = cms.bool(True); # True for MC
-process.phoJetNtuplizer.pfmetToken  = cms.InputTag("slimmedMETsModifiedMET")
 
 process.p = cms.Path(
-    process.fullPatMetSequenceModifiedMET *
     process.egammaPostRecoSeq *
     process.rerunMvaIsolationSequence *
     process.NewTauIDsEmbedded *
