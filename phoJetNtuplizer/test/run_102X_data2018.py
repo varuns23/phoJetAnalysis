@@ -15,13 +15,13 @@ process.GlobalTag = GlobalTag(process.GlobalTag, '102X_dataRun2_Sep2018Rereco_v1
 #process.GlobalTag = GlobalTag(process.GlobalTag, '102X_dataRun2_Prompt_v11')
 
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
-process.MessageLogger.cerr.FwkReport.reportEvery = 1000 #1000
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10) )
+process.MessageLogger.cerr.FwkReport.reportEvery = 1 #1000
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
     fileNames = cms.untracked.vstring(
-        'file:/hdfs/store/user/varuns/monoZprime/TEST-INPUTFILES/test-data2018-17Sep2018.root'
+        'file:/hdfs/store/user/varuns/TEST-INPUTFILES/test-data2018-17Sep2018.root'
         #'file:/hdfs/store/user/varuns/monoZprime/TEST-INPUTFILES/test-data2018-prompt.root'
     )
 )
