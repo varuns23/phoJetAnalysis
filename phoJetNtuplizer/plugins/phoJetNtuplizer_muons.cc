@@ -115,6 +115,7 @@ for (edm::View<pat::Muon>::const_iterator iMu = muonHandle->begin(); iMu != muon
     muSIP_   .push_back(fabs(iMu->dB(pat::Muon::PV3D))/iMu->edB(pat::Muon::PV3D));  
     muFiredTrgs_  .push_back(matchMuonTriggerFilters(iMu->pt(), iMu->eta(), iMu->phi()));
     muFiredL1Trgs_.push_back(matchL1TriggerFilters(iMu->pt(), iMu->eta(), iMu->phi()));
+
     ULong64_t tmpmuIDbit = 0;   
     if (iMu->passed(reco::Muon::CutBasedIdLoose))        setbit(tmpmuIDbit,  0);
     if (iMu->passed(reco::Muon::CutBasedIdMedium))       setbit(tmpmuIDbit,  1);

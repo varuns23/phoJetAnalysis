@@ -311,11 +311,6 @@ void phoJetNtuplizer::initPhotons(){
   phoSigmaIEtaIPhiFull5x5_     .clear();
   phoSigmaIPhiIPhiFull5x5_     .clear();
 
-  phoFiredSingleTrgs_     .clear();
-  phoFiredDoubleTrgs_     .clear();
-  phoFiredTripleTrgs_     .clear();
-  phoFiredL1Trgs_         .clear();
-
   phoPFChIso_                  .clear();
   phoPFChWorstIso_             .clear();
   phoPFPhoIso_                 .clear();

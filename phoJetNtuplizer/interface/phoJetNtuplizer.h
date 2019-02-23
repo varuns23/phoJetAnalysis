@@ -88,7 +88,6 @@ class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
     Double_t deltaPhi(Double_t phi1, Double_t phi2);
     Double_t deltaR(Double_t eta1, Double_t phi1, Double_t eta2, Double_t phi2);
 
-
     // ----------member data ---------------------------
     void branchEventInfo (TTree*);
     void branchPhotons   (TTree*);
