@@ -33,7 +33,7 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 5 #1000
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
     fileNames = cms.untracked.vstring(
-        'file:/hdfs/store/user/varuns/monoZprime/TEST-INPUTFILES/test_data_MET-2017B-31March18.root'
+        'file:/hdfs/store/user/varuns/TEST-INPUTFILES/test_data_MET-2017B-31March18.root'
     )
 )
 
