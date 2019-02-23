@@ -35,6 +35,9 @@ vector<float>    muBestTrkPtError_;
 vector<float>    muBestTrkPt_;
 vector<int>      muBestTrkType_;
 
+vector<ULong64_t> muFiredTrgs_;
+vector<ULong64_t> muFiredL1Trgs_;
+
 void phoJetNtuplizer::branchMuons(TTree* tree){
 
   if(debug_) std::cout<< "<<DEBUG>>:: Inside phoJetNtuplizer::branchMuons -->BEGIN<-- "<<std::endl;
@@ -72,6 +75,9 @@ void phoJetNtuplizer::branchMuons(TTree* tree){
   tree->Branch("muBestTrkPtError",       &muBestTrkPtError_);
   tree->Branch("muBestTrkPt",            &muBestTrkPt_);
   tree->Branch("muBestTrkType",          &muBestTrkType_);
+  tree->Branch("muFiredTrgs", &muFiredTrgs_);
+  tree->Branch("muFiredL1Trgs", &muFiredL1Trgs_);
+
 
   if(debug_) std::cout<< "<<DEBUG>>:: Inside phoJetNtuplizer::branchMuons -->END<--"<<std::endl;
 }                                                                                                                                                                                    
@@ -107,7 +113,9 @@ for (edm::View<pat::Muon>::const_iterator iMu = muonHandle->begin(); iMu != muon
     muD0_    .push_back(iMu->muonBestTrack()->dxy(ipv));                             
     muDz_    .push_back(iMu->muonBestTrack()->dz(ipv));                              
     muSIP_   .push_back(fabs(iMu->dB(pat::Muon::PV3D))/iMu->edB(pat::Muon::PV3D));  
-                               
+    muFiredTrgs_  .push_back(matchMuonTriggerFilters(iMu->pt(), iMu->eta(), iMu->phi()));
+    muFiredL1Trgs_.push_back(matchL1TriggerFilters(iMu->pt(), iMu->eta(), iMu->phi()));
+
     ULong64_t tmpmuIDbit = 0;   
     if (iMu->passed(reco::Muon::CutBasedIdLoose))        setbit(tmpmuIDbit,  0);
     if (iMu->passed(reco::Muon::CutBasedIdMedium))       setbit(tmpmuIDbit,  1);
@@ -226,5 +234,6 @@ void phoJetNtuplizer::initMuons(){
   muBestTrkPtError_       .clear();
   muBestTrkPt_            .clear();
   muBestTrkType_          .clear();
-
+  muFiredTrgs_           .clear();
+  muFiredL1Trgs_         .clear();
 }

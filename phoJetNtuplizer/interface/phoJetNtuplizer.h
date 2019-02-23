@@ -76,6 +76,18 @@ class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
   private:
     virtual void analyze(const edm::Event&, const edm::EventSetup&) override;
 
+    void initTriggerFilters(const edm::Event&);
+    ULong64_t matchSingleElectronTriggerFilters(double pt, double eta, double phi);
+    ULong64_t matchDoubleElectronTriggerFilters(double pt, double eta, double phi);
+    ULong64_t matchSinglePhotonTriggerFilters(double pt, double eta, double phi);
+    ULong64_t matchDoublePhotonTriggerFilters(double pt, double eta, double phi);
+    ULong64_t matchTriplePhotonTriggerFilters(double pt, double eta, double phi);
+    ULong64_t matchMuonTriggerFilters(double pt, double eta, double phi);
+    ULong64_t matchJetTriggerFilters(double pt, double eta, double phi);
+    ULong64_t matchL1TriggerFilters(double pt, double eta, double phi);
+    Double_t deltaPhi(Double_t phi1, Double_t phi2);
+    Double_t deltaR(Double_t eta1, Double_t phi1, Double_t eta2, Double_t phi2);
+
     // ----------member data ---------------------------
     void branchEventInfo (TTree*);
     void branchPhotons   (TTree*);
@@ -106,6 +118,9 @@ class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
 
     bool is_Data_;
     bool debug_;
+    
+    double trgFilterDeltaPtCut_;
+    double trgFilterDeltaRCut_;
 
     bool                                             runEventInfo_;
     edm::EDGetTokenT<double>                         rhoToken_;
@@ -118,6 +133,8 @@ class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
     edm::EDGetTokenT<edm::TriggerResults>            recoTrgResultsToken_;
     std::string                                      trgResultsProcess_;
     HLTPrescaleProvider                              hltPrescaleProvider_;
+    //Trigger filter
+    edm::EDGetTokenT<pat::TriggerObjectStandAloneCollection> triggerObjectsLabel_;
     edm::EDGetTokenT< double >                       prefweight_token;
     edm::EDGetTokenT< double >                       prefweightup_token;
     edm::EDGetTokenT< double >                       prefweightdown_token;

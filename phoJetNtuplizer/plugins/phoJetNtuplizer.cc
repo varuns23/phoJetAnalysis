@@ -51,6 +51,11 @@ phoJetNtuplizer::phoJetNtuplizer(const edm::ParameterSet& iConfig):
   trgResultsProcess_         =                                         iConfig.getParameter<InputTag>("triggerResults").process();
   patTrgResultsToken_        = consumes<edm::TriggerResults>          (iConfig.getParameter<InputTag>("patTriggerResults"));
   recoTrgResultsToken_       = consumes<edm::TriggerResults>          (iConfig.getParameter<InputTag>("recoTriggerResults"));
+  triggerObjectsLabel_       = consumes<pat::TriggerObjectStandAloneCollection>(iConfig.getParameter<edm::InputTag>("triggerEvent"));
+  //trigger filter realted 
+  trgFilterDeltaPtCut_       = iConfig.getParameter<double>("trgFilterDeltaPtCut");
+  trgFilterDeltaRCut_        = iConfig.getParameter<double>("trgFilterDeltaRCut");
+
   if(is_Data_){
     prefweight_token           = consumes< double >                     (edm::InputTag("prefiringweight:nonPrefiringProb"));
     prefweightup_token         = consumes< double >                     (edm::InputTag("prefiringweight:nonPrefiringProbUp"));
@@ -152,6 +157,8 @@ phoJetNtuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
       break;      
     }             
   }
+
+  initTriggerFilters(iEvent);
 
   if(runEventInfo_) fillEventInfo(iEvent, iSetup);
   if(runMet_)       fillMet(iEvent, iSetup);

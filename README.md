@@ -8,7 +8,7 @@ cmsenv
 git cms-init
 
 git cms-merge-topic cms-met:METFixEE2017_949_v2_backport_to_102X 
-git cms-merge-topic cms-egamma:EgammaPostRecoTools_940
+git cms-merge-topic cms-egamma:EgammaPostRecoTools
 
 #For 2017 data-taking
 git clone https://github.com/varuns23/phoJetAnalysis.git
@@ -42,8 +42,8 @@ Muons:
 
 For PPD RunII analysis recipe
 ```
-[] https://twiki.cern.ch/twiki/bin/view/CMS/PdmV
-[] https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVAnalysisSummaryTable
+[8] https://twiki.cern.ch/twiki/bin/view/CMS/PdmV
+[9] https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVAnalysisSummaryTable
 ```
 
 Data set Info:

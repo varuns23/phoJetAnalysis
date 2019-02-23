@@ -231,6 +231,7 @@ void phoJetNtuplizer::fillEventInfo(const edm::Event& iEvent, const edm::EventSe
     else if (name.find("HLT_DiMu9_Ele9_CaloIdL_TrackIdL_DZ_v")                       != string::npos) bitEleMuX = 56;
     else if (name.find("HLT_Mu8_DiEle12_CaloIdL_TrackIdL_DZ_v")                      != string::npos) bitEleMuX = 57;
     else if (name.find("HLT_Mu12_DoublePhoton20_v")                                  != string::npos) bitEleMuX = 58;
+    else if (name.find("HLT_Ele32_WPTight_v")                                        != string::npos) bitEleMuX = 59;
 
     // Photon triggers
     int bitPho    = -1;
