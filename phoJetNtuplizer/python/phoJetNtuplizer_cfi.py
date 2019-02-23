@@ -20,6 +20,10 @@ phoJetNtuplizer = cms.EDAnalyzer('phoJetNtuplizer',
 				  triggerResults                       = cms.InputTag("TriggerResults", "", "HLT"),
 				  patTriggerResults                    = cms.InputTag("TriggerResults", "", "PAT"),
 				  recoTriggerResults                   = cms.InputTag("TriggerResults", "", "RECO"),
+				  trgFilterDeltaPtCut                  = cms.double(0.5),
+				  trgFilterDeltaRCut                   = cms.double(0.3),
+				  triggerEvent                         = cms.InputTag("slimmedPatTrigger", "", ""),
+
 
 				  photonToken                          =  cms.InputTag("slimmedPhotons"),
 

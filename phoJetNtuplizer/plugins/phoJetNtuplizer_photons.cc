@@ -48,10 +48,10 @@ vector<UShort_t> phoMVAIDbit_;
 vector<float>    phoSeedTime_;
 vector<float>    phoSeedEnergy_;
 
-vector<UInt_t>   phoFiredSingleTrgs_;
-vector<UInt_t>   phoFiredDoubleTrgs_;
-vector<UInt_t>   phoFiredTripleTrgs_;
-vector<UInt_t>   phoFiredL1Trgs_;
+vector<ULong64_t> phoFiredSingleTrgs_;
+vector<ULong64_t> phoFiredDoubleTrgs_;
+vector<ULong64_t> phoFiredTripleTrgs_;
+vector<ULong64_t> phoFiredL1Trgs_;
 
 //vector<float>    phoScale_up_;
 //vector<float>    phoScale_dn_;
@@ -118,10 +118,10 @@ void phoJetNtuplizer::branchPhotons(TTree* tree){
   tree->Branch("phoSeedTime",              &phoSeedTime_);
   tree->Branch("phoSeedEnergy",            &phoSeedEnergy_);
 
-//  tree->Branch("phoFiredSingleTrgs",       &phoFiredSingleTrgs_);
-//  tree->Branch("phoFiredDoubleTrgs",       &phoFiredDoubleTrgs_);
-//  tree->Branch("phoFiredTripleTrgs",       &phoFiredTripleTrgs_);
-//  tree->Branch("phoFiredL1Trgs",           &phoFiredL1Trgs_);
+  tree->Branch("phoFiredSingleTrgs",       &phoFiredSingleTrgs_);
+  tree->Branch("phoFiredDoubleTrgs",       &phoFiredDoubleTrgs_);
+  tree->Branch("phoFiredTripleTrgs",       &phoFiredTripleTrgs_);
+  tree->Branch("phoFiredL1Trgs",           &phoFiredL1Trgs_);
 
 //  tree->Branch("phoScale_up",              &phoScale_up_);
 //  tree->Branch("phoScale_dn",              &phoScale_dn_);
@@ -240,10 +240,10 @@ void phoJetNtuplizer::fillPhotons(const edm::Event& iEvent, const edm::EventSetu
       phoSeedEnergy_.push_back(-99.);  
     }  
 
-//    phoFiredSingleTrgs_       .push_back(matchSinglePhotonTriggerFilters(ipho->et(), ipho->eta(), ipho->phi()));
-//    phoFiredDoubleTrgs_       .push_back(matchDoublePhotonTriggerFilters(ipho->et(), ipho->eta(), ipho->phi()));
-//    phoFiredTripleTrgs_       .push_back(matchTriplePhotonTriggerFilters(ipho->et(), ipho->eta(), ipho->phi()));
-//    phoFiredL1Trgs_           .push_back(matchL1TriggerFilters(ipho->et(), ipho->eta(), ipho->phi()));
+    phoFiredSingleTrgs_       .push_back(matchSinglePhotonTriggerFilters(ipho->et(), ipho->eta(), ipho->phi()));
+    phoFiredDoubleTrgs_       .push_back(matchDoublePhotonTriggerFilters(ipho->et(), ipho->eta(), ipho->phi()));
+    phoFiredTripleTrgs_       .push_back(matchTriplePhotonTriggerFilters(ipho->et(), ipho->eta(), ipho->phi()));
+    phoFiredL1Trgs_           .push_back(matchL1TriggerFilters(ipho->et(), ipho->eta(), ipho->phi()));
 
 
     // ECAL scale and smearing corrections
@@ -310,6 +310,11 @@ void phoJetNtuplizer::initPhotons(){
   phoSigmaIEtaIEtaFull5x5_     .clear();
   phoSigmaIEtaIPhiFull5x5_     .clear();
   phoSigmaIPhiIPhiFull5x5_     .clear();
+
+  phoFiredSingleTrgs_     .clear();
+  phoFiredDoubleTrgs_     .clear();
+  phoFiredTripleTrgs_     .clear();
+  phoFiredL1Trgs_         .clear();
 
   phoPFChIso_                  .clear();
   phoPFChWorstIso_             .clear();

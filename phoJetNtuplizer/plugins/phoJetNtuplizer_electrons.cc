@@ -42,6 +42,10 @@ vector<float>    eledPhiAtVtx_;
 vector<float>    eledEtaAtCalo_;
 vector<float>    eledEtaseedAtVtx_;
 
+vector<ULong64_t> eleFiredSingleTrgs_;
+vector<ULong64_t> eleFiredDoubleTrgs_;
+vector<ULong64_t> eleFiredL1Trgs_;
+
 vector<float>    eleSigmaIEtaIEtaFull5x5_;
 vector<float>    eleSigmaIPhiIPhiFull5x5_;
 vector<int>      eleConvVeto_;
@@ -137,6 +141,12 @@ void phoJetNtuplizer::branchElectrons (TTree* tree){
   tree->Branch("elePFClusEcalIso",        &elePFClusEcalIso_);
   tree->Branch("elePFClusHcalIso",        &elePFClusHcalIso_);
 
+
+  tree->Branch("eleFiredSingleTrgs",          &eleFiredSingleTrgs_);
+  tree->Branch("eleFiredDoubleTrgs",          &eleFiredDoubleTrgs_);
+  tree->Branch("eleFiredL1Trgs",              &eleFiredL1Trgs_);
+
+
   tree->Branch("eleHEEPID",               &eleHEEPID_);
   tree->Branch("eleMVAIsoID",             &eleMVAIsoID_);
   tree->Branch("eleMVAnoIsoID",           &eleMVAnoIsoID_); 
@@ -224,6 +234,11 @@ void phoJetNtuplizer::fillElectrons (const edm::Event& iEvent, const edm::EventS
     eledEtaAtVtx_        .push_back(iele->deltaEtaSuperClusterTrackAtVtx());
     eledPhiAtVtx_        .push_back(iele->deltaPhiSuperClusterTrackAtVtx());
     eledEtaAtCalo_       .push_back(iele->deltaEtaSeedClusterTrackAtCalo());
+
+    eleFiredSingleTrgs_ .push_back(matchSingleElectronTriggerFilters(iele->pt(), iele->eta(), iele->phi()));
+    eleFiredDoubleTrgs_ .push_back(matchDoubleElectronTriggerFilters(iele->pt(), iele->eta(), iele->phi()));
+    eleFiredL1Trgs_     .push_back(matchL1TriggerFilters(iele->pt(), iele->eta(), iele->phi()));
+
 
     // (1/E - 1/p)
     if (iele->ecalEnergy() == 0)   eleEoverPInv_.push_back(1e30);
@@ -415,4 +430,7 @@ void phoJetNtuplizer::initElectrons(){
 //  eleResol_rho_dn_         .clear();
 //  eleResol_phi_up_         .clear();
 //  eleResol_phi_dn_         .clear(); 
+  eleFiredSingleTrgs_         .clear();
+  eleFiredDoubleTrgs_         .clear();
+  eleFiredL1Trgs_             .clear();
 }
