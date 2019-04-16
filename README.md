@@ -32,18 +32,19 @@ JetMET
 
 Taus:
 ```
-[5] https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuidePFTauID#Rerunning_of_the_tau_ID_on_M_AN1
-[6] https://twiki.cern.ch/twiki/pub/CMSPublic/SWGuidePFTauID/2017v2-recipe.pdf
+[8] https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuidePFTauID#Rerunning_of_the_tau_ID_on_M_AN1
+[9] https://twiki.cern.ch/twiki/pub/CMSPublic/SWGuidePFTauID/2017v2-recipe.pdf
+[10] https://indico.cern.ch/event/810741/contributions/3384093/attachments/1827349/2991114/TauID_CMSweek_10042019.pdf 
 ```
 Muons:
 ```
-[7]-https://twiki.cern.ch/twiki/bin/viewauth/CMS/SWGuideMuonIdRun2
+[11]-https://twiki.cern.ch/twiki/bin/viewauth/CMS/SWGuideMuonIdRun2
 ```
 
 For PPD RunII analysis recipe
 ```
-[8] https://twiki.cern.ch/twiki/bin/view/CMS/PdmV
-[9] https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVAnalysisSummaryTable
+[12] https://twiki.cern.ch/twiki/bin/view/CMS/PdmV
+[13] https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVAnalysisSummaryTable
 ```
 
 Data set Info:
