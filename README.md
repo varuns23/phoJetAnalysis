@@ -8,7 +8,6 @@ cmsenv
 git cms-init
 
 git cms-init
-git cms-merge-topic cms-egamma:EgammaID_1023 #if you want the V2 IDs, otherwise skip
 git cms-merge-topic cms-egamma:EgammaPostRecoTools #just adds in an extra file to have a setup function to make things easier
 
 #For 2018 data-taking
