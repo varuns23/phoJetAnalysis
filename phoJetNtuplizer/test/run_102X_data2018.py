@@ -40,7 +40,7 @@ runOnData( process,  names=['Photons', 'Electrons','Muons','Taus','Jets'], outpu
 
 from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
 setupEgammaPostRecoSeq(process,
-    runEnergyCorrections=False, #as energy corrections are not yet availible for 2018
+    #runEnergyCorrections=False, #as energy corrections are not yet availible for 2018
     era='2018-Prompt')  
 
 ##Updating Jet collection for DeepCSV tagger
