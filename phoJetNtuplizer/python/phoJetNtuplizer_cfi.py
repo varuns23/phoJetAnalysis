@@ -2,10 +2,12 @@ import FWCore.ParameterSet.Config as cms
 
 phoJetNtuplizer = cms.EDAnalyzer('phoJetNtuplizer',
                                   debug                                = cms.bool(False),
+                                  saveAll                              = cms.bool(False),
                                   is_Data                              = cms.bool(True),
                                   runEventInfo                         = cms.bool(True),
                                   runPhotons                           = cms.bool(False),
                                   runJets                              = cms.bool(False),
+                                  runak8Jets                           = cms.bool(False),
                                   runJetWidthCalculator                = cms.bool(False),
                                   runEle                               = cms.bool(False),
                                   runMuon                              = cms.bool(False),
@@ -33,6 +35,7 @@ phoJetNtuplizer = cms.EDAnalyzer('phoJetNtuplizer',
 
                                   #jetsAK4Token                          = cms.InputTag("selectedUpdatedPatJetsUpdatedJEC"), 
 				  jetsAK4Token                          = cms.InputTag("slimmedJets"), 
+				  jetsAK8Token                          = cms.InputTag("slimmedJetsAK8"), 
 				  
 				  electronToken                        = cms.InputTag("slimmedElectrons"),
 				  packedPFCands                        = cms.InputTag("packedPFCandidates"),

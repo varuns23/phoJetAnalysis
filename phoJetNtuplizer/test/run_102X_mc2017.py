@@ -45,22 +45,45 @@ process.load( "PhysicsTools.PatAlgos.producersLayer1.patCandidates_cff" )
 process.load( "PhysicsTools.PatAlgos.triggerLayer1.triggerProducer_cff" )
 process.load( "PhysicsTools.PatAlgos.selectionLayer1.selectedPatCandidates_cff" )
 
+##Re-run ECAL bad calibration filter 
+##https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#2017_data
+process.load('RecoMET.METFilters.ecalBadCalibFilter_cfi')
+baddetEcallist = cms.vuint32(
+    [872439604,872422825,872420274,872423218,
+    872423215,872416066,872435036,872439336,
+    872420273,872436907,872420147,872439731,
+    872436657,872420397,872439732,872439339,
+    872439603,872422436,872439861,872437051,
+    872437052,872420649,872422436,872421950,
+    872437185,872422564,872421566,872421695,
+    872421955,872421567,872437184,872421951,
+    872421694,872437056,872437057,872437313])
+
+process.ecalBadCalibReducedMINIAODFilter = cms.EDFilter(
+    "EcalBadCalibFilter",
+    EcalRecHitSource = cms.InputTag("reducedEgamma:reducedEERecHits"),
+    ecalMinEt        = cms.double(50.),
+    baddetEcal       = baddetEcallist, 
+    taggingMode      = cms.bool(True),
+    debug            = cms.bool(False)
+    )
+
 ## EE noise mitigation
 ## https://twiki.cern.ch/twiki/bin/view/CMS/MissingETUncertaintyPrescription#Instructions_for_9_4_X_X_9_or_10
 from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
 runMetCorAndUncFromMiniAOD (
     process,
-    isData = False, # false for MC
-    fixEE2017 = True,
+    isData          = False, # false for MC
+    fixEE2017       = True,
     fixEE2017Params = {'userawPt': True, 'ptThreshold':50.0, 'minEtaThreshold':2.65, 'maxEtaThreshold': 3.139} ,
-    postfix = "ModifiedMET"
+    postfix         = "ModifiedMET"
     )
 
 ##https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaMiniAODV2#2017_MiniAOD_V2
 from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
 setupEgammaPostRecoSeq(process,
-    runVID=False, #saves CPU time by not needlessly re-running VID, if you want the Fall17V2 IDs, set this to True or remove (default is True)
-    era='2017-Nov17ReReco') 
+    runVID  =True, #saves CPU time by not needlessly re-running VID, if you want the Fall17V2 IDs, set this to True or remove (default is True)
+    era     ='2017-Nov17ReReco') 
 
 ##Updating Jet collection for DeepCSV tagger
 # https://twiki.cern.ch/twiki/bin/view/CMS/DeepJet#94X_installation_recipe_X_10
@@ -107,6 +130,7 @@ process.phoJetNtuplizer.runMet      = cms.bool(True);
 process.phoJetNtuplizer.runGenInfo  = cms.bool(True); # True for MC
 
 process.p = cms.Path(
+    process.ecalBadCalibReducedMINIAODFilter *
     process.fullPatMetSequenceModifiedMET *
     process.egammaPostRecoSeq *
     process.rerunMvaIsolationSequence *

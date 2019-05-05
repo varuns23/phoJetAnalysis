@@ -44,6 +44,7 @@
 #include "EgammaAnalysis/ElectronTools/interface/EnergyScaleCorrection_class.h"
 //Jet
 #include "DataFormats/PatCandidates/interface/Jet.h"
+#include "DataFormats/JetReco/interface/GenJet.h"
 #include "CondFormats/JetMETObjects/interface/FactorizedJetCorrector.h"
 #include "JetMETCorrections/Modules/interface/JetResolution.h"
 //#include "PhysicsTools/SelectorUtils/interface/PFJetIDSelectionFunctor.h"
@@ -66,6 +67,7 @@
 using namespace std;
 
 void setbit(UShort_t& x, UShort_t bit);
+void setbit(UInt_t& x, UInt_t bit);
 void setbit(ULong64_t& x, UShort_t bit);
 
 class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
@@ -92,6 +94,7 @@ class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
     void branchEventInfo (TTree*);
     void branchPhotons   (TTree*);
     void branchJets      (TTree*);
+    void branchak8Jets   (TTree*);
     void branchElectrons (TTree*);
     void branchMuons     (TTree*);
     void branchTaus      (TTree*);
@@ -101,6 +104,7 @@ class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
     void fillEventInfo  (const edm::Event&, const edm::EventSetup&);
     void fillPhotons    (const edm::Event&, const edm::EventSetup&);
     void fillJets       (const edm::Event&, const edm::EventSetup&);
+    void fillak8Jets       (const edm::Event&, const edm::EventSetup&);
     void fillElectrons  (const edm::Event&, const edm::EventSetup&, math::XYZPoint&);
     void fillMuons      (const edm::Event&, math::XYZPoint&, const reco::Vertex);
     void fillTaus      (const edm::Event&);
@@ -110,6 +114,7 @@ class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
     void initEventInfo();
     void initPhotons();
     void initJets();
+    void initak8Jets();
     void initElectrons();
     void initMuons();
     void initTaus();
@@ -118,6 +123,7 @@ class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
 
     bool is_Data_;
     bool debug_;
+    bool saveAll_;
     
     double trgFilterDeltaPtCut_;
     double trgFilterDeltaRCut_;
@@ -151,6 +157,13 @@ class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
     bool                                             runJets_;
     bool                                             runJetWidthCalculator_;
     edm::EDGetTokenT<edm::View<pat::Jet> >           jetsAK4Token_;
+    bool                                             runak8Jets_;
+    edm::EDGetTokenT<edm::View<pat::Jet> >           jetsAK8Token_;
+
+    //MET Info
+    bool                                             runMet_;
+    edm::EDGetTokenT<edm::View<pat::MET> >           pfmetToken_;
+    edm::EDGetTokenT< bool >                         ecalBadCalibFilterUpdate_token_;
 
     //Electron Info
     bool                                             runEle_;
@@ -164,12 +177,7 @@ class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
     //Taus Info
     bool                                             runTaus_;
     //edm::EDGetTokenT<edm::View<pat::Tau> >          tausToken_;
-    edm::EDGetTokenT<vector<pat::Tau> >              tausToken_;
-
-    //MET Info
-    bool                                             runMet_;
-    edm::EDGetTokenT<edm::View<pat::MET> >           pfmetToken_;
-
+    edm::EDGetTokenT<std::vector<pat::Tau> >         tausToken_;
 
     //Gen Particle Info
     bool                                             runGenInfo_;

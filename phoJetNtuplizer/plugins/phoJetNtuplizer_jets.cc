@@ -18,14 +18,11 @@
 Int_t             nJet_;
 
 vector<float>    jetPt_;
-vector<float>    jetPx_;
-vector<float>    jetPy_;
-vector<float>    jetPz_;
-vector<float>    jetEn_;
+vector<float>    JetE_;
 vector<float>    jetEta_;
 vector<float>    jetPhi_;
 vector<float>    jetRawPt_;
-vector<float>    jetRawEn_;
+vector<float>    jetRawE_;
 vector<float>    jetMt_;
 vector<float>    jetArea_;
 vector<float>    jetMass_;
@@ -34,32 +31,32 @@ vector<float>    jetPhiPhiMoment_;
 vector<float>    jetConstituentEtaPhiSpread_;
 vector<float>    jetConstituentPtDistribution_;
 vector<float>    jetPileup_;
-vector<UShort_t>  jetID_; 
+vector<UShort_t> jetID_; 
 vector<float>    jetPUID_;
-vector<Int_t>     jetPUFullID_;
-vector<Int_t>     jetPartonID_;
-vector<Int_t>     jetHadFlvr_;
+vector<Int_t>    jetPUFullID_;
+vector<Int_t>    jetPartonID_;
+vector<Int_t>    jetHadFlvr_;
 vector<float>    jetJECUnc_;
 
 vector<float>    jetCEF_;
 vector<float>    jetNEF_;
 vector<float>    jetCHF_;
 vector<float>    jetNHF_;
-vector<Int_t>     jetPhotonEnF_;
-vector<Int_t>     jetElectronEnF_;
+vector<Int_t>    jetPhotonEnF_;
+vector<Int_t>    jetElectronEnF_;
 vector<float>    jetMuonEnF_;
 vector<float>    jetChargedMuonEnF_;
 vector<float>    jetHFHAE_;
 vector<float>    jetHFEME_;
-vector<Int_t>     jetNConst_;
-vector<Int_t>     jetNConstituents_;
-vector<Int_t>     jetNCharged_; 
-vector<Int_t>     jetNNeutral_;
-vector<Int_t>     jetNChargedHad_;
-vector<Int_t>     jetNNeutralHad_;
-vector<Int_t>     jetNPhoton_;
-vector<Int_t>     jetNElectron_;
-vector<Int_t>     jetNMuon_;
+vector<Int_t>    jetNConst_;
+vector<Int_t>    jetNConstituents_;
+vector<Int_t>    jetNCharged_; 
+vector<Int_t>    jetNNeutral_;
+vector<Int_t>    jetNChargedHad_;
+vector<Int_t>    jetNNeutralHad_;
+vector<Int_t>    jetNPhoton_;
+vector<Int_t>    jetNElectron_;
+vector<Int_t>    jetNMuon_;
 
 vector<float>    jetCSV2BJetTags_;
 vector<float>    jetDeepCSVTags_b_;
@@ -67,17 +64,17 @@ vector<float>    jetDeepCSVTags_bb_;
 vector<float>    jetDeepCSVTags_c_;
 vector<float>    jetDeepCSVTags_udsg_;
 
-vector<float>   jetDeepFlavour_b_;
-vector<float>   jetDeepFlavour_bb_;
-vector<float>   jetDeepFlavour_lepb_;
-vector<float>   jetDeepFlavour_c_;
-vector<float>   jetDeepFlavour_uds_;
-vector<float>   jetDeepFlavour_g_;
+vector<float>    jetDeepFlavour_b_;
+vector<float>    jetDeepFlavour_bb_;
+vector<float>    jetDeepFlavour_lepb_;
+vector<float>    jetDeepFlavour_c_;
+vector<float>    jetDeepFlavour_uds_;
+vector<float>    jetDeepFlavour_g_;
 
 vector<float>    jetLeadTrackPt_;
 vector<float>    jetLeadTrackEta_;
 vector<float>    jetLeadTrackPhi_;
-vector<Int_t>     jetLepTrackPID_;
+vector<Int_t>    jetLepTrackPID_;
 vector<float>    jetLepTrackPt_;
 vector<float>    jetLepTrackEta_;
 vector<float>    jetLepTrackPhi_;
@@ -98,26 +95,23 @@ vector<float>    jetGenJetEn_;
 vector<float>    jetGenJetPt_;
 vector<float>    jetGenJetEta_;
 vector<float>    jetGenJetPhi_;
-vector<Int_t>     jetGenPartonID_;
+vector<Int_t>    jetGenPartonID_;
 vector<float>    jetGenEn_;
 vector<float>    jetGenPt_;
 vector<float>    jetGenEta_;
 vector<float>    jetGenPhi_;
-vector<Int_t>     jetGenPartonMomID_;
+vector<Int_t>    jetGenPartonMomID_;
 
 void phoJetNtuplizer::branchJets(TTree* tree){
 
   tree->Branch("nJet",                         &nJet_);
 
   tree->Branch("jetPt",                        &jetPt_);
-  tree->Branch("jetPx",                        &jetPx_);
-  tree->Branch("jetPy",                        &jetPy_);
-  tree->Branch("jetPz",                        &jetPz_);
-  tree->Branch("jetEn",                        &jetEn_);
+  tree->Branch("JetE",                         &JetE_);
   tree->Branch("jetEta",                       &jetEta_);
   tree->Branch("jetPhi",                       &jetPhi_);
   tree->Branch("jetRawPt",                     &jetRawPt_);
-  tree->Branch("jetRawEn",                     &jetRawEn_);
+  tree->Branch("jetRawE",                      &jetRawE_);
   tree->Branch("jetMt",                        &jetMt_);
   tree->Branch("jetArea",                      &jetArea_);
   tree->Branch("jetMass",                      &jetMass_);
@@ -166,13 +160,15 @@ void phoJetNtuplizer::branchJets(TTree* tree){
   tree->Branch("jetDeepFlavour_uds",           &jetDeepFlavour_uds_);
   tree->Branch("jetDeepFlavour_g",             &jetDeepFlavour_g_);
 
-  tree->Branch("jetLeadTrackPt",               &jetLeadTrackPt_);
-  tree->Branch("jetLeadTrackEta",              &jetLeadTrackEta_);
-  tree->Branch("jetLeadTrackPhi",              &jetLeadTrackPhi_);
-  tree->Branch("jetLepTrackPID",               &jetLepTrackPID_);
-  tree->Branch("jetLepTrackPt",                &jetLepTrackPt_);
-  tree->Branch("jetLepTrackEta",               &jetLepTrackEta_);
-  tree->Branch("jetLepTrackPhi",               &jetLepTrackPhi_);
+  if(saveAll_){
+    tree->Branch("jetLeadTrackPt",               &jetLeadTrackPt_);
+    tree->Branch("jetLeadTrackEta",              &jetLeadTrackEta_);
+    tree->Branch("jetLeadTrackPhi",              &jetLeadTrackPhi_);
+    tree->Branch("jetLepTrackPID",               &jetLepTrackPID_);
+    tree->Branch("jetLepTrackPt",                &jetLepTrackPt_);
+    tree->Branch("jetLepTrackEta",               &jetLepTrackEta_);
+    tree->Branch("jetLepTrackPhi",               &jetLepTrackPhi_);
+  }
 
   if(runJetWidthCalculator_){
     tree->Branch("jetetaWidth",                  &jetetaWidth_);
@@ -233,14 +229,11 @@ void phoJetNtuplizer::fillJets(const edm::Event& iEvent, const edm::EventSetup& 
 
     if (iJet->pt() < 20.) continue;
     jetPt_                        .push_back(iJet->pt());
-    jetPx_                        .push_back(iJet->px());
-    jetPy_                        .push_back(iJet->py());
-    jetPz_                        .push_back(iJet->pz());
-    jetEn_                        .push_back(iJet->energy());
+    JetE_                         .push_back(iJet->energy());
     jetEta_                       .push_back(iJet->eta());
     jetPhi_                       .push_back(iJet->phi());
     jetRawPt_                     .push_back((*iJet).correctedJet("Uncorrected").pt());
-    jetRawEn_                     .push_back((*iJet).correctedJet("Uncorrected").energy());
+    jetRawE_                     .push_back((*iJet).correctedJet("Uncorrected").energy());
     jetMt_                        .push_back(iJet->mt());
     jetArea_                      .push_back(iJet->jetArea());
     jetMass_                      .push_back(iJet->mass());
@@ -300,8 +293,8 @@ void phoJetNtuplizer::fillJets(const edm::Event& iEvent, const edm::EventSetup& 
     jetElectronEnF_               .push_back(iJet->electronEnergyFraction());
     jetMuonEnF_                   .push_back(iJet->muonEnergyFraction());
     jetChargedMuonEnF_            .push_back(iJet->chargedMuEnergyFraction());
-    jetHFHAE_                     .push_back( iJet->HFHadronEnergy());
-    jetHFEME_                     .push_back( iJet->HFEMEnergy());
+    jetHFHAE_                     .push_back(iJet->HFHadronEnergy());
+    jetHFEME_                     .push_back(iJet->HFEMEnergy());
     jetNConst_                    .push_back(iJet->nConstituents());
     jetNConstituents_             .push_back(iJet->numberOfDaughters());
     //jetNConst60_                  .push_back(iJet->nCarrying(0.60)); //return # of consitutents carrying 60% of energy
@@ -327,49 +320,46 @@ void phoJetNtuplizer::fillJets(const edm::Event& iEvent, const edm::EventSetup& 
     jetDeepFlavour_uds_          .push_back(iJet->bDiscriminator("pfDeepFlavourJetTags:probuds"));
     jetDeepFlavour_g_            .push_back(iJet->bDiscriminator("pfDeepFlavourJetTags:probg"));
 
-    //Searching for leading track and lepton
-    float leadTrkPt  = -99;
-    float leadTrkEta = -99;
-    float leadTrkPhi = -99;
-    Int_t   lepTrkPID  = -99;
-    float lepTrkPt   = -99;
-    float lepTrkEta  = -99;
-    float lepTrkPhi  = -99;
+    if(saveAll_){
+      //Searching for leading track and lepton
+      float leadTrkPt  = -99;
+      float leadTrkEta = -99;
+      float leadTrkPhi = -99;
+      Int_t   lepTrkPID  = -99;
+      float lepTrkPt   = -99;
+      float lepTrkEta  = -99;
+      float lepTrkPhi  = -99;
 
-    for (unsigned id = 0; id < iJet->getJetConstituents().size(); id++) {
+      for (unsigned id = 0; id < iJet->getJetConstituents().size(); id++) {
 
-      const edm::Ptr<reco::Candidate> daughter = iJet->getJetConstituents().at(id);
+	const edm::Ptr<reco::Candidate> daughter = iJet->getJetConstituents().at(id);
 
-      if (daughter.isNonnull() && daughter.isAvailable()) {
-	if (daughter->charge() != 0 && daughter->pt() > leadTrkPt) {
-	  leadTrkPt  = daughter->pt();
-	  leadTrkEta = daughter->eta();
-	  leadTrkPhi = daughter->phi();
-	}
+	if (daughter.isNonnull() && daughter.isAvailable()) {
+	  if (daughter->charge() != 0 && daughter->pt() > leadTrkPt) {
+	    leadTrkPt  = daughter->pt();
+	    leadTrkEta = daughter->eta();
+	    leadTrkPhi = daughter->phi();
+	  }
 
-	if (fabs(daughter->pdgId()) == 11 || fabs(daughter->pdgId()) == 13) {
-	  if (daughter->pt() > lepTrkPt) {
-	    lepTrkPID = daughter->pdgId();
-	    lepTrkPt  = daughter->pt();
-	    lepTrkEta = daughter->eta();
-	    lepTrkPhi = daughter->phi();
+	  if (fabs(daughter->pdgId()) == 11 || fabs(daughter->pdgId()) == 13) {
+	    if (daughter->pt() > lepTrkPt) {
+	      lepTrkPID = daughter->pdgId();
+	      lepTrkPt  = daughter->pt();
+	      lepTrkEta = daughter->eta();
+	      lepTrkPhi = daughter->phi();
+	    }
 	  }
 	}
       }
-    }
 
-    jetLeadTrackPt_ .push_back(leadTrkPt);
-    jetLeadTrackEta_.push_back(leadTrkEta);
-    jetLeadTrackPhi_.push_back(leadTrkPhi);
-    jetLepTrackPID_ .push_back(lepTrkPID);
-    jetLepTrackPt_  .push_back(lepTrkPt);
-    jetLepTrackEta_ .push_back(lepTrkEta);
-    jetLepTrackPhi_ .push_back(lepTrkPhi);    
-    //jetVtxPt_       .push_back(sqrt(pow(iJet->userFloat("vtxPx"),2)+pow(iJet->userFloat("vtxPy"),2)));
-    //jetVtxMass_     .push_back(iJet->userFloat("vtxMass"));
-    //jetVtxNtrks_    .push_back(iJet->userFloat("vtxNtracks"));
-    //jetVtx3DVal_    .push_back(iJet->userFloat("vtx3DVal"));
-    //jetVtx3DSig_    .push_back(iJet->userFloat("vtx3DSig"));
+      jetLeadTrackPt_ .push_back(leadTrkPt);
+      jetLeadTrackEta_.push_back(leadTrkEta);
+      jetLeadTrackPhi_.push_back(leadTrkPhi);
+      jetLepTrackPID_ .push_back(lepTrkPID);
+      jetLepTrackPt_  .push_back(lepTrkPt);
+      jetLepTrackEta_ .push_back(lepTrkEta);
+      jetLepTrackPhi_ .push_back(lepTrkPhi);
+    }
 
     //JetWidthCalculator
     if(runJetWidthCalculator_){
@@ -382,7 +372,7 @@ void phoJetNtuplizer::fillJets(const edm::Event& iEvent, const edm::EventSetup& 
       //jetnMisc_          .push_back(jwc.getnMiscParticles());
       //jetMiscPdgId_      .push_back(jwc.getMiscPdgId());
 
-      
+
       jetConstPt_        .push_back(jwc.getConstPt());
       jetConstEt_        .push_back(jwc.getConstEt());
       jetConstEta_       .push_back(jwc.getConstEta());
@@ -443,14 +433,11 @@ void phoJetNtuplizer::initJets(){
   nJet_                          = 0;
 
   jetPt_                        .clear();
-  jetPx_                        .clear();
-  jetPy_                        .clear();
-  jetPz_                        .clear();
-  jetEn_                        .clear();
+  JetE_                         .clear();
   jetEta_                       .clear();
   jetPhi_                       .clear();
   jetRawPt_                     .clear();
-  jetRawEn_                     .clear();
+  jetRawE_                     .clear();
   jetMt_                        .clear();
   jetArea_                      .clear();
   jetMass_                      .clear();

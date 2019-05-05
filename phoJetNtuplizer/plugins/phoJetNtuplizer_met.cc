@@ -59,18 +59,19 @@ void phoJetNtuplizer::fillMet(const edm::Event& iEvent, const edm::EventSetup& i
   
   initMet();
 
-  // https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#Early_2018_data
+   // https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#Early_2018_data
+  
+  
   std::vector< string > metFilterNames;
-  metFilterNames.push_back("Flag_goodVertices"); //1
-  metFilterNames.push_back("Flag_globalSuperTightHalo2016Filter"); //2
-  metFilterNames.push_back("Flag_HBHENoiseFilter");  // 3
-  metFilterNames.push_back("Flag_HBHENoiseIsoFilter"); // 4
-  metFilterNames.push_back("Flag_EcalDeadCellTriggerPrimitiveFilter"); //5
-  metFilterNames.push_back("Flag_BadPFMuonFilter"); //6
-  metFilterNames.push_back("Flag_BadChargedCandidateFilter"); //7
-  if(is_Data_)metFilterNames.push_back("Flag_eeBadScFilter"); //8
-//  metFilterNames.push_back("ecalBadCalibReducedMINIAODFilter"); // Need to be RE-RUN
-
+  metFilterNames.push_back("Flag_goodVertices"); //0
+  metFilterNames.push_back("Flag_globalSuperTightHalo2016Filter"); //1
+  metFilterNames.push_back("Flag_HBHENoiseFilter");  // 2
+  metFilterNames.push_back("Flag_HBHENoiseIsoFilter"); // 3
+  metFilterNames.push_back("Flag_EcalDeadCellTriggerPrimitiveFilter"); //4
+  metFilterNames.push_back("Flag_BadPFMuonFilter"); //5
+  metFilterNames.push_back("Flag_BadChargedCandidateFilter"); //6
+  if(is_Data_)metFilterNames.push_back("Flag_eeBadScFilter"); //7
+  //metFilterNames.push_back("ecalBadCalibReducedMINIAODFilter"); //8 // Need to be RE-RUN - done below
 
   edm::Handle<edm::TriggerResults> patFilterResultsHandle;                                                          
   //iEvent.getByToken(patTrgResultsToken_, patFilterResultsHandle);
@@ -89,6 +90,13 @@ void phoJetNtuplizer::fillMet(const edm::Event& iEvent, const edm::EventSetup& i
       }
     }
   }
+
+  edm::Handle< bool > passecalBadCalibFilterUpdate ;
+  iEvent.getByToken(ecalBadCalibFilterUpdate_token_,passecalBadCalibFilterUpdate);
+  bool  _passecalBadCalibFilterUpdate =  (*passecalBadCalibFilterUpdate );
+  if(!_passecalBadCalibFilterUpdate) 
+    setbit(metFilters_, 8);
+  
 
   edm::Handle<edm::View<pat::MET> > pfmetHandle;
   iEvent.getByToken(pfmetToken_, pfmetHandle);

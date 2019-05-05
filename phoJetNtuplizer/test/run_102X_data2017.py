@@ -45,6 +45,29 @@ process.load( "PhysicsTools.PatAlgos.producersLayer1.patCandidates_cff" )
 process.load( "PhysicsTools.PatAlgos.triggerLayer1.triggerProducer_cff" )
 process.load( "PhysicsTools.PatAlgos.selectionLayer1.selectedPatCandidates_cff" )
 
+##Re-run ECAL bad calibration filter 
+##https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#2017_data
+process.load('RecoMET.METFilters.ecalBadCalibFilter_cfi')
+baddetEcallist = cms.vuint32(
+    [872439604,872422825,872420274,872423218,
+    872423215,872416066,872435036,872439336,
+    872420273,872436907,872420147,872439731,
+    872436657,872420397,872439732,872439339,
+    872439603,872422436,872439861,872437051,
+    872437052,872420649,872422436,872421950,
+    872437185,872422564,872421566,872421695,
+    872421955,872421567,872437184,872421951,
+    872421694,872437056,872437057,872437313])
+
+process.ecalBadCalibReducedMINIAODFilter = cms.EDFilter(
+    "EcalBadCalibFilter",
+    EcalRecHitSource = cms.InputTag("reducedEgamma:reducedEERecHits"),
+    ecalMinEt        = cms.double(50.),
+    baddetEcal       = baddetEcallist, 
+    taggingMode      = cms.bool(True),
+    debug            = cms.bool(False)
+    )
+ 
 ##MET Corrections: Type-1
 from PhysicsTools.PatAlgos.tools.coreTools import *
 runOnData( process,  names=['Photons', 'Electrons','Muons','Taus','Jets'], outputModules = [] )
@@ -54,26 +77,28 @@ runOnData( process,  names=['Photons', 'Electrons','Muons','Taus','Jets'], outpu
 from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
 runMetCorAndUncFromMiniAOD (
     process,
-    isData = True, # false for MC
-    fixEE2017 = True,
+    isData          = True, # false for MC
+    fixEE2017       = True,
     fixEE2017Params = {'userawPt': True, 'ptThreshold':50.0, 'minEtaThreshold':2.65, 'maxEtaThreshold': 3.139} ,
-    postfix = "ModifiedMET"
+    postfix         = "ModifiedMET"
     )
 
 ##L1 Prefirring
 ##https://twiki.cern.ch/twiki/bin/viewauth/CMS/L1ECALPrefiringWeightRecipe
 from PhysicsTools.PatUtils.l1ECALPrefiringWeightProducer_cfi import l1ECALPrefiringWeightProducer
 process.prefiringweight = l1ECALPrefiringWeightProducer.clone(
-    DataEra = cms.string("2017BtoF"),
-    UseJetEMPt = cms.bool(False),
+    DataEra                      = cms.string("2017BtoF"),
+    UseJetEMPt                   = cms.bool(False),
     PrefiringRateSystematicUncty = cms.double(0.2),
-    SkipWarnings = False)
+    SkipWarnings                 = False
+    )
 
 ##https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaMiniAODV2#2017_MiniAOD_V2
 from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
 setupEgammaPostRecoSeq(process,
-    runVID=False, #saves CPU time by not needlessly re-running VID, if you want the Fall17V2 IDs, set this to True or remove (default is True)
-    era='2017-Nov17ReReco') 
+    runVID = True, #saves CPU time by not needlessly re-running VID, if you want the Fall17V2 IDs, set this to True or remove (default is True)
+    era    = '2017-Nov17ReReco'
+    ) 
 
 ##Updating Jet collection for DeepCSV tagger
 # https://twiki.cern.ch/twiki/bin/view/CMS/DeepJet#94X_installation_recipe_X_10

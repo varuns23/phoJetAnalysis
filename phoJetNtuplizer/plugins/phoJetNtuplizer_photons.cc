@@ -2,13 +2,15 @@
 #include "phoJetAnalysis/phoJetNtuplizer/interface/phoJetNtuplizer.h"
 
 Int_t            nPho_;
+
 vector<float>    phoE_;
-vector<float>    phoPx_;
-vector<float>    phoPy_;
-vector<float>    phoPz_;
 vector<float>    phoEt_;
 vector<float>    phoEta_;
 vector<float>    phoPhi_;
+vector<float>    phoPx_;
+vector<float>    phoPy_;
+vector<float>    phoPz_;
+
 
 vector<float>    phoUnCalibE_;
 vector<float>    phoUnCalibESigma_;
@@ -40,10 +42,8 @@ vector<float>    phoPFChWorstIso_;
 vector<float>    phoPFPhoIso_;
 vector<float>    phoPFNeuIso_;
 
-vector<float>    phoIDMVAv1_;
-vector<float>    phoIDMVAv1p1_;
-vector<UShort_t> phoIDbit_;
-vector<UShort_t> phoMVAIDbit_;
+vector<float>     phoIDMVA_;
+vector<UShort_t>  phoIDbit_;
 
 vector<float>    phoSeedTime_;
 vector<float>    phoSeedEnergy_;
@@ -73,19 +73,21 @@ void phoJetNtuplizer::branchPhotons(TTree* tree){
 
   tree->Branch("nPho",                     &nPho_);
   tree->Branch("phoE",                     &phoE_);
-  tree->Branch("phoPx",                    &phoPx_);
-  tree->Branch("phoPy",                    &phoPy_);
-  tree->Branch("phoPz",                    &phoPz_);
   tree->Branch("phoEt",                    &phoEt_);
   tree->Branch("phoEta",                   &phoEta_);
   tree->Branch("phoPhi",                   &phoPhi_);
-  
+  if(saveAll_){
+    tree->Branch("phoPx",                     &phoPx_);
+    tree->Branch("phoPy",                     &phoPy_);
+    tree->Branch("phoPz",                     &phoPz_);
+  }
+
   tree->Branch("phoUnCalibE",              &phoUnCalibE_);
   tree->Branch("phoUnCalibESigma",         &phoUnCalibESigma_);
   tree->Branch("phoCalibE",                &phoCalibE_);
   tree->Branch("phoCalibESigma",           &phoCalibESigma_);
   tree->Branch("phoCalibEt",               &phoCalibEt_);
-  
+
   tree->Branch("phoEnergyScale",           &phoEnergyScale_);
   tree->Branch("phoEnergySigma",           &phoEnergySigma_);
 
@@ -98,7 +100,8 @@ void phoJetNtuplizer::branchPhotons(TTree* tree){
 
   tree->Branch("phohasPixelSeed",          &phohasPixelSeed_);
   tree->Branch("phoEleVeto",               &phoEleVeto_);
-  tree->Branch("phoR9",                    &phoR9_);
+  if(saveAll_)
+    tree->Branch("phoR9",                    &phoR9_);
   tree->Branch("phoR9Full5x5",             &phoR9Full5x5_);
   tree->Branch("phoHoverE",                &phoHoverE_);
   tree->Branch("phoSigmaIEtaIEtaFull5x5",  &phoSigmaIEtaIEtaFull5x5_);
@@ -110,10 +113,8 @@ void phoJetNtuplizer::branchPhotons(TTree* tree){
   tree->Branch("phoPFPhoIso",              &phoPFPhoIso_);
   tree->Branch("phoPFNeuIso",              &phoPFNeuIso_);
 
-  tree->Branch("phoIDMVAv1",               &phoIDMVAv1_);
-  tree->Branch("phoIDMVAv1p1",             &phoIDMVAv1p1_);
+  tree->Branch("phoIDMVA",                 &phoIDMVA_);
   tree->Branch("phoIDbit",                 &phoIDbit_);
-  tree->Branch("phoMVAIDbit",              &phoMVAIDbit_);
 
   tree->Branch("phoSeedTime",              &phoSeedTime_);
   tree->Branch("phoSeedEnergy",            &phoSeedEnergy_);
@@ -166,17 +167,20 @@ void phoJetNtuplizer::fillPhotons(const edm::Event& iEvent, const edm::EventSetu
     phoCalibESigma_           .push_back(ipho->userFloat("ecalEnergyErrPostCorr"));
     phoCalibEt_               .push_back(ipho->et()*ipho->userFloat("ecalEnergyPostCorr")/ipho->energy());
 
+
     phoEnergyScale_           .push_back(ipho->userFloat("energyScaleValue"));
     phoEnergySigma_           .push_back(ipho->userFloat("energySigmaValue"));
 
     phoE_                     .push_back(ipho->energy());
-    phoPx_                    .push_back(ipho->px());
-    phoPy_                    .push_back(ipho->py());
-    phoPz_                    .push_back(ipho->pz());
     phoEt_                    .push_back(ipho->et());
     phoEta_                   .push_back(ipho->eta());
     phoPhi_                   .push_back(ipho->phi());
 
+    if(saveAll_){
+      phoPx_                     .push_back(ipho->px());
+      phoPy_                     .push_back(ipho->py());
+      phoPz_                     .push_back(ipho->pz());
+    }
     phoSCE_                   .push_back(ipho->superCluster()->energy());
     phoSCRawE_                .push_back(ipho->superCluster()->rawEnergy());
     phoSCEta_                 .push_back(ipho->superCluster()->eta());
@@ -186,7 +190,7 @@ void phoJetNtuplizer::fillPhotons(const edm::Event& iEvent, const edm::EventSetu
 
     phohasPixelSeed_          .push_back((Int_t)ipho->hasPixelSeed());
     phoEleVeto_               .push_back((Int_t)ipho->passElectronVeto());
-    phoR9_                    .push_back(ipho->r9());
+    if(saveAll_) phoR9_                    .push_back(ipho->r9());
     phoR9Full5x5_             .push_back(ipho->full5x5_r9());
     phoHoverE_                .push_back(ipho->hadTowOverEm());
 
@@ -204,27 +208,24 @@ void phoJetNtuplizer::fillPhotons(const edm::Event& iEvent, const edm::EventSetu
     phoPFPhoIso_              .push_back(ipho->userFloat("phoPhotonIsolation"));
     phoPFNeuIso_              .push_back(ipho->userFloat("phoNeutralHadronIsolation"));
 
-    phoIDMVAv1_               .push_back(ipho->userFloat("PhotonMVAEstimatorRunIIFall17v1Values"));
-    phoIDMVAv1p1_             .push_back(ipho->userFloat("PhotonMVAEstimatorRunIIFall17v1p1Values"));
+    phoIDMVA_               .push_back(ipho->userFloat("PhotonMVAEstimatorRunIIFall17v2Values"));
 
     //VID decisions
     UShort_t tmpphoIDbit = 0;
-    bool isPassLoose  = ipho->photonID("cutBasedPhotonID-Fall17-94X-V1-loose");
+    bool isPassLoose  = ipho->photonID("cutBasedPhotonID-Fall17-94X-V2-loose");
     if (isPassLoose)  setbit(tmpphoIDbit, 0);
-    bool isPassMedium = ipho->photonID("cutBasedPhotonID-Fall17-94X-V1-medium");
+    bool isPassMedium = ipho->photonID("cutBasedPhotonID-Fall17-94X-V2-medium");
     if (isPassMedium) setbit(tmpphoIDbit, 1);
-    bool isPassTight  = ipho->photonID("cutBasedPhotonID-Fall17-94X-V1-tight");
+    bool isPassTight  = ipho->photonID("cutBasedPhotonID-Fall17-94X-V2-tight");
     if (isPassTight)  setbit(tmpphoIDbit, 2);
+
+    bool isPassWP80   = ipho->photonID("mvaPhoID-RunIIFall17-v2-wp80");
+    if(isPassWP80) setbit(tmpphoIDbit, 3);
+    bool isPassWP90   = ipho->photonID("mvaPhoID-RunIIFall17-v2-wp90");
+    if(isPassWP90) setbit(tmpphoIDbit, 4);
 
     phoIDbit_                 .push_back(tmpphoIDbit);
 
-    UShort_t tmpphoMVAIDbit = 0;
-    bool isPassWP80   = ipho->photonID("mvaPhoID-RunIIFall17-v1-wp80");
-    if(isPassWP80) setbit(tmpphoMVAIDbit, 0);
-    bool isPassWP90   = ipho->photonID("mvaPhoID-RunIIFall17-v1-wp90");
-    if(isPassWP90) setbit(tmpphoMVAIDbit, 1);
-
-    phoMVAIDbit_              .push_back(tmpphoMVAIDbit);
 
     ////// Seed time and energy
     DetId seed = (ipho->superCluster()->seed()->hitsAndFractions())[0].first;
@@ -279,13 +280,14 @@ void phoJetNtuplizer::initPhotons(){
   nPho_ = 0;
 
   phoE_                        .clear();
-  phoPx_                       .clear();
-  phoPy_                       .clear();
-  phoPz_                       .clear();
   phoEt_                       .clear();
   phoEta_                      .clear();
   phoPhi_                      .clear();
-
+  if(saveAll_){
+    phoPx_                        .clear(); 
+    phoPy_                        .clear(); 
+    phoPz_                        .clear(); 
+  }
   phoUnCalibE_                 .clear();
   phoUnCalibESigma_            .clear();
   phoCalibE_                   .clear();
@@ -304,7 +306,9 @@ void phoJetNtuplizer::initPhotons(){
 
   phohasPixelSeed_             .clear();
   phoEleVeto_                  .clear();
-  phoR9_                       .clear();
+  if(saveAll_){
+    phoR9_                       .clear();
+  }
   phoR9Full5x5_                .clear();
   phoHoverE_                   .clear();
   phoSigmaIEtaIEtaFull5x5_     .clear();
@@ -316,10 +320,8 @@ void phoJetNtuplizer::initPhotons(){
   phoPFPhoIso_                 .clear();
   phoPFNeuIso_                 .clear();
 
-  phoIDMVAv1_                  .clear();
-  phoIDMVAv1p1_                .clear();
+  phoIDMVA_                  .clear();
   phoIDbit_                    .clear();
-  phoMVAIDbit_                 .clear();
 
   phoSeedTime_                 .clear();
   phoSeedEnergy_               .clear();
