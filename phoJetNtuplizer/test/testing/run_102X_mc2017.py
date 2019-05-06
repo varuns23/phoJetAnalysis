@@ -120,6 +120,7 @@ na.runTauID()
 process.load("phoJetAnalysis.phoJetNtuplizer.phoJetNtuplizer_cfi")
 process.phoJetNtuplizer.debug       = cms.bool(False);
 process.phoJetNtuplizer.is_Data     = cms.bool(False);  # True for Data
+process.phoJetNtuplizer.saveAll     = cms.bool(True); 
 process.phoJetNtuplizer.runPhotons  = cms.bool(True);
 process.phoJetNtuplizer.runJets     = cms.bool(True);
 process.phoJetNtuplizer.runak8Jets     = cms.bool(True);

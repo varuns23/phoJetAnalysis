@@ -325,7 +325,7 @@ void phoJetNtuplizer::fillJets(const edm::Event& iEvent, const edm::EventSetup& 
       float leadTrkPt  = -99;
       float leadTrkEta = -99;
       float leadTrkPhi = -99;
-      Int_t   lepTrkPID  = -99;
+      Int_t lepTrkPID  = -99;
       float lepTrkPt   = -99;
       float lepTrkEta  = -99;
       float lepTrkPhi  = -99;
