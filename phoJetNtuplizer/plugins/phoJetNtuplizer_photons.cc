@@ -7,10 +7,6 @@ vector<float>    phoE_;
 vector<float>    phoEt_;
 vector<float>    phoEta_;
 vector<float>    phoPhi_;
-vector<float>    phoPx_;
-vector<float>    phoPy_;
-vector<float>    phoPz_;
-
 
 vector<float>    phoUnCalibE_;
 vector<float>    phoUnCalibESigma_;
@@ -76,11 +72,6 @@ void phoJetNtuplizer::branchPhotons(TTree* tree){
   tree->Branch("phoEt",                    &phoEt_);
   tree->Branch("phoEta",                   &phoEta_);
   tree->Branch("phoPhi",                   &phoPhi_);
-  if(saveAll_){
-    tree->Branch("phoPx",                     &phoPx_);
-    tree->Branch("phoPy",                     &phoPy_);
-    tree->Branch("phoPz",                     &phoPz_);
-  }
 
   tree->Branch("phoUnCalibE",              &phoUnCalibE_);
   tree->Branch("phoUnCalibESigma",         &phoUnCalibESigma_);
@@ -176,11 +167,6 @@ void phoJetNtuplizer::fillPhotons(const edm::Event& iEvent, const edm::EventSetu
     phoEta_                   .push_back(ipho->eta());
     phoPhi_                   .push_back(ipho->phi());
 
-    if(saveAll_){
-      phoPx_                     .push_back(ipho->px());
-      phoPy_                     .push_back(ipho->py());
-      phoPz_                     .push_back(ipho->pz());
-    }
     phoSCE_                   .push_back(ipho->superCluster()->energy());
     phoSCRawE_                .push_back(ipho->superCluster()->rawEnergy());
     phoSCEta_                 .push_back(ipho->superCluster()->eta());
@@ -283,11 +269,7 @@ void phoJetNtuplizer::initPhotons(){
   phoEt_                       .clear();
   phoEta_                      .clear();
   phoPhi_                      .clear();
-  if(saveAll_){
-    phoPx_                        .clear(); 
-    phoPy_                        .clear(); 
-    phoPz_                        .clear(); 
-  }
+  
   phoUnCalibE_                 .clear();
   phoUnCalibESigma_            .clear();
   phoCalibE_                   .clear();
