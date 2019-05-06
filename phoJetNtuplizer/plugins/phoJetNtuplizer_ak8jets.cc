@@ -112,16 +112,16 @@ void phoJetNtuplizer::branchak8Jets(TTree* tree){
   tree->Branch("ak8JetCHS_phi", &ak8JetCHS_phi_);
   tree->Branch("ak8JetCHS_mass", &ak8JetCHS_mass_);
 
-//  tree->Branch("ak8JetCEF",                &ak8JetCEF_);
-//  tree->Branch("ak8JetNEF",                &ak8JetNEF_);
-//  tree->Branch("ak8JetCHF",                &ak8JetCHF_);
-//  tree->Branch("ak8JetNHF",                &ak8JetNHF_);
-//  tree->Branch("ak8JetNCH",                &ak8JetNCH_);
-//  tree->Branch("ak8JetNNP",                &ak8JetNNP_);
-//  tree->Branch("ak8JetMUF",                &ak8JetMUF_);
-//  tree->Branch("ak8Jetnconstituents",      &ak8Jetnconstituents_);
-//  tree->Branch("ak8JetPFLooseId",          &ak8JetPFLooseId_);
-//  tree->Branch("ak8JetPFTightLepVetoId",   &ak8JetPFTightLepVetoId_);
+  tree->Branch("ak8JetCEF",                &ak8JetCEF_);
+  tree->Branch("ak8JetNEF",                &ak8JetNEF_);
+  tree->Branch("ak8JetCHF",                &ak8JetCHF_);
+  tree->Branch("ak8JetNHF",                &ak8JetNHF_);
+  tree->Branch("ak8JetNCH",                &ak8JetNCH_);
+  tree->Branch("ak8JetNNP",                &ak8JetNNP_);
+  tree->Branch("ak8JetMUF",                &ak8JetMUF_);
+  tree->Branch("ak8Jetnconstituents",      &ak8Jetnconstituents_);
+  tree->Branch("ak8JetPFLooseId",          &ak8JetPFLooseId_);
+  tree->Branch("ak8JetPFTightLepVetoId",   &ak8JetPFTightLepVetoId_);
   
 //  tree->Branch("ak8CHSSoftDropJetMassCorr",&ak8CHSSoftDropJetMassCorr_);
 //  tree->Branch("ak8CHSPrunedJetMassCorr",  &ak8CHSPrunedJetMassCorr_);
@@ -164,6 +164,9 @@ void phoJetNtuplizer::fillak8Jets(const edm::Event& iEvent, const edm::EventSetu
 //
   edm::Handle<edm::View<pat::Jet> > ak8jetHandle;
   iEvent.getByToken(jetsAK8Token_, ak8jetHandle);
+//  iEvent.getByToken(jetsAK8Token_, ak8jetHandle);
+
+
 
   if (!ak8jetHandle.isValid()) {
     edm::LogWarning("phoJetNtuplizer") << "no pat::Jets (AK8) in event";
@@ -188,7 +191,7 @@ void phoJetNtuplizer::fillak8Jets(const edm::Event& iEvent, const edm::EventSetu
  
   for (edm::View<pat::Jet>::const_iterator iak8Jet = ak8jetHandle->begin(); iak8Jet != ak8jetHandle->end(); ++iak8Jet) {
 
-    if(iak8Jet->pt() < 30.) continue;
+    if(iak8Jet->pt() < 200.) continue;
 
     ak8JetPt_                        .push_back(iak8Jet->pt());
     ak8JetE_                         .push_back(iak8Jet->energy());
@@ -200,13 +203,13 @@ void phoJetNtuplizer::fillak8Jets(const edm::Event& iEvent, const edm::EventSetu
       ak8JetRawE_                      .push_back((*iak8Jet).correctedJet("Uncorrected").energy());
     }
 
-//    ak8JetCEF_         .push_back(iak8Jet->chargedEmEnergyFraction());
-//    ak8JetNEF_         .push_back(iak8Jet->neutralEmEnergyFraction());
-//    ak8JetCHF_         .push_back(iak8Jet->chargedHadronEnergyFraction());
-//    ak8JetNHF_         .push_back(iak8Jet->neutralHadronEnergyFraction());
-//    ak8JetNCH_         .push_back(iak8Jet->chargedMultiplicity());
-//    ak8JetNNP_         .push_back(iak8Jet->neutralMultiplicity());
-//    ak8JetMUF_         .push_back(iak8Jet->muonEnergyFraction());
+    ak8JetCEF_         .push_back(iak8Jet->chargedEmEnergyFraction());
+    ak8JetNEF_         .push_back(iak8Jet->neutralEmEnergyFraction());
+    ak8JetCHF_         .push_back(iak8Jet->chargedHadronEnergyFraction());
+    ak8JetNHF_         .push_back(iak8Jet->neutralHadronEnergyFraction());
+    ak8JetNCH_         .push_back(iak8Jet->chargedMultiplicity());
+    ak8JetNNP_         .push_back(iak8Jet->neutralMultiplicity());
+    ak8JetMUF_         .push_back(iak8Jet->muonEnergyFraction());
 
     ak8Jet_tau1_      .push_back(iak8Jet->userFloat("ak8PFJetsCHSValueMap:NjettinessAK8CHSTau1"));
     ak8Jet_tau2_      .push_back(iak8Jet->userFloat("ak8PFJetsCHSValueMap:NjettinessAK8CHSTau2"));
@@ -274,16 +277,16 @@ void phoJetNtuplizer::initak8Jets(){
   ak8JetCHS_phi_             .clear();
   ak8JetCHS_mass_            .clear();
 
-//  ak8JetCEF_          .clear();
-//  ak8JetNEF_          .clear();
-//  ak8JetCHF_          .clear();
-//  ak8JetNHF_          .clear();
-//  ak8JetNCH_          .clear();
-//  ak8JetNNP_          .clear();
-//  ak8JetMUF_          .clear();
-//  ak8Jetnconstituents_     .clear();
-//  ak8JetPFLooseId_         .clear();
-//  ak8JetPFTightLepVetoId_  .clear();
+  ak8JetCEF_          .clear();
+  ak8JetNEF_          .clear();
+  ak8JetCHF_          .clear();
+  ak8JetNHF_          .clear();
+  ak8JetNCH_          .clear();
+  ak8JetNNP_          .clear();
+  ak8JetMUF_          .clear();
+  ak8Jetnconstituents_     .clear();
+  ak8JetPFLooseId_         .clear();
+  ak8JetPFTightLepVetoId_  .clear();
 
 //  ak8CHSSoftDropJetMassCorr_   .clear();
 //  ak8CHSPrunedJetMassCorr_   .clear();
