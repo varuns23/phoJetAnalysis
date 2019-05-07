@@ -11,8 +11,8 @@ process.load("Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cf
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
 #process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_data', '')
-process.GlobalTag = GlobalTag(process.GlobalTag, '102X_dataRun2_v8')
-#process.GlobalTag = GlobalTag(process.GlobalTag, '94X_dataRun2_v6')
+#process.GlobalTag = GlobalTag(process.GlobalTag, '102X_dataRun2_v8')
+process.GlobalTag = GlobalTag(process.GlobalTag, '94X_dataRun2_v11')
 
 #jec from sqlite
 process.load("CondCore.CondDB.CondDB_cfi")
@@ -128,27 +128,16 @@ na = TauIDEmbedder(process, cms, # pass tour process object
     )
 na.runTauID()
 
-#https://twiki.cern.ch/twiki/bin/viewauth/CMS/JetToolbox
-# For AK8 jets 
-
 ### Analyzer Related
 process.load("phoJetAnalysis.phoJetNtuplizer.phoJetNtuplizer_cfi")
 process.phoJetNtuplizer.debug        = cms.bool(False);
-process.phoJetNtuplizer.runEventInfo = cms.bool(True);
-process.phoJetNtuplizer.runPhotons   = cms.bool(True);
-process.phoJetNtuplizer.runJets      = cms.bool(True);
+process.phoJetNtuplizer.runak8Jets   = cms.bool(True);
 process.phoJetNtuplizer.runJetWidthCalculator = cms.bool(True); # needed for monoZprime Analysis [Valid only if runJets is True]
-process.phoJetNtuplizer.runEle       = cms.bool(True);
-process.phoJetNtuplizer.runMuon      = cms.bool(True);
-process.phoJetNtuplizer.runTaus      = cms.bool(True);
-process.phoJetNtuplizer.runMet       = cms.bool(True);
-process.phoJetNtuplizer.runGenInfo   = cms.bool(False); # True for MC
-#process.phoJetNtuplizer.pfmetToken  = cms.InputTag("slimmedMETsModifiedMET")
 
 process.p = cms.Path(
+    process.ecalBadCalibReducedMINIAODFilter *
     process.fullPatMetSequenceModifiedMET *
     process.egammaPostRecoSeq *
-#    process.ecalBadCalibReducedMINIAODFilter *
     process.prefiringweight *
     process.rerunMvaIsolationSequence *
     process.NewTauIDsEmbedded *
