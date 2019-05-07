@@ -2,15 +2,14 @@
 
 Instructions:
 ```
-cmsrel CMSSW_10_2_11
-cd CMSSW_10_2_11/src
+cmsrel CMSSW_10_2_10
+cd CMSSW_10_2_10/src
 cmsenv
 git cms-init
 
 git cms-addpkg RecoMET/METFilters                              
 git cms-merge-topic cms-egamma:EgammaPostRecoTools             
 git cms-merge-topic cms-met:METFixEE2017_949_v2_backport_to_102X
-git clone git@github.com:cms-jet/JetToolbox.git JMEAnalysis/JetToolbox -b jetToolbox_102X_v1
 
 #For 2017 data-taking
 git clone -b 2017_102X https://github.com/varuns23/phoJetAnalysis.git
