@@ -22,13 +22,14 @@ def submit(config):
 
 from CRABClient.UserUtilities import config
 config = config()
-name = 'ntuple_data31Mar2018'
+name = 'Run2017_31Mar2018_May2019'
 config.General.workArea = 'crab_'+name
 config.General.transferOutputs = True
 config.General.transferLogs = True
 
 config.JobType.pluginName = 'Analysis'
-#config.JobType.inputFiles = ['inputFiles']
+config.JobType.inputFiles = ['Fall17_17Nov2017_V32_102X_DATA.db']
+config.JobType.allowUndistributedCMSSW = True
 
 config.section_('Data') 
 config.Data.publication = False
@@ -40,24 +41,24 @@ config.Site.storageSite = 'T2_US_Wisconsin'
 #config.Site.whitelist = ["T2_US_Wisconsin"]
 #config.Site.blacklist = ['T2_CH_CERN']
 
-listOfSamples = ['MET2017B', 'MET2017C', 'MET2017D', 'MET2017E', 'MET2017F']
-#listOfSamples = ['MET2017E', 'MET2017F']
+#listOfSamples = ['MET2017B', 'MET2017C', 'MET2017D', 'MET2017E', 'MET2017F']
+listOfSamples = ['MET2017B', 'MET2017C', 'MET2017D']
 #listOfSamples = ['SingleEle2017B', 'SingleEle2017C', 'SingleEle2017D', 'SingleEle2017E', 'SingleEle2017F']
 
 for sample in listOfSamples:  
-  os.popen('cp run_94X_data.py run_94X_data_'+sample+'.py')
-  with open('run_94X_data_'+sample+'.py') as oldFile:
-    newText = oldFile.read().replace('Ntuple_data.root','Data_'+sample+'.root')
-  with open('run_94X_data_'+sample+'.py', 'w') as newFile:
+  os.popen('cp run_102X_data2017.py run_102X_data2017_'+sample+'.py')
+  with open('run_102X_data2017_'+sample+'.py') as oldFile:
+    newText = oldFile.read().replace('Ntuple_data2017.root','Data_'+sample+'.root')
+  with open('run_102X_data2017_'+sample+'.py', 'w') as newFile:
     newFile.write(newText)
 
   config.General.requestName = 'job_'+sample
   
-  config.JobType.psetName = 'run_94X_data_'+sample+'.py'
+  config.JobType.psetName = 'run_102X_data2017_'+sample+'.py'
   config.JobType.outputFiles = ['Data_'+sample+'.root']
   
   config.Data.inputDataset   = dataset[sample]
-  config.Data.unitsPerJob = 15
+  config.Data.unitsPerJob = 10
   config.Data.totalUnits = -1
   config.Data.outLFNDirBase = '/store/user/varuns/'+name
   submit(config)
