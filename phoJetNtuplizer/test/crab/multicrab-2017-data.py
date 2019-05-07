@@ -40,8 +40,8 @@ config.Site.storageSite = 'T2_US_Wisconsin'
 #config.Site.whitelist = ["T2_US_Wisconsin"]
 #config.Site.blacklist = ['T2_CH_CERN']
 
-#listOfSamples = ['MET2017B', 'MET2017C', 'MET2017D', 'MET2017E', 'MET2017F']
-listOfSamples = ['MET2017E', 'MET2017F']
+listOfSamples = ['MET2017B', 'MET2017C', 'MET2017D', 'MET2017E', 'MET2017F']
+#listOfSamples = ['MET2017E', 'MET2017F']
 #listOfSamples = ['SingleEle2017B', 'SingleEle2017C', 'SingleEle2017D', 'SingleEle2017E', 'SingleEle2017F']
 
 for sample in listOfSamples:  
