@@ -1,35 +1,35 @@
 #!/usr/bin/env python
 
-#def convert_to_str(vec_str):
-#    output = ""
-#    for entry in vec_str:
-#        if output != "": output+="\n  "
-#        output+=entry
-#    return output
-#
-#def convertpair_to_str(vec_str):
-#    output = ""
-#    for entry in vec_str:
-#        if output != "": output+="\n  "
-#        output+=entry.first
-#    return output
-#
-#def print_ele_user_data(ele):
-#    print "ele userfloats:"
-#    print "  "+convert_to_str(ele.userFloatNames())
-#    print "ele userints:"
-#    print "  "+convert_to_str(ele.userIntNames())
-#    print "ele IDs:"
-#    print "  "+convertpair_to_str(ele.electronIDs())
-#
-#def print_pho_user_data(pho):
-#    print "pho userfloats:"
-#    print "  "+convert_to_str(pho.userFloatNames())
-#    print "pho userints:"
-#    print "  "+convert_to_str(pho.userIntNames())
-#    print "pho IDs:"
-#    print "  "+convertpair_to_str(pho.photonIDs())
-#
+def convert_to_str(vec_str):
+    output = ""
+    for entry in vec_str:
+        if output != "": output+="\n  "
+        output+=entry
+    return output
+
+def convertpair_to_str(vec_str):
+    output = ""
+    for entry in vec_str:
+        if output != "": output+="\n  "
+        output+=entry.first
+    return output
+
+def print_ele_user_data(ele):
+    print "ele userfloats:"
+    print "  "+convert_to_str(ele.userFloatNames())
+    print "ele userints:"
+    print "  "+convert_to_str(ele.userIntNames())
+    print "ele IDs:"
+    print "  "+convertpair_to_str(ele.electronIDs())
+
+def print_pho_user_data(pho):
+    print "pho userfloats:"
+    print "  "+convert_to_str(pho.userFloatNames())
+    print "pho userints:"
+    print "  "+convert_to_str(pho.userIntNames())
+    print "pho IDs:"
+    print "  "+convertpair_to_str(pho.photonIDs())
+
 
 import sys
 oldargv = sys.argv[:]

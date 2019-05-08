@@ -38,8 +38,8 @@ vector<float>    phoPFChWorstIso_;
 vector<float>    phoPFPhoIso_;
 vector<float>    phoPFNeuIso_;
 
-vector<float>     phoIDMVA_;
-vector<UShort_t>  phoIDbit_;
+vector<float>    phoIDMVA_;
+vector<UShort_t> phoIDbit_;
 
 vector<float>    phoSeedTime_;
 vector<float>    phoSeedEnergy_;
@@ -91,8 +91,9 @@ void phoJetNtuplizer::branchPhotons(TTree* tree){
 
   tree->Branch("phohasPixelSeed",          &phohasPixelSeed_);
   tree->Branch("phoEleVeto",               &phoEleVeto_);
-  if(saveAll_)
+  if(saveAll_){
     tree->Branch("phoR9",                    &phoR9_);
+  }
   tree->Branch("phoR9Full5x5",             &phoR9Full5x5_);
   tree->Branch("phoHoverE",                &phoHoverE_);
   tree->Branch("phoSigmaIEtaIEtaFull5x5",  &phoSigmaIEtaIEtaFull5x5_);
@@ -157,7 +158,6 @@ void phoJetNtuplizer::fillPhotons(const edm::Event& iEvent, const edm::EventSetu
     phoCalibE_                .push_back(ipho->userFloat("ecalEnergyPostCorr"));
     phoCalibESigma_           .push_back(ipho->userFloat("ecalEnergyErrPostCorr"));
     phoCalibEt_               .push_back(ipho->et()*ipho->userFloat("ecalEnergyPostCorr")/ipho->energy());
-
 
     phoEnergyScale_           .push_back(ipho->userFloat("energyScaleValue"));
     phoEnergySigma_           .push_back(ipho->userFloat("energySigmaValue"));

@@ -207,7 +207,7 @@ void phoJetNtuplizer::initMuons(){
 
   nMu_                    = 0;
   muPt_                   .clear();
-  muE_                   .clear();
+  muE_                    .clear();
   muEta_                  .clear();
   muPhi_                  .clear();
   muCharge_               .clear();

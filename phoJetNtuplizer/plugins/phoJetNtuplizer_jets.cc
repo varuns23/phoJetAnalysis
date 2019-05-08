@@ -18,7 +18,7 @@
 Int_t             nJet_;
 
 vector<float>    jetPt_;
-vector<float>    JetE_;
+vector<float>    jetE_;
 vector<float>    jetEta_;
 vector<float>    jetPhi_;
 vector<float>    jetRawPt_;
@@ -91,12 +91,12 @@ vector<vector<float>> jetConstEta_;
 vector<vector<float>> jetConstPhi_;
 vector<vector<Int_t>> jetConstPdgId_;
 
-vector<float>    jetGenJetEn_;
+vector<float>    jetGenJetE_;
 vector<float>    jetGenJetPt_;
 vector<float>    jetGenJetEta_;
 vector<float>    jetGenJetPhi_;
 vector<Int_t>    jetGenPartonID_;
-vector<float>    jetGenEn_;
+vector<float>    jetGenE_;
 vector<float>    jetGenPt_;
 vector<float>    jetGenEta_;
 vector<float>    jetGenPhi_;
@@ -107,7 +107,7 @@ void phoJetNtuplizer::branchJets(TTree* tree){
   tree->Branch("nJet",                         &nJet_);
 
   tree->Branch("jetPt",                        &jetPt_);
-  tree->Branch("JetE",                         &JetE_);
+  tree->Branch("jetE",                         &jetE_);
   tree->Branch("jetEta",                       &jetEta_);
   tree->Branch("jetPhi",                       &jetPhi_);
   tree->Branch("jetRawPt",                     &jetRawPt_);
@@ -185,12 +185,12 @@ void phoJetNtuplizer::branchJets(TTree* tree){
   }
 
   if(runGenInfo_){
-    tree->Branch("jetGenJetEn",                  &jetGenJetEn_);
+    tree->Branch("jetGenJetE",                   &jetGenJetE_);
     tree->Branch("jetGenJetPt",                  &jetGenJetPt_);
     tree->Branch("jetGenJetEta",                 &jetGenJetEta_);
     tree->Branch("jetGenJetPhi",                 &jetGenJetPhi_);
     tree->Branch("jetGenPartonID",               &jetGenPartonID_);
-    tree->Branch("jetGenEn",                     &jetGenEn_);
+    tree->Branch("jetGenE",                      &jetGenE_);
     tree->Branch("jetGenPt",                     &jetGenPt_);
     tree->Branch("jetGenEta",                    &jetGenEta_);
     tree->Branch("jetGenPhi",                    &jetGenPhi_);
@@ -229,11 +229,11 @@ void phoJetNtuplizer::fillJets(const edm::Event& iEvent, const edm::EventSetup& 
 
     if (iJet->pt() < 20.) continue;
     jetPt_                        .push_back(iJet->pt());
-    JetE_                         .push_back(iJet->energy());
+    jetE_                         .push_back(iJet->energy());
     jetEta_                       .push_back(iJet->eta());
     jetPhi_                       .push_back(iJet->phi());
     jetRawPt_                     .push_back((*iJet).correctedJet("Uncorrected").pt());
-    jetRawE_                     .push_back((*iJet).correctedJet("Uncorrected").energy());
+    jetRawE_                      .push_back((*iJet).correctedJet("Uncorrected").energy());
     jetMt_                        .push_back(iJet->mt());
     jetArea_                      .push_back(iJet->jetArea());
     jetMass_                      .push_back(iJet->mass());
@@ -385,13 +385,13 @@ void phoJetNtuplizer::fillJets(const edm::Event& iEvent, const edm::EventSetup& 
     if (runGenInfo_ && genParticlesHandle.isValid()) {
       Int_t  jetGenPartonID    = -99;
       Int_t  jetGenPartonMomID = -99;
-      float jetGenEn          = -999.;
+      float jetGenE           = -999.;
       float jetGenPt          = -999.;
       float jetGenEta         = -999.;
       float jetGenPhi         = -999.;      
       if ((*iJet).genParton()) {
 	jetGenPartonID = (*iJet).genParton()->pdgId();
-	jetGenEn       = (*iJet).genParton()->energy();
+	jetGenE        = (*iJet).genParton()->energy();
 	jetGenPt       = (*iJet).genParton()->pt();
 	jetGenEta      = (*iJet).genParton()->eta();
 	jetGenPhi      = (*iJet).genParton()->phi();
@@ -402,22 +402,22 @@ void phoJetNtuplizer::fillJets(const edm::Event& iEvent, const edm::EventSetup& 
 
       jetGenPartonID_     .push_back(jetGenPartonID);
       jetGenPartonMomID_  .push_back(jetGenPartonMomID);
-      jetGenEn_           .push_back(jetGenEn);
+      jetGenE_            .push_back(jetGenE);
       jetGenPt_           .push_back(jetGenPt);
       jetGenEta_          .push_back(jetGenEta);
       jetGenPhi_          .push_back(jetGenPhi);
 
-      float jetGenJetEn       = -999.;
+      float jetGenJetE       = -999.;
       float jetGenJetPt       = -999.;
       float jetGenJetEta      = -999.;
       float jetGenJetPhi      = -999.;
       if ((*iJet).genJet()) {
-	jetGenJetEn    = (*iJet).genJet()->energy();
+	jetGenJetE     = (*iJet).genJet()->energy();
 	jetGenJetPt    = (*iJet).genJet()->pt();
 	jetGenJetEta   = (*iJet).genJet()->eta();
 	jetGenJetPhi   = (*iJet).genJet()->phi();
       }
-      jetGenJetEn_        .push_back(jetGenJetEn);
+      jetGenJetE_         .push_back(jetGenJetE);
       jetGenJetPt_        .push_back(jetGenJetPt);
       jetGenJetEta_       .push_back(jetGenJetEta);
       jetGenJetPhi_       .push_back(jetGenJetPhi);
@@ -433,11 +433,11 @@ void phoJetNtuplizer::initJets(){
   nJet_                          = 0;
 
   jetPt_                        .clear();
-  JetE_                         .clear();
+  jetE_                         .clear();
   jetEta_                       .clear();
   jetPhi_                       .clear();
   jetRawPt_                     .clear();
-  jetRawE_                     .clear();
+  jetRawE_                      .clear();
   jetMt_                        .clear();
   jetArea_                      .clear();
   jetMass_                      .clear();
@@ -506,12 +506,12 @@ void phoJetNtuplizer::initJets(){
   jetConstPhi_                  .clear();
   jetConstPdgId_                .clear();
 
-  jetGenJetEn_                  .clear();
+  jetGenJetE_                   .clear();
   jetGenJetPt_                  .clear();
   jetGenJetEta_                 .clear();
   jetGenJetPhi_                 .clear();
   jetGenPartonID_               .clear();
-  jetGenEn_                     .clear();
+  jetGenE_                      .clear();
   jetGenPt_                     .clear();
   jetGenEta_                    .clear();
   jetGenPhi_                    .clear();

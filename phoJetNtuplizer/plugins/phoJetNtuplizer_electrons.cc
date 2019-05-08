@@ -110,8 +110,8 @@ void phoJetNtuplizer::branchElectrons (TTree* tree){
   tree->Branch("eleEnergyScale",          &eleEnergyScale_);
   tree->Branch("eleEnergySigma",          &eleEnergySigma_);
 
-  tree->Branch("eleSCRawE",              &eleSCRawE_);
-  tree->Branch("eleSCE",                 &eleSCE_);
+  tree->Branch("eleSCRawE",               &eleSCRawE_);
+  tree->Branch("eleSCE",                  &eleSCE_);
   tree->Branch("eleSCEta",                &eleSCEta_);
   tree->Branch("eleSCPhi",                &eleSCPhi_);
   tree->Branch("eleSCEtaWidth",           &eleSCEtaWidth_);
@@ -130,7 +130,6 @@ void phoJetNtuplizer::branchElectrons (TTree* tree){
     tree->Branch("eledEtaAtCalo",           &eledEtaAtCalo_);
   }
   tree->Branch("eledEtaseedAtVtx",        &eledEtaseedAtVtx_);
-
 
   tree->Branch("eleSigmaIEtaIEtaFull5x5", &eleSigmaIEtaIEtaFull5x5_);
   tree->Branch("eleSigmaIPhiIPhiFull5x5", &eleSigmaIPhiIPhiFull5x5_);
@@ -223,8 +222,8 @@ void phoJetNtuplizer::fillElectrons (const edm::Event& iEvent, const edm::EventS
     eleDz_               .push_back(iele->gsfTrack()->dz(ipv));
     eleSIP_              .push_back(fabs(iele->dB(pat::Electron::PV3D))/iele->edB(pat::Electron::PV3D));
 
-    eleSCRawE_          .push_back(iele->superCluster()->rawEnergy());
-    eleSCE_             .push_back(iele->superCluster()->energy());
+    eleSCRawE_           .push_back(iele->superCluster()->rawEnergy());
+    eleSCE_              .push_back(iele->superCluster()->energy());
     eleSCEta_            .push_back(iele->superCluster()->eta());
     eleSCPhi_            .push_back(iele->superCluster()->phi());
     eleSCEtaWidth_       .push_back(iele->superCluster()->etaWidth());
@@ -274,7 +273,6 @@ void phoJetNtuplizer::fillElectrons (const edm::Event& iEvent, const edm::EventS
     eleHEEPID_          .push_back(iele->userFloat("heepTrkPtIso"));
     eleMVAIsoID_        .push_back(iele->userFloat("ElectronMVAEstimatorRun2Fall17IsoV2Values"));
     eleMVAnoIsoID_      .push_back(iele->userFloat("ElectronMVAEstimatorRun2Fall17NoIsoV2Values"));
-
 
     //VID decisions
     UShort_t tmpeleIDbit = 0;
