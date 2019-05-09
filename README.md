@@ -1,7 +1,7 @@
 # 2018 Analyzer: 102X
 ## MiniAOD analyzer for all physics objects 
 
-- Working for 17Sep2018 Re-Reco of BCD
+- Working for 17Sep2018 Re-Reco of ABC
 - For prompt reco refer to 2018_94X branch
 
 Instructions:
