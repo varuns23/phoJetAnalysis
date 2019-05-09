@@ -11,18 +11,29 @@ process.load("Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cf
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
 #process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_data', '')
-process.GlobalTag = GlobalTag(process.GlobalTag, '102X_dataRun2_Sep2018Rereco_v1')
-#process.GlobalTag = GlobalTag(process.GlobalTag, '102X_dataRun2_Prompt_v11')
+process.GlobalTag = GlobalTag(process.GlobalTag, '102X_dataRun2_Sep2018ABC_v2') # for ABC
+#process.GlobalTag = GlobalTag(process.GlobalTag, '102X_dataRun2_Prompt_v13') #for D
 
+#jec from sqlite
+process.load("CondCore.CondDB.CondDB_cfi")
+from CondCore.CondDB.CondDB_cfi import *
+process.CondDB.connect = 'sqlite:Autumn18_RunABCD_V8_DATA.db'
+process.jec = cms.ESSource("PoolDBESSource",CondDB,
+    toGet = cms.VPSet(
+      cms.PSet(
+	record = cms.string('JetCorrectionsRecord'),
+	tag = cms.string('JetCorrectorParametersCollection_Autumn18_RunABCD_V8_DATA_AK4PFchs'),
+	label = cms.untracked.string('AK4PFchs')
+	)))
+process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
 process.MessageLogger.cerr.FwkReport.reportEvery = 1 #1000
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
     fileNames = cms.untracked.vstring(
         'file:/hdfs/store/user/varuns/TEST-INPUTFILES/test-data2018-17Sep2018.root'
-        #'file:/hdfs/store/user/varuns/monoZprime/TEST-INPUTFILES/test-data2018-prompt.root'
     )
 )
 
@@ -34,14 +45,38 @@ process.load( "PhysicsTools.PatAlgos.producersLayer1.patCandidates_cff" )
 process.load( "PhysicsTools.PatAlgos.triggerLayer1.triggerProducer_cff" )
 process.load( "PhysicsTools.PatAlgos.selectionLayer1.selectedPatCandidates_cff" )
 
+##Re-run ECAL bad calibration filter 
+##https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#2017_data
+process.load('RecoMET.METFilters.ecalBadCalibFilter_cfi')
+baddetEcallist = cms.vuint32(
+    [872439604,872422825,872420274,872423218,
+    872423215,872416066,872435036,872439336,
+    872420273,872436907,872420147,872439731,
+    872436657,872420397,872439732,872439339,
+    872439603,872422436,872439861,872437051,
+    872437052,872420649,872422436,872421950,
+    872437185,872422564,872421566,872421695,
+    872421955,872421567,872437184,872421951,
+    872421694,872437056,872437057,872437313])
+
+process.ecalBadCalibReducedMINIAODFilter = cms.EDFilter(
+    "EcalBadCalibFilter",
+    EcalRecHitSource = cms.InputTag("reducedEgamma:reducedEERecHits"),
+    ecalMinEt        = cms.double(50.),
+    baddetEcal       = baddetEcallist, 
+    taggingMode      = cms.bool(True),
+    debug            = cms.bool(False)
+    )
+
 ##MET Corrections: Type-1
 from PhysicsTools.PatAlgos.tools.coreTools import *
 runOnData( process,  names=['Photons', 'Electrons','Muons','Taus','Jets'], outputModules = [] )
 
+##https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaMiniAODV2#2018_Preliminary_Energy_Correcti
 from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
 setupEgammaPostRecoSeq(process,
-    #runEnergyCorrections=False, #as energy corrections are not yet availible for 2018
-    era='2018-Prompt')  
+    era='2018-Prompt'
+    )
 
 ##Updating Jet collection for DeepCSV tagger
 # https://twiki.cern.ch/twiki/bin/view/CMS/DeepJet#94X_installation_recipe_X_10
@@ -71,28 +106,14 @@ na = TauIDEmbedder(process, cms, # pass tour process object
     )
 na.runTauID()
 
-
-#https://twiki.cern.ch/twiki/bin/viewauth/CMS/JetToolbox
-# For AK8 jets 
-
-
 ### Analyzer Related
 process.load("phoJetAnalysis.phoJetNtuplizer.phoJetNtuplizer_cfi")
 process.phoJetNtuplizer.debug        = cms.bool(False);
-process.phoJetNtuplizer.runEventInfo = cms.bool(True);
-process.phoJetNtuplizer.runPhotons   = cms.bool(True);
-process.phoJetNtuplizer.runJets      = cms.bool(True);
+process.phoJetNtuplizer.runak8Jets   = cms.bool(True);
 process.phoJetNtuplizer.runJetWidthCalculator = cms.bool(True); # needed for monoZprime Analysis [Valid only if runJets is True]
-process.phoJetNtuplizer.runEle       = cms.bool(True);
-process.phoJetNtuplizer.runMuon      = cms.bool(True);
-process.phoJetNtuplizer.runTaus      = cms.bool(True);
-process.phoJetNtuplizer.runMet       = cms.bool(True);
-process.phoJetNtuplizer.runGenInfo   = cms.bool(False); # True for MC
-#process.phoJetNtuplizer.pfmetToken  = cms.InputTag("slimmedMETsModifiedMET")
 
 process.p = cms.Path(
-#    process.fullPatMetSequenceModifiedMET *
-#    process.ecalBadCalibReducedMINIAODFilter *
+    process.ecalBadCalibReducedMINIAODFilter *
     process.egammaPostRecoSeq *
     process.rerunMvaIsolationSequence *
     process.NewTauIDsEmbedded *

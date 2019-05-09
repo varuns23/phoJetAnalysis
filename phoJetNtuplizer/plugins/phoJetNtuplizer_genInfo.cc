@@ -8,6 +8,7 @@ float            genWeight_;
 float            genHT_;
 float            pdfWeight_;     
 vector<float>    pdfSystWeight_;
+//vector<double>    psWeight_;
 
 Int_t            nPUInfo_;
 vector<int>      nPU_;
@@ -38,6 +39,7 @@ void phoJetNtuplizer::branchGenInfo(TTree* tree){
   tree->Branch("genHT",         &genHT_);
   tree->Branch("pdfWeight",     &pdfWeight_);
   tree->Branch("pdfSystWeight", &pdfSystWeight_);
+//  tree->Branch("psWeight",      &psWeight_);
 
   tree->Branch("nPUInfo",       &nPUInfo_);
   tree->Branch("nPU",           &nPU_);
@@ -83,6 +85,24 @@ void phoJetNtuplizer::fillGenInfo(const edm::Event& iEvent){
       pthat_ = genEventInfoHandle->binningValues()[0];
     processID_ = genEventInfoHandle->signalProcessID();
     genWeight_ = genEventInfoHandle->weight();
+
+    /*
+    //PS weights:
+    std::vector<double> ps_Weight_ = genEventInfoHandle->weights();
+    // Normalize all Parton-Shower weights to the nominal one
+    if(ps_Weight_.size() > 0){
+      const double nominal_psWeight = ps_Weight_.at(0);
+      if(nominal_psWeight == 0.){
+	throw cms::Exception("input") << "nominal PS-Weight equal to zero (failed to normalize other PS-Weights";
+      }
+
+      for(uint iweights =0; iweights< ps_Weight_.size(); iweights++){
+	ps_Weight_.at(iweights) /= nominal_psWeight;
+	psWeight_.at(iweights) = ps_Weight_.at(iweights);
+      }
+    }
+   */ 
+
   }else{
     edm::LogWarning("phoJetNtuplizer") << "no generator info in event";
   }
@@ -223,7 +243,8 @@ void phoJetNtuplizer::initGenInfo(){
   genWeight_     = -99;
   genHT_         = -99;
   pdfWeight_     = -99;
-  pdfSystWeight_.clear();
+  pdfSystWeight_  .clear();
+//  psWeight_       .clear();
 
   nPUInfo_       = 0;
   nPU_          .clear();

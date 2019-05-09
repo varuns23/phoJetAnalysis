@@ -1,4 +1,8 @@
-#MiniAOD analyzer for all physics objects 
+# 2018 Analyzer: 102X
+## MiniAOD analyzer for all physics objects 
+
+- Working for 17Sep2018 Re-Reco of BCD
+- For prompt reco refer to 2018_94X branch
 
 Instructions:
 ```
@@ -8,7 +12,10 @@ cmsenv
 git cms-init
 
 git cms-init
+git cms-addpkg RecoMET/METFilters 
 git cms-merge-topic cms-egamma:EgammaPostRecoTools #just adds in an extra file to have a setup function to make things easier
+
+scram b -j10
 
 git cms-addpkg EgammaAnalysis/ElectronTools
 rm EgammaAnalysis/ElectronTools/data -rf
@@ -19,7 +26,7 @@ cd -
 git cms-merge-topic cms-egamma:EgammaPostRecoTools_dev
 
 #For 2018 data-taking
-git clone -b 102X_2018 https://github.com/varuns23/phoJetAnalysis.git
+git clone -b 2018_102X https://github.com/varuns23/phoJetAnalysis.git
 
 scram b -j10
 ```
