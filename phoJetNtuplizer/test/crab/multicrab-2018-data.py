@@ -2,11 +2,16 @@ import os
 
 dataset = {
   'MET2018A' : '/MET/Run2018A-17Sep2018-v1/MINIAOD',
+  'MET2018B' : '/MET/Run2018A-17Sep2018-v1/MINIAOD',
   'MET2018C' : '/MET/Run2018C-17Sep2018-v1/MINIAOD',
 
   'EGamma2018A' : '/EGamma/Run2018A-17Sep2018-v2/MINIAOD',
   'EGamma2018B' : '/EGamma/Run2018B-17Sep2018-v1/MINIAOD',
   'EGamma2018C' : '/EGamma/Run2018C-17Sep2018-v1/MINIAOD',
+
+  'JetHT2018A' : '/JetHT/Run2018A-17Sep2018-v1/MINIAOD',
+  'JetHT2018B' : '/JetHT/Run2018B-17Sep2018-v1/MINIAOD',
+  'JetHT2018C' : '/JetHT/Run2018C-17Sep2018-v1/MINIAOD',
 }
 
 if __name__ == '__main__':
@@ -29,13 +34,13 @@ config.section_('Data')
 config.Data.publication = False
 config.Data.inputDBS = 'global'
 config.Data.splitting = 'LumiBased'
-config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions18/13TeV/PromptReco/Cert_314472-325175_13TeV_PromptReco_Collisions18_JSON.txt'
+config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions18/13TeV/ReReco/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt'
 
 config.Site.storageSite = 'T2_US_Wisconsin'
 #config.Site.whitelist = ["T2_US_Wisconsin"]
 #config.Site.blacklist = ['T2_CH_CERN']
 
-#listOfSamples = ['MET2018A', 'MET2018C']
+#listOfSamples = ['MET2018A', 'MET2018B', 'MET2018C']
 listOfSamples = ['EGamma2018A', 'EGamma2018B', 'EGamma2018C']
 
 

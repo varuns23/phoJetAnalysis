@@ -104,15 +104,15 @@ config.Site.storageSite = 'T2_US_Wisconsin'
 #listOfSamples = ['WW', 'WWToLNuQQ', 'WWTo2L2Nu', 'WWTo4Q', 'WZ', 'ZZ']
 
 for sample in listOfSamples:  
-  os.popen('cp run_94X_mc.py run_94X_mc_'+sample+'.py')
-  with open('run_94X_mc_'+sample+'.py') as oldFile:
+  os.popen('cp run_102X_mc2018.py run_102X_mc2018_'+sample+'.py')
+  with open('run_102X_mc2018_'+sample+'.py') as oldFile:
     newText = oldFile.read().replace('Ntuple_mc.root','MC_'+sample+'.root')
-  with open('run_94X_mc_'+sample+'.py', 'w') as newFile:
+  with open('run_102X_mc2018_'+sample+'.py', 'w') as newFile:
     newFile.write(newText)
 
   config.General.requestName = 'job_'+sample
   
-  config.JobType.psetName = 'run_94X_mc_'+sample+'.py'
+  config.JobType.psetName = 'run_102X_mc2018_'+sample+'.py'
   config.JobType.outputFiles = ['MC_'+sample+'.root']
   
   config.Data.inputDataset   = dataset[sample]
