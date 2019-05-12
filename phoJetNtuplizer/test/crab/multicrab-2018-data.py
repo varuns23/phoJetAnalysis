@@ -25,7 +25,7 @@ config = config()
 name = 'data2018_17Sep2018'
 config.General.workArea = 'crab_'+name
 config.General.transferOutputs = True
-config.General.transferLogs = True
+config.General.transferLogs = False
 
 config.JobType.pluginName = 'Analysis'
 #config.JobType.inputFiles = ['inputFiles']
