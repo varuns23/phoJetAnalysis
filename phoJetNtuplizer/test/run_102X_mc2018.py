@@ -18,12 +18,12 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 10 #1000
 #jec from sqlite
 process.load("CondCore.CondDB.CondDB_cfi")
 from CondCore.CondDB.CondDB_cfi import *
-process.CondDB.connect = 'sqlite:Autumn18_V8_MC.db'
+process.CondDB.connect = 'sqlite:Autumn18_V19_MC.db'
 process.jec = cms.ESSource("PoolDBESSource",CondDB,
     toGet = cms.VPSet(
       cms.PSet(
 	record = cms.string('JetCorrectionsRecord'),
-	tag = cms.string('JetCorrectorParametersCollection_Autumn18_V8_MC_AK4PFchs'),
+	tag = cms.string('JetCorrectorParametersCollection_Autumn18_V19_MC_AK4PFchs'),
 	label = cms.untracked.string('AK4PFchs')
 	)))
 process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')

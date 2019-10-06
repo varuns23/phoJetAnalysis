@@ -11,19 +11,17 @@ cd CMSSW_10_2_10/src
 cmsenv
 git cms-init
 
-git cms-init
-git cms-addpkg RecoMET/METFilters 
-git cms-merge-topic cms-egamma:EgammaPostRecoTools #just adds in an extra file to have a setup function to make things easier
-
-scram b -j10
-
+## MET 
+git cms-addpkg RecoMET/METFilters
+       
+##https://twiki.cern.ch/twiki/bin/view/CMS/EgammaMiniAODV2#2018_MiniAOD
+git cms-merge-topic cms-egamma:EgammaPostRecoTools                                                              
+git cms-merge-topic cms-egamma:PhotonIDValueMapSpeedup1029
+git cms-merge-topic cms-egamma:slava77-btvDictFix_10210
 git cms-addpkg EgammaAnalysis/ElectronTools
 rm EgammaAnalysis/ElectronTools/data -rf
-git clone git@github.com:cms-egamma/EgammaAnalysis-ElectronTools.git EgammaAnalysis/ElectronTools/data
-cd EgammaAnalysis/ElectronTools/data
-git checkout ScalesSmearing2018_Dev
-cd -
-git cms-merge-topic cms-egamma:EgammaPostRecoTools_dev
+git clone git@github.com:cms-data/EgammaAnalysis-ElectronTools.git EgammaAnalysis/ElectronTools/data
+
 
 #For 2018 data-taking
 git clone -b 2018_102X https://github.com/varuns23/phoJetAnalysis.git
