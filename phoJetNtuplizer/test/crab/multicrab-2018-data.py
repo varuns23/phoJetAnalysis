@@ -8,6 +8,7 @@ dataset = {
   'EGamma2018A' : '/EGamma/Run2018A-17Sep2018-v2/MINIAOD',
   'EGamma2018B' : '/EGamma/Run2018B-17Sep2018-v1/MINIAOD',
   'EGamma2018C' : '/EGamma/Run2018C-17Sep2018-v1/MINIAOD',
+  'EGamma2018D' : '/EGamma/Run2018D-22Jan2019-v2/MINIAOD',
 
   'JetHT2018A' : '/JetHT/Run2018A-17Sep2018-v1/MINIAOD',
   'JetHT2018B' : '/JetHT/Run2018B-17Sep2018-v1/MINIAOD',
@@ -22,13 +23,14 @@ def submit(config):
 
 from CRABClient.UserUtilities import config
 config = config()
-name = 'data2018_17Sep2018'
+name = 'data2018_22Jan2019_JECv19'
 config.General.workArea = 'crab_'+name
 config.General.transferOutputs = True
 config.General.transferLogs = False
 
 config.JobType.pluginName = 'Analysis'
-#config.JobType.inputFiles = ['inputFiles']
+config.JobType.inputFiles = ['Autumn18_RunABCD_V19_DATA.db']
+config.JobType.allowUndistributedCMSSW = True
 
 config.section_('Data') 
 config.Data.publication = False
@@ -37,11 +39,11 @@ config.Data.splitting = 'LumiBased'
 config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions18/13TeV/ReReco/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt'
 
 config.Site.storageSite = 'T2_US_Wisconsin'
-#config.Site.whitelist = ["T2_US_Wisconsin"]
+config.Site.whitelist = ["T2_US_Wisconsin"]
 #config.Site.blacklist = ['T2_CH_CERN']
 
 #listOfSamples = ['MET2018A', 'MET2018B', 'MET2018C']
-listOfSamples = ['EGamma2018A', 'EGamma2018B', 'EGamma2018C']
+listOfSamples = ['EGamma2018D']
 
 
 for sample in listOfSamples:  
@@ -57,7 +59,7 @@ for sample in listOfSamples:
   config.JobType.outputFiles = ['Data_'+sample+'.root']
   
   config.Data.inputDataset   = dataset[sample]
-  config.Data.unitsPerJob = 6
+  config.Data.unitsPerJob = 13
   config.Data.totalUnits = -1
   config.Data.outLFNDirBase = '/store/user/varuns/'+name
   submit(config)
