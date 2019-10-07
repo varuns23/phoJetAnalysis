@@ -10,6 +10,7 @@ cmsrel CMSSW_10_2_10
 cd CMSSW_10_2_10/src
 cmsenv
 git cms-init
+git config merge.renameLimit 20000
 
 ## MET 
 git cms-addpkg RecoMET/METFilters
