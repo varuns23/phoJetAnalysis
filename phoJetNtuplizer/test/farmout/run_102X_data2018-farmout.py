@@ -39,6 +39,9 @@ process.source = cms.Source("PoolSource",
     )
 )
 
+import FWCore.PythonUtilities.LumiList as LumiList
+process.source.lumisToProcess = LumiList.LumiList(filename = 'Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt').getVLuminosityBlockRange()
+
 process.TFileService = cms.Service("TFileService", 
     #fileName = cms.string('Ntuple_data2018.root')
     fileName = cms.string('$outputFileName')
