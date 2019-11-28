@@ -257,12 +257,12 @@ void phoJetNtuplizer::fillJets(const edm::Event& iEvent, const edm::EventSetup& 
     bool tightJetID        = false;
     bool tightLepVetoJetID = false;
     if (fabs(iJet->eta()) <= 2.7) {
-      tightJetID = (NHF<0.90 && NEMF<0.90 && NumConst>1) && ((fabs(iJet->eta())<=2.4 && CHF>0 && CHM>0) || fabs(iJet->eta())>2.4);
-      tightLepVetoJetID = (NHF<0.90 && NEMF<0.90 && NumConst>1 && MUF<0.8) && ((fabs(iJet->eta())<=2.4 && CHF>0 && CHM>0 && CEMF<0.8) || fabs(iJet->eta())>2.4);
+      tightJetID = (NHF<0.90 && NEMF<0.90 && NumConst>1) && ((fabs(iJet->eta())<=2.4 && CHF>0 && CHM>0 && CEMF<0.99) || fabs(iJet->eta())>2.4);
+      tightLepVetoJetID = (NHF<0.90 && NEMF<0.90 && NumConst>1 && MUF<0.8) && ((fabs(iJet->eta())<=2.4 && CHF>0 && CHM>0 && CEMF<0.9) || fabs(iJet->eta())>2.4);
     } else if (fabs(iJet->eta()) <= 3.0) {
-      tightJetID = (NEMF>0.02 && NEMF<0.99 && NNP>2);
+      tightJetID = (NEMF<0.90 && NNP>2);
     } else {
-      tightJetID = (NEMF<0.90 && NHF>0.02 && NNP>10);
+      tightJetID = (NEMF<0.90 && NNP>10);
     }
 
     UShort_t tmpjetIDbit = 0;
