@@ -39,6 +39,7 @@ process.source = cms.Source("PoolSource",
     )
 )
 
+## needed to get lumi masking using farmout script
 import FWCore.PythonUtilities.LumiList as LumiList
 process.source.lumisToProcess = LumiList.LumiList(filename = 'Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt').getVLuminosityBlockRange()
 

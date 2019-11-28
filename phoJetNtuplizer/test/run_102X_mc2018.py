@@ -13,7 +13,7 @@ from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
 #process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc', '')
 process.GlobalTag = GlobalTag(process.GlobalTag, '102X_upgrade2018_realistic_v20')
  
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )
 process.MessageLogger.cerr.FwkReport.reportEvery = 10 #1000
 #jec from sqlite
 process.load("CondCore.CondDB.CondDB_cfi")
@@ -113,7 +113,15 @@ process.phoJetNtuplizer.runGenInfo  = cms.bool(True);  # True for MC
 process.phoJetNtuplizer.runak8Jets  = cms.bool(True);
 process.phoJetNtuplizer.runJetWidthCalculator = cms.bool(True); # needed for monoZprime Analysis [Valid only if runJets is True]
 
+##### SKIMMER
+process.phoJetSkim = cms.EDFilter("phoJetSkimmer",
+    jetsSkimToken    = cms.InputTag("slimmedJets"),
+    cutJetPt  = cms.double(85.),
+    cutJetEta = cms.double(2.5),
+    )
+
 process.p = cms.Path(
+    process.phoJetSkim *  ##skimmer  ## Make sure if it is needed
     process.ecalBadCalibReducedMINIAODFilter *
     process.egammaPostRecoSeq *
     process.rerunMvaIsolationSequence *
