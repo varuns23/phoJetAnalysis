@@ -2,14 +2,23 @@
 
 Instructions:
 ```
-cmsrel CMSSW_10_2_10
-cd CMSSW_10_2_10/src
+cmsrel CMSSW_10_2_18
+cd CMSSW_10_2_18/src
 cmsenv
 git cms-init
 
-git cms-addpkg RecoMET/METFilters                              
-git cms-merge-topic cms-egamma:EgammaPostRecoTools             
-git cms-merge-topic cms-met:METFixEE2017_949_v2_backport_to_102X
+#https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#How_to_run_ecal_BadCalibReducedM
+git cms-addpkg RecoMET/METFilters
+ 
+#https://twiki.cern.ch/twiki/bin/view/CMS/EgammaPostRecoRecipes#102X
+git cms-merge-topic cms-egamma:PhotonIDValueMapSpeedup1029 #optional but speeds up the photon ID value module so things run faster
+#now build everything
+scram b -j 8
+#now add in E/gamma Post reco tools
+git clone git@github.com:cms-egamma/EgammaPostRecoTools.git  EgammaUser/EgammaPostRecoTools
+cd  EgammaUser/EgammaPostRecoTools
+git checkout master
+cd -
 
 #For 2017 data-taking
 git clone -b 2017_102X https://github.com/varuns23/phoJetAnalysis.git
@@ -19,10 +28,7 @@ scram b -j10
 
 Electrons and Photons:
 ```
-[] https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaRunIIRecommendations
-[] https://twiki.cern.ch/twiki/bin/view/CMS/EgammaMiniAODV2
-[] https://twiki.cern.ch/twiki/bin/view/CMS/Egamma2017DataRecommendations
-[] https://twiki.cern.ch/twiki/bin/view/CMS/EgammaIDRecipesRun2
+[] https://twiki.cern.ch/twiki/bin/view/CMS/EgammaPostRecoRecipes#102X
 ```
 JetMET
 ```
@@ -34,12 +40,14 @@ JetMET
 
 Taus:
 ```
+[] https://twiki.cern.ch/twiki/bin/viewauth/CMS/TauIDRecommendationForRun2
 [] https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuidePFTauID#Rerunning_of_the_tau_ID_on_M_AN1
 [] https://twiki.cern.ch/twiki/pub/CMSPublic/SWGuidePFTauID/2017v2-recipe.pdf
 [] https://indico.cern.ch/event/810741/contributions/3384093/attachments/1827349/2991114/TauID_CMSweek_10042019.pdf 
 ```
 Muons:
 ```
+[] https://twiki.cern.ch/twiki/bin/view/CMS/MuonPOG
 [] https://twiki.cern.ch/twiki/bin/viewauth/CMS/SWGuideMuonIdRun2
 ```
 
@@ -48,10 +56,3 @@ For PPD RunII analysis recipe
 [] https://twiki.cern.ch/twiki/bin/view/CMS/PdmV
 [] https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVAnalysisSummaryTable
 ```
-
-Data set Info:
-DATA:
-DAS query: dataset=/*/Run2017*31Mar2018*/MINIAOD
-
-MC:
-DAS query: dataset=/*/RunIIFall17*12Apr2018*/MINIAODSIM

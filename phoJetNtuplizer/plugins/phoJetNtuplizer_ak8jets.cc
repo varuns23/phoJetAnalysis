@@ -24,16 +24,6 @@ vector<float> ak8JetE_;
 vector<float> ak8JetEta_;
 vector<float> ak8JetPhi_;
 vector<float> ak8JetMass_;
-vector<float> ak8JetRawPt_;
-vector<float> ak8JetRawE_;
-
-vector<float> ak8JetCEF_;
-vector<float> ak8JetNEF_;
-vector<float> ak8JetCHF_;
-vector<float> ak8JetNHF_;
-vector<int>   ak8JetNCH_;
-vector<int>   ak8JetNNP_;
-vector<int>   ak8JetMUF_;
 
 vector<float> ak8Jet_tau1_;
 vector<float> ak8Jet_tau2_;
@@ -61,6 +51,14 @@ vector<float> ak8Jet_CSVv2Tags_;
 vector<float> ak8Jet_DeepCSVTags_b_;
 vector<float> ak8Jet_DeepCSVTags_bb_;
 vector<float> ak8Jet_BoostedDSVTags_bb_;
+
+vector<float> ak8Jet_TvsQCD_;
+vector<float> ak8Jet_WvsQCD_;
+vector<float> ak8Jet_ZvsQCD_;
+vector<float> ak8Jet_MD_TvsQCD_;
+vector<float> ak8Jet_MD_WvsQCD_;
+vector<float> ak8Jet_MD_ZvsQCD_;
+
 vector<float> ak8JetJECUnc_;
 //vector<float> ak8JetL2L3corr_;
 
@@ -72,18 +70,6 @@ void phoJetNtuplizer::branchak8Jets(TTree* tree){
   tree->Branch("ak8JetEta",                &ak8JetEta_);
   tree->Branch("ak8JetPhi",                &ak8JetPhi_);
   tree->Branch("ak8JetMass",               &ak8JetMass_);
-  if(saveAll_){
-    tree->Branch("ak8JetRawPt",              &ak8JetRawPt_);
-    tree->Branch("ak8JetRawE",               &ak8JetRawE_);
-  }
-
-  tree->Branch("ak8JetCEF",                &ak8JetCEF_);
-  tree->Branch("ak8JetNEF",                &ak8JetNEF_);
-  tree->Branch("ak8JetCHF",                &ak8JetCHF_);
-  tree->Branch("ak8JetNHF",                &ak8JetNHF_);
-  tree->Branch("ak8JetNCH",                &ak8JetNCH_);
-  tree->Branch("ak8JetNNP",                &ak8JetNNP_);
-  tree->Branch("ak8JetMUF",                &ak8JetMUF_);
  
   tree->Branch("ak8Jet_tau1",              &ak8Jet_tau1_);
   tree->Branch("ak8Jet_tau2",              &ak8Jet_tau2_);
@@ -111,6 +97,14 @@ void phoJetNtuplizer::branchak8Jets(TTree* tree){
   tree->Branch("ak8Jet_DeepCSVTags_bb",    &ak8Jet_DeepCSVTags_bb_);
   tree->Branch("ak8Jet_BoostedDSVTags_bb", &ak8Jet_BoostedDSVTags_bb_);
   tree->Branch("ak8JetJECUnc",             &ak8JetJECUnc_);
+
+  tree->Branch("ak8Jet_TvsQCD",    &ak8Jet_TvsQCD_);
+  tree->Branch("ak8Jet_WvsQCD",    &ak8Jet_WvsQCD_);
+  tree->Branch("ak8Jet_ZvsQCD",    &ak8Jet_ZvsQCD_);
+  tree->Branch("ak8Jet_MD_TvsQCD", &ak8Jet_MD_TvsQCD_);
+  tree->Branch("ak8Jet_MD_WvsQCD", &ak8Jet_MD_WvsQCD_);
+  tree->Branch("ak8Jet_MD_ZvsQCD", &ak8Jet_MD_ZvsQCD_);
+
   //tree->Branch("ak8JetL2L3corr",             &ak8JetL2L3corr_);
 
 }
@@ -126,7 +120,6 @@ void phoJetNtuplizer::fillak8Jets(const edm::Event& iEvent, const edm::EventSetu
     return;
   }
 
-
   // Accessing the JEC uncertainties AK8 
   edm::ESHandle<JetCorrectorParametersCollection> AK8JetCorParColl;
   iSetup.get<JetCorrectionsRecord>().get("AK8PFchs",AK8JetCorParColl); 
@@ -141,18 +134,6 @@ void phoJetNtuplizer::fillak8Jets(const edm::Event& iEvent, const edm::EventSetu
     ak8JetEta_                       .push_back(iak8Jet->eta());
     ak8JetPhi_                       .push_back(iak8Jet->phi());
     ak8JetMass_                      .push_back(iak8Jet->mass());
-    if(saveAll_){
-      ak8JetRawPt_                     .push_back((*iak8Jet).correctedJet("Uncorrected").pt());
-      ak8JetRawE_                      .push_back((*iak8Jet).correctedJet("Uncorrected").energy());
-    }
-
-    ak8JetCEF_         .push_back(iak8Jet->chargedEmEnergyFraction());
-    ak8JetNEF_         .push_back(iak8Jet->neutralEmEnergyFraction());
-    ak8JetCHF_         .push_back(iak8Jet->chargedHadronEnergyFraction());
-    ak8JetNHF_         .push_back(iak8Jet->neutralHadronEnergyFraction());
-    ak8JetNCH_         .push_back(iak8Jet->chargedMultiplicity());
-    ak8JetNNP_         .push_back(iak8Jet->neutralMultiplicity());
-    ak8JetMUF_         .push_back(iak8Jet->muonEnergyFraction());
 
     ak8Jet_tau1_      .push_back(iak8Jet->userFloat("ak8PFJetsCHSValueMap:NjettinessAK8CHSTau1"));
     ak8Jet_tau2_      .push_back(iak8Jet->userFloat("ak8PFJetsCHSValueMap:NjettinessAK8CHSTau2"));
@@ -176,13 +157,18 @@ void phoJetNtuplizer::fillak8Jets(const edm::Event& iEvent, const edm::EventSetu
     ak8Jet_nb2AK8PuppiSoftDropN2_ .push_back(iak8Jet->userFloat("ak8PFJetsPuppiSoftDropValueMap:nb2AK8PuppiSoftDropN2"));
     ak8Jet_nb2AK8PuppiSoftDropN3_ .push_back(iak8Jet->userFloat("ak8PFJetsPuppiSoftDropValueMap:nb2AK8PuppiSoftDropN3"));
 
-
     ak8Jet_CSVv2Tags_         .push_back(iak8Jet->bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags"));
     ak8Jet_DeepCSVTags_b_     .push_back(iak8Jet->bDiscriminator("pfDeepCSVJetTags:probb"));
     ak8Jet_DeepCSVTags_bb_    .push_back(iak8Jet->bDiscriminator("pfDeepCSVJetTags:probbb"));
     ak8Jet_BoostedDSVTags_bb_ .push_back(iak8Jet->bDiscriminator("pfBoostedDoubleSecondaryVertexAK8BJetTags"));
-    
 
+    ak8Jet_TvsQCD_            .push_back(iak8Jet->bDiscriminator("pfDeepBoostedDiscriminatorsJetTags:TvsQCD")); 
+    ak8Jet_WvsQCD_            .push_back(iak8Jet->bDiscriminator("pfDeepBoostedDiscriminatorsJetTags:WvsQCD")); 
+    ak8Jet_ZvsQCD_            .push_back(iak8Jet->bDiscriminator("pfDeepBoostedDiscriminatorsJetTags:ZvsQCD")); 
+    ak8Jet_MD_TvsQCD_         .push_back(iak8Jet->bDiscriminator("pfMassDecorrelatedDeepBoostedDiscriminatorsJetTags:TvsQCD")); 
+    ak8Jet_MD_WvsQCD_         .push_back(iak8Jet->bDiscriminator("pfMassDecorrelatedDeepBoostedDiscriminatorsJetTags:WvsQCD")); 
+    ak8Jet_MD_ZvsQCD_         .push_back(iak8Jet->bDiscriminator("pfMassDecorrelatedDeepBoostedDiscriminatorsJetTags:ZvsQCD")); 
+    
     if (fabs(iak8Jet->eta()) < 5.2) {
       ak8jecUnc->setJetEta(iak8Jet->eta());
       ak8jecUnc->setJetPt(iak8Jet->pt()); // here you must use the CORRECTED jet pt
@@ -205,16 +191,6 @@ void phoJetNtuplizer::initak8Jets(){
   ak8JetEta_          .clear();
   ak8JetPhi_          .clear();
   ak8JetMass_         .clear();
-  ak8JetRawPt_        .clear();
-  ak8JetRawE_         .clear();
-
-  ak8JetCEF_          .clear();
-  ak8JetNEF_          .clear();
-  ak8JetCHF_          .clear();
-  ak8JetNHF_          .clear();
-  ak8JetNCH_          .clear();
-  ak8JetNNP_          .clear();
-  ak8JetMUF_          .clear();
 
   ak8Jet_tau1_        .clear();
   ak8Jet_tau2_        .clear();
@@ -242,6 +218,13 @@ void phoJetNtuplizer::initak8Jets(){
   ak8Jet_DeepCSVTags_bb_   .clear();
   ak8Jet_BoostedDSVTags_bb_.clear();
   ak8JetJECUnc_            .clear();
-  //  ak8JetL2L3corr_            .clear();
 
+  ak8Jet_TvsQCD_            .clear(); 
+  ak8Jet_WvsQCD_            .clear();
+  ak8Jet_ZvsQCD_            .clear();  
+  ak8Jet_MD_TvsQCD_         .clear();
+  ak8Jet_MD_WvsQCD_         .clear();
+  ak8Jet_MD_ZvsQCD_         .clear();
+
+  //  ak8JetL2L3corr_            .clear();
 }
