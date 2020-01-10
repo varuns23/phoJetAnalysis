@@ -7,6 +7,10 @@ cd CMSSW_10_2_18/src
 cmsenv
 git cms-init
 
+#https://twiki.cern.ch/twiki/bin/viewauth/CMS/JetToolbox#How_to_run_the_jetToolbox
+git clone git@github.com:cms-jet/JetToolbox.git JMEAnalysis/JetToolbox -b jetToolbox_102X_v2
+scram b -j 18
+
 #https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#How_to_run_ecal_BadCalibReducedM
 git cms-addpkg RecoMET/METFilters
  
@@ -36,6 +40,7 @@ JetMET
 [] https://twiki.cern.ch/twiki/bin/view/CMS/JECDataMC#2017_Data
 [] https://twiki.cern.ch/twiki/bin/view/CMS/MissingETUncertaintyPrescription#Instructions_for_9_4_X_X_9_or_10
 [] https://twiki.cern.ch/twiki/bin/viewauth/CMS/L1ECALPrefiringWeightRecipe
+[] https://twiki.cern.ch/twiki/bin/viewauth/CMS/JetToolbox
 ```
 
 Taus:
