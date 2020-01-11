@@ -83,6 +83,7 @@ phoJetNtuplizer::phoJetNtuplizer(const edm::ParameterSet& iConfig):
   jetsAK4Token_                   =  consumes<View<pat::Jet> >  (iConfig.getParameter<InputTag>("jetsAK4Token"));
   runak8Jets_                     =  iConfig.getParameter<bool> ("runak8Jets");
   jetsAK8Token_                   =  consumes<View<pat::Jet> >  (iConfig.getParameter<InputTag>("jetsAK8Token"));
+  jetsAK8TagToken_                =  consumes<View<pat::Jet> >  (iConfig.getParameter<InputTag>("jetsAK8TagToken"));
 
   //MET Info
   runMet_                         = iConfig.getParameter<bool>     ("runMet");

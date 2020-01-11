@@ -35,6 +35,7 @@ phoJetNtuplizer = cms.EDAnalyzer('phoJetNtuplizer',
 
 				  jetsAK4Token                          = cms.InputTag("slimmedJets"), 
 				  jetsAK8Token                          = cms.InputTag("slimmedJetsAK8"), 
+				  jetsAK8TagToken                       = cms.InputTag("slimmedJetsAK8"), 
 				  
 				  electronToken                        = cms.InputTag("slimmedElectrons"),
 				  packedPFCands                        = cms.InputTag("packedPFCandidates"),

@@ -9,24 +9,24 @@ process.load("Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cf
 
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
-#process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc', '')
-#process.GlobalTag = GlobalTag(process.GlobalTag, '102X_mc2017_realistic_v6')
-process.GlobalTag = GlobalTag(process.GlobalTag, '94X_mc2017_realistic_v17')
+#process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_data', '')
+#process.GlobalTag = GlobalTag(process.GlobalTag, '102X_dataRun2_v8')
+process.GlobalTag = GlobalTag(process.GlobalTag, '94X_dataRun2_v11')
 
 #jec from sqlite
 process.load("CondCore.CondDB.CondDB_cfi")
 from CondCore.CondDB.CondDB_cfi import *
-process.CondDB.connect = 'sqlite:Fall17_17Nov2017_V32_102X_MC.db'
+process.CondDB.connect = 'sqlite:Fall17_17Nov2017_V32_102X_DATA.db'
 process.jec = cms.ESSource("PoolDBESSource",CondDB,
     toGet = cms.VPSet(
       cms.PSet(
 	record = cms.string('JetCorrectionsRecord'),
-	tag    = cms.string('JetCorrectorParametersCollection_Fall17_17Nov2017_V32_102X_MC_AK4PFchs'),
+	tag    = cms.string('JetCorrectorParametersCollection_Fall17_17Nov2017_V32_102X_DATA_AK4PFchs'),
 	label  = cms.untracked.string('AK4PFchs')
 	),
       cms.PSet(
 	record = cms.string('JetCorrectionsRecord'),
-	tag    = cms.string('JetCorrectorParametersCollection_Fall17_17Nov2017_V32_102X_MC_AK8PFPuppi'),
+	tag    = cms.string('JetCorrectorParametersCollection_Fall17_17Nov2017_V32_102X_DATA_AK8PFPuppi'),
 	label  = cms.untracked.string('AK8PFPuppi')
 	)
       )
@@ -34,25 +34,26 @@ process.jec = cms.ESSource("PoolDBESSource",CondDB,
 process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
-process.MessageLogger.cerr.FwkReport.reportEvery = 1000
+process.MessageLogger.cerr.FwkReport.reportEvery = 1
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
     fileNames = cms.untracked.vstring(
-        'file:/hdfs/store/user/varuns/TEST-INPUTFILES/test_mc_12Apr2018_94X.root'
+        #'file:/hdfs/store/user/varuns/TEST-INPUTFILES/test_data_MET-2017B-31March18.root'
+        'file:/hdfs/store/user/varuns/TEST-INPUTFILES/pickeventsALL.root'
     )
 )
 
 process.TFileService = cms.Service("TFileService", 
-    fileName = cms.string('Ntuple_mc.root')
+    fileName = cms.string('Ntuple_data2017-jetToolbox.root')
     )
 
 process.load( "PhysicsTools.PatAlgos.producersLayer1.patCandidates_cff" )
 process.load( "PhysicsTools.PatAlgos.triggerLayer1.triggerProducer_cff" )
 process.load( "PhysicsTools.PatAlgos.selectionLayer1.selectedPatCandidates_cff" )
 
-##Re-run ECAL bad calibration filter 
-##https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#2017_data
+## Re-run ECAL bad calibration filter 
+## https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#2017_data
 process.load('RecoMET.METFilters.ecalBadCalibFilter_cfi')
 baddetEcallist = cms.vuint32(
     [872439604,872422825,872420274,872423218,
@@ -73,16 +74,29 @@ process.ecalBadCalibReducedMINIAODFilter = cms.EDFilter(
     taggingMode      = cms.bool(True),
     debug            = cms.bool(False)
     )
+ 
+## MET Corrections: Type-1
+from PhysicsTools.PatAlgos.tools.coreTools import *
+runOnData( process,  names=['Photons', 'Electrons','Muons','Taus','Jets'], outputModules = [] )
 
-## EE noise mitigation
 ## https://twiki.cern.ch/twiki/bin/view/CMS/MissingETUncertaintyPrescription#Instructions_for_9_4_X_X_9_or_10
 from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
 runMetCorAndUncFromMiniAOD (
     process,
-    isData          = False, # false for MC
+    isData          = True, # false for MC
     fixEE2017       = True,
-    fixEE2017Params = {'userawPt': True, 'ptThreshold':50.0, 'minEtaThreshold':2.65, 'maxEtaThreshold': 3.139} ,
+    fixEE2017Params = {'userawPt': True, 'ptThreshold':50.0, 'minEtaThreshold':2.65, 'maxEtaThreshold': 3.139},
     postfix         = "ModifiedMET"
+    )
+
+## L1 Prefirring
+## https://twiki.cern.ch/twiki/bin/viewauth/CMS/L1ECALPrefiringWeightRecipe
+from PhysicsTools.PatUtils.l1ECALPrefiringWeightProducer_cfi import l1ECALPrefiringWeightProducer
+process.prefiringweight = l1ECALPrefiringWeightProducer.clone(
+    DataEra                      = cms.string("2017BtoF"),
+    UseJetEMPt                   = cms.bool(False),
+    PrefiringRateSystematicUncty = cms.double(0.2),
+    SkipWarnings                 = False
     )
 
 ## https://twiki.cern.ch/twiki/bin/view/CMS/EgammaPostRecoRecipes#Running_on_2017_MiniAOD_V2
@@ -92,7 +106,6 @@ setupEgammaPostRecoSeq(process,
     era    = '2017-Nov17ReReco'
     ) 
 
-## Apply JEC in AK4
 ## https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookJetEnergyCorrections#CorrPatJets
 from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
 updateJetCollection(
@@ -101,23 +114,10 @@ updateJetCollection(
     pvSource = cms.InputTag('offlineSlimmedPrimaryVertices'),
     svSource = cms.InputTag('slimmedSecondaryVertices'),
     jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']), 'None'),  # Update: Safe to always add 'L2L3Residual' as MC contains dummy L2L3Residual corrections (always set to 1)
-    postfix='UpdatedJECAK4'
-    )
-## AK4Jet Tag: selectedUpdatedPatJetsUpdatedJECAK4
-
-## Apply JEC in AK8
-from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
-updateJetCollection(
-    process,
-    jetSource = cms.InputTag('slimmedJetsAK8'),
-    pvSource = cms.InputTag('offlineSlimmedPrimaryVertices'),
-    svSource = cms.InputTag('slimmedSecondaryVertices'),
-    rParam = 0.8,
-    jetCorrections = ('AK8PFPuppi', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']), 'None'),
-    postfix='UpdatedJECAK8',
+    postfix='UpdatedJECAK4',
     printWarning = True
     )
-## AK8Jet Tag: selectedUpdatedPatJetsUpdatedJECAK8
+## AK4Jet Tag: selectedUpdatedPatJetsUpdatedJECAK4
 
 ## https://twiki.cern.ch/twiki/bin/viewauth/CMS/DeepAKXTagging#Option_1_Add_DeepAK8_to_slimmed
 from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
@@ -133,22 +133,31 @@ pfMassDecorrelatedDeepBoostedJetTags.preprocessParams = pfMassDecorrelatedDeepBo
 pfMassDecorrelatedDeepBoostedJetTags.model_path = 'RecoBTag/Combined/data/DeepBoostedJet/V02/decorrelated/resnet-symbol.json'
 pfMassDecorrelatedDeepBoostedJetTags.param_path = 'RecoBTag/Combined/data/DeepBoostedJet/V02/decorrelated/resnet-0000.params'
 
-updateJetCollection(
-    process,
-    jetSource = cms.InputTag('slimmedJetsAK8'),
-    pvSource = cms.InputTag('offlineSlimmedPrimaryVertices'),
-    svSource = cms.InputTag('slimmedSecondaryVertices'),
-    rParam = 0.8,
-    jetCorrections = ('AK8PFPuppi', cms.vstring(['L2Relative', 'L3Absolute', 'L2L3Residual']), 'None'),
-    btagDiscriminators = _pfDeepBoostedJetTagsAll,
-    postfix='AK8WithDeepTags',
-    printWarning = True
+from JMEAnalysis.JetToolbox.jetToolbox_cff import jetToolbox
+jetToolbox( process, 'ak8', 'jetSequence', 'noOutput', 
+    dataTier='miniAOD', 
+    runOnMC = False, 
+    updateCollection='slimmedJetsAK8', 
+    JETCorrPayload='AK8PFchs', 
+    JETCorrLevels=['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual'],
+    bTagDiscriminators=[
+    "pfDeepBoostedDiscriminatorsJetTags:TvsQCD",
+    "pfDeepBoostedDiscriminatorsJetTags:WvsQCD",
+    "pfDeepBoostedDiscriminatorsJetTags:ZvsQCD",
+    "pfMassDecorrelatedDeepBoostedDiscriminatorsJetTags:TvsQCD",
+    "pfMassDecorrelatedDeepBoostedDiscriminatorsJetTags:WvsQCD",
+    "pfMassDecorrelatedDeepBoostedDiscriminatorsJetTags:ZvsQCD",
+
+    ]
     )
 ## AK8Jet Tag: selectedUpdatedPatJetsAK8WithDeepTags
 
 from PhysicsTools.PatAlgos.tools.helpers import getPatAlgosToolsTask
 task = getPatAlgosToolsTask(process)
 process.endpath = cms.EndPath(task)
+
+##--|  ##Updating Jet collection for DeepFlavor tagger
+##--|  # https://twiki.cern.ch/twiki/bin/view/CMS/DeepJet#94X_installation_recipe_X_10
 
 ## Tau ID
 from phoJetAnalysis.phoJetNtuplizer.runTauIdMVA import *
@@ -160,20 +169,21 @@ na.runTauID()
 
 ### Analyzer Related
 process.load("phoJetAnalysis.phoJetNtuplizer.phoJetNtuplizer_cfi")
-process.phoJetNtuplizer.debug       = cms.bool(False);
-process.phoJetNtuplizer.is_Data     = cms.bool(False); # True for Data
-process.phoJetNtuplizer.runGenInfo  = cms.bool(True);  # True for MC
-process.phoJetNtuplizer.runak8Jets  = cms.bool(True);
+process.phoJetNtuplizer.debug        = cms.bool(False);
+process.phoJetNtuplizer.runak8Jets   = cms.bool(True);
 process.phoJetNtuplizer.runJetWidthCalculator = cms.bool(True); # needed for monoZprime Analysis [Valid only if runJets is True]
 process.phoJetNtuplizer.jetsAK4Token = cms.InputTag("selectedUpdatedPatJetsUpdatedJECAK4")
-process.phoJetNtuplizer.jetsAK8Token = cms.InputTag("selectedUpdatedPatJetsUpdatedJECAK8")
-process.phoJetNtuplizer.jetsAK8TagToken = cms.InputTag("selectedUpdatedPatJetsAK8WithDeepTags")
+#process.phoJetNtuplizer.jetsAK8Token = cms.InputTag("selectedUpdatedPatJetsUpdatedJECAK8")
+process.phoJetNtuplizer.jetsAK8Token = cms.InputTag("selectedPatJetsAK8PFCHS")
+#process.phoJetNtuplizer.jetsAK8TagToken = cms.InputTag("selectedUpdatedPatJetsAK8WithDeepTags")
+process.phoJetNtuplizer.jetsAK8TagToken = cms.InputTag("selectedPatJetsAK8PFCHS")
 process.phoJetNtuplizer.pfmetToken   = cms.InputTag("slimmedMETsModifiedMET")
 
 process.p = cms.Path(
     process.ecalBadCalibReducedMINIAODFilter *
     process.fullPatMetSequenceModifiedMET *
     process.egammaPostRecoSeq *
+    process.prefiringweight *
     process.rerunMvaIsolationSequence *
     process.NewTauIDsEmbedded *
     process.phoJetNtuplizer

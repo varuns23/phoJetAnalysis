@@ -48,9 +48,9 @@ vector<float> ak8Jet_nb2AK8PuppiSoftDropN2_;
 vector<float> ak8Jet_nb2AK8PuppiSoftDropN3_;
 
 vector<float> ak8Jet_CSVv2Tags_;
-vector<float> ak8Jet_DeepCSVTags_b_;
-vector<float> ak8Jet_DeepCSVTags_bb_;
-vector<float> ak8Jet_BoostedDSVTags_bb_;
+//-| vector<float> ak8Jet_DeepCSVTags_b_;
+//-| vector<float> ak8Jet_DeepCSVTags_bb_;
+//-| vector<float> ak8Jet_BoostedDSVTags_bb_;
 
 vector<float> ak8Jet_TvsQCD_;
 vector<float> ak8Jet_WvsQCD_;
@@ -93,9 +93,9 @@ void phoJetNtuplizer::branchak8Jets(TTree* tree){
   tree->Branch("ak8Jet_nb2AK8PuppiSoftDropN3", &ak8Jet_nb2AK8PuppiSoftDropN3_);
  
   tree->Branch("ak8Jet_CSVv2Tags",         &ak8Jet_CSVv2Tags_);
-  tree->Branch("ak8Jet_DeepCSVTags_b",     &ak8Jet_DeepCSVTags_b_);
-  tree->Branch("ak8Jet_DeepCSVTags_bb",    &ak8Jet_DeepCSVTags_bb_);
-  tree->Branch("ak8Jet_BoostedDSVTags_bb", &ak8Jet_BoostedDSVTags_bb_);
+  //-| tree->Branch("ak8Jet_DeepCSVTags_b",     &ak8Jet_DeepCSVTags_b_);
+  //-| tree->Branch("ak8Jet_DeepCSVTags_bb",    &ak8Jet_DeepCSVTags_bb_);
+  //-| tree->Branch("ak8Jet_BoostedDSVTags_bb", &ak8Jet_BoostedDSVTags_bb_);
   tree->Branch("ak8JetJECUnc",             &ak8JetJECUnc_);
 
   tree->Branch("ak8Jet_TvsQCD",    &ak8Jet_TvsQCD_);
@@ -115,14 +115,22 @@ void phoJetNtuplizer::fillak8Jets(const edm::Event& iEvent, const edm::EventSetu
   edm::Handle<edm::View<pat::Jet> > ak8jetHandle;
   iEvent.getByToken(jetsAK8Token_, ak8jetHandle);
 
+  edm::Handle<edm::View<pat::Jet> > ak8jetTagHandle;
+  iEvent.getByToken(jetsAK8TagToken_, ak8jetTagHandle);
+
   if (!ak8jetHandle.isValid()) {
-    edm::LogWarning("phoJetNtuplizer") << "no pat::Jets (AK8) in event";
+    edm::LogWarning("phoJetNtuplizer") << "no pat::Jets (AK8:ak8jetHandle) in event";
+    return;
+  }
+
+  if (!ak8jetTagHandle.isValid()) {
+    edm::LogWarning("phoJetNtuplizer") << "no pat::Jets (AK8:ak8jetTagHandle) in event";
     return;
   }
 
   // Accessing the JEC uncertainties AK8 
   edm::ESHandle<JetCorrectorParametersCollection> AK8JetCorParColl;
-  iSetup.get<JetCorrectionsRecord>().get("AK8PFchs",AK8JetCorParColl); 
+  iSetup.get<JetCorrectionsRecord>().get("AK8PFPuppi",AK8JetCorParColl); 
   JetCorrectorParameters const & AK8JetCorPar = (*AK8JetCorParColl)["Uncertainty"];
   JetCorrectionUncertainty *ak8jecUnc=0;
   ak8jecUnc = new JetCorrectionUncertainty(AK8JetCorPar);
@@ -158,16 +166,17 @@ void phoJetNtuplizer::fillak8Jets(const edm::Event& iEvent, const edm::EventSetu
     ak8Jet_nb2AK8PuppiSoftDropN3_ .push_back(iak8Jet->userFloat("ak8PFJetsPuppiSoftDropValueMap:nb2AK8PuppiSoftDropN3"));
 
     ak8Jet_CSVv2Tags_         .push_back(iak8Jet->bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags"));
-    ak8Jet_DeepCSVTags_b_     .push_back(iak8Jet->bDiscriminator("pfDeepCSVJetTags:probb"));
-    ak8Jet_DeepCSVTags_bb_    .push_back(iak8Jet->bDiscriminator("pfDeepCSVJetTags:probbb"));
-    ak8Jet_BoostedDSVTags_bb_ .push_back(iak8Jet->bDiscriminator("pfBoostedDoubleSecondaryVertexAK8BJetTags"));
+    //-| ak8Jet_DeepCSVTags_b_     .push_back(iak8Jet->bDiscriminator("pfDeepCSVJetTags:probb"));
+    //-| ak8Jet_DeepCSVTags_bb_    .push_back(iak8Jet->bDiscriminator("pfDeepCSVJetTags:probbb"));
+    //-| ak8Jet_BoostedDSVTags_bb_ .push_back(iak8Jet->bDiscriminator("pfBoostedDoubleSecondaryVertexAK8BJetTags"));
 
-    ak8Jet_TvsQCD_            .push_back(iak8Jet->bDiscriminator("pfDeepBoostedDiscriminatorsJetTags:TvsQCD")); 
-    ak8Jet_WvsQCD_            .push_back(iak8Jet->bDiscriminator("pfDeepBoostedDiscriminatorsJetTags:WvsQCD")); 
-    ak8Jet_ZvsQCD_            .push_back(iak8Jet->bDiscriminator("pfDeepBoostedDiscriminatorsJetTags:ZvsQCD")); 
-    ak8Jet_MD_TvsQCD_         .push_back(iak8Jet->bDiscriminator("pfMassDecorrelatedDeepBoostedDiscriminatorsJetTags:TvsQCD")); 
-    ak8Jet_MD_WvsQCD_         .push_back(iak8Jet->bDiscriminator("pfMassDecorrelatedDeepBoostedDiscriminatorsJetTags:WvsQCD")); 
-    ak8Jet_MD_ZvsQCD_         .push_back(iak8Jet->bDiscriminator("pfMassDecorrelatedDeepBoostedDiscriminatorsJetTags:ZvsQCD")); 
+    const pat::Jet &jet = (*ak8jetTagHandle)[nak8Jet_];
+    ak8Jet_TvsQCD_            .push_back(jet.bDiscriminator("pfDeepBoostedDiscriminatorsJetTags:TvsQCD")); 
+    ak8Jet_WvsQCD_            .push_back(jet.bDiscriminator("pfDeepBoostedDiscriminatorsJetTags:WvsQCD")); 
+    ak8Jet_ZvsQCD_            .push_back(jet.bDiscriminator("pfDeepBoostedDiscriminatorsJetTags:ZvsQCD")); 
+    ak8Jet_MD_TvsQCD_         .push_back(jet.bDiscriminator("pfMassDecorrelatedDeepBoostedDiscriminatorsJetTags:TvsQCD")); 
+    ak8Jet_MD_WvsQCD_         .push_back(jet.bDiscriminator("pfMassDecorrelatedDeepBoostedDiscriminatorsJetTags:WvsQCD")); 
+    ak8Jet_MD_ZvsQCD_         .push_back(jet.bDiscriminator("pfMassDecorrelatedDeepBoostedDiscriminatorsJetTags:ZvsQCD")); 
     
     if (fabs(iak8Jet->eta()) < 5.2) {
       ak8jecUnc->setJetEta(iak8Jet->eta());
@@ -214,9 +223,9 @@ void phoJetNtuplizer::initak8Jets(){
   ak8Jet_nb2AK8PuppiSoftDropN3_  .clear();
 
   ak8Jet_CSVv2Tags_        .clear();
-  ak8Jet_DeepCSVTags_b_    .clear();
-  ak8Jet_DeepCSVTags_bb_   .clear();
-  ak8Jet_BoostedDSVTags_bb_.clear();
+  //-| ak8Jet_DeepCSVTags_b_    .clear();
+  //-| ak8Jet_DeepCSVTags_bb_   .clear();
+  //-| ak8Jet_BoostedDSVTags_bb_.clear();
   ak8JetJECUnc_            .clear();
 
   ak8Jet_TvsQCD_            .clear(); 
