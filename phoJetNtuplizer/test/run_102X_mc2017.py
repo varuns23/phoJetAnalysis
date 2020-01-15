@@ -23,11 +23,12 @@ process.jec = cms.ESSource("PoolDBESSource",CondDB,
 	record = cms.string('JetCorrectionsRecord'),
 	tag    = cms.string('JetCorrectorParametersCollection_Fall17_17Nov2017_V32_102X_MC_AK4PFchs'),
 	label  = cms.untracked.string('AK4PFchs')
-	),
-      cms.PSet(
-	record = cms.string('JetCorrectionsRecord'),
-	tag    = cms.string('JetCorrectorParametersCollection_Fall17_17Nov2017_V32_102X_MC_AK8PFPuppi'),
-	label  = cms.untracked.string('AK8PFPuppi')
+	)
+##      ,
+##      cms.PSet(
+##	record = cms.string('JetCorrectionsRecord'),
+##	tag    = cms.string('JetCorrectorParametersCollection_Fall17_17Nov2017_V32_102X_MC_AK8PFPuppi'),
+##	label  = cms.untracked.string('AK8PFPuppi')
 	)
       )
     )
@@ -105,46 +106,46 @@ updateJetCollection(
     )
 ## AK4Jet Tag: selectedUpdatedPatJetsUpdatedJECAK4
 
-## Apply JEC in AK8
-from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
-updateJetCollection(
-    process,
-    jetSource = cms.InputTag('slimmedJetsAK8'),
-    pvSource = cms.InputTag('offlineSlimmedPrimaryVertices'),
-    svSource = cms.InputTag('slimmedSecondaryVertices'),
-    rParam = 0.8,
-    jetCorrections = ('AK8PFPuppi', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']), 'None'),
-    postfix='UpdatedJECAK8',
-    printWarning = True
-    )
-## AK8Jet Tag: selectedUpdatedPatJetsUpdatedJECAK8
-
-## https://twiki.cern.ch/twiki/bin/viewauth/CMS/DeepAKXTagging#Option_1_Add_DeepAK8_to_slimmed
-from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
-from RecoBTag.MXNet.pfDeepBoostedJet_cff import _pfDeepBoostedJetTagsAll, _pfDeepBoostedJetTagsProbs, _pfDeepBoostedJetTagsMetaDiscrs, _pfMassDecorrelatedDeepBoostedJetTagsProbs, _pfMassDecorrelatedDeepBoostedJetTagsMetaDiscrs
-
-from RecoBTag.MXNet.pfDeepBoostedJet_cff import pfDeepBoostedJetTags, pfMassDecorrelatedDeepBoostedJetTags
-from RecoBTag.MXNet.Parameters.V02.pfDeepBoostedJetPreprocessParams_cfi import pfDeepBoostedJetPreprocessParams as pfDeepBoostedJetPreprocessParamsV02
-from RecoBTag.MXNet.Parameters.V02.pfMassDecorrelatedDeepBoostedJetPreprocessParams_cfi import pfMassDecorrelatedDeepBoostedJetPreprocessParams as pfMassDecorrelatedDeepBoostedJetPreprocessParamsV02
-pfDeepBoostedJetTags.preprocessParams = pfDeepBoostedJetPreprocessParamsV02
-pfDeepBoostedJetTags.model_path = 'RecoBTag/Combined/data/DeepBoostedJet/V02/full/resnet-symbol.json'
-pfDeepBoostedJetTags.param_path = 'RecoBTag/Combined/data/DeepBoostedJet/V02/full/resnet-0000.params'
-pfMassDecorrelatedDeepBoostedJetTags.preprocessParams = pfMassDecorrelatedDeepBoostedJetPreprocessParamsV02
-pfMassDecorrelatedDeepBoostedJetTags.model_path = 'RecoBTag/Combined/data/DeepBoostedJet/V02/decorrelated/resnet-symbol.json'
-pfMassDecorrelatedDeepBoostedJetTags.param_path = 'RecoBTag/Combined/data/DeepBoostedJet/V02/decorrelated/resnet-0000.params'
-
-updateJetCollection(
-    process,
-    jetSource = cms.InputTag('slimmedJetsAK8'),
-    pvSource = cms.InputTag('offlineSlimmedPrimaryVertices'),
-    svSource = cms.InputTag('slimmedSecondaryVertices'),
-    rParam = 0.8,
-    jetCorrections = ('AK8PFPuppi', cms.vstring(['L2Relative', 'L3Absolute', 'L2L3Residual']), 'None'),
-    btagDiscriminators = _pfDeepBoostedJetTagsAll,
-    postfix='AK8WithDeepTags',
-    printWarning = True
-    )
-## AK8Jet Tag: selectedUpdatedPatJetsAK8WithDeepTags
+##--| ## Apply JEC in AK8
+##--| from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
+##--| updateJetCollection(
+##--|     process,
+##--|     jetSource = cms.InputTag('slimmedJetsAK8'),
+##--|     pvSource = cms.InputTag('offlineSlimmedPrimaryVertices'),
+##--|     svSource = cms.InputTag('slimmedSecondaryVertices'),
+##--|     rParam = 0.8,
+##--|     jetCorrections = ('AK8PFPuppi', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']), 'None'),
+##--|     postfix='UpdatedJECAK8',
+##--|     printWarning = True
+##--|     )
+##--| ## AK8Jet Tag: selectedUpdatedPatJetsUpdatedJECAK8
+##--| 
+##--| ## https://twiki.cern.ch/twiki/bin/viewauth/CMS/DeepAKXTagging#Option_1_Add_DeepAK8_to_slimmed
+##--| from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
+##--| from RecoBTag.MXNet.pfDeepBoostedJet_cff import _pfDeepBoostedJetTagsAll, _pfDeepBoostedJetTagsProbs, _pfDeepBoostedJetTagsMetaDiscrs, _pfMassDecorrelatedDeepBoostedJetTagsProbs, _pfMassDecorrelatedDeepBoostedJetTagsMetaDiscrs
+##--| 
+##--| from RecoBTag.MXNet.pfDeepBoostedJet_cff import pfDeepBoostedJetTags, pfMassDecorrelatedDeepBoostedJetTags
+##--| from RecoBTag.MXNet.Parameters.V02.pfDeepBoostedJetPreprocessParams_cfi import pfDeepBoostedJetPreprocessParams as pfDeepBoostedJetPreprocessParamsV02
+##--| from RecoBTag.MXNet.Parameters.V02.pfMassDecorrelatedDeepBoostedJetPreprocessParams_cfi import pfMassDecorrelatedDeepBoostedJetPreprocessParams as pfMassDecorrelatedDeepBoostedJetPreprocessParamsV02
+##--| pfDeepBoostedJetTags.preprocessParams = pfDeepBoostedJetPreprocessParamsV02
+##--| pfDeepBoostedJetTags.model_path = 'RecoBTag/Combined/data/DeepBoostedJet/V02/full/resnet-symbol.json'
+##--| pfDeepBoostedJetTags.param_path = 'RecoBTag/Combined/data/DeepBoostedJet/V02/full/resnet-0000.params'
+##--| pfMassDecorrelatedDeepBoostedJetTags.preprocessParams = pfMassDecorrelatedDeepBoostedJetPreprocessParamsV02
+##--| pfMassDecorrelatedDeepBoostedJetTags.model_path = 'RecoBTag/Combined/data/DeepBoostedJet/V02/decorrelated/resnet-symbol.json'
+##--| pfMassDecorrelatedDeepBoostedJetTags.param_path = 'RecoBTag/Combined/data/DeepBoostedJet/V02/decorrelated/resnet-0000.params'
+##--| 
+##--| updateJetCollection(
+##--|     process,
+##--|     jetSource = cms.InputTag('slimmedJetsAK8'),
+##--|     pvSource = cms.InputTag('offlineSlimmedPrimaryVertices'),
+##--|     svSource = cms.InputTag('slimmedSecondaryVertices'),
+##--|     rParam = 0.8,
+##--|     jetCorrections = ('AK8PFPuppi', cms.vstring(['L2Relative', 'L3Absolute', 'L2L3Residual']), 'None'),
+##--|     btagDiscriminators = _pfDeepBoostedJetTagsAll,
+##--|     postfix='AK8WithDeepTags',
+##--|     printWarning = True
+##--|     )
+##--| ## AK8Jet Tag: selectedUpdatedPatJetsAK8WithDeepTags
 
 from PhysicsTools.PatAlgos.tools.helpers import getPatAlgosToolsTask
 task = getPatAlgosToolsTask(process)
@@ -163,11 +164,11 @@ process.load("phoJetAnalysis.phoJetNtuplizer.phoJetNtuplizer_cfi")
 process.phoJetNtuplizer.debug       = cms.bool(False);
 process.phoJetNtuplizer.is_Data     = cms.bool(False); # True for Data
 process.phoJetNtuplizer.runGenInfo  = cms.bool(True);  # True for MC
-process.phoJetNtuplizer.runak8Jets  = cms.bool(True);
+process.phoJetNtuplizer.runak8Jets  = cms.bool(False);
 process.phoJetNtuplizer.runJetWidthCalculator = cms.bool(True); # needed for monoZprime Analysis [Valid only if runJets is True]
 process.phoJetNtuplizer.jetsAK4Token = cms.InputTag("selectedUpdatedPatJetsUpdatedJECAK4")
-process.phoJetNtuplizer.jetsAK8Token = cms.InputTag("selectedUpdatedPatJetsUpdatedJECAK8")
-process.phoJetNtuplizer.jetsAK8TagToken = cms.InputTag("selectedUpdatedPatJetsAK8WithDeepTags")
+##process.phoJetNtuplizer.jetsAK8Token = cms.InputTag("selectedUpdatedPatJetsUpdatedJECAK8")
+##process.phoJetNtuplizer.jetsAK8TagToken = cms.InputTag("selectedUpdatedPatJetsAK8WithDeepTags")
 process.phoJetNtuplizer.pfmetToken   = cms.InputTag("slimmedMETsModifiedMET")
 
 process.p = cms.Path(
