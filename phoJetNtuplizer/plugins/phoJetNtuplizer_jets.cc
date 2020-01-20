@@ -255,19 +255,27 @@ void phoJetNtuplizer::fillJets(const edm::Event& iEvent, const edm::EventSetup& 
     float MUF      = iJet->muonEnergyFraction();
 
     bool tightJetID        = false;
-    bool tightLepVetoJetID = false;
-    if (fabs(iJet->eta()) <= 2.7) {
-      tightJetID = (NHF<0.90 && NEMF<0.90 && NumConst>1) && ((fabs(iJet->eta())<=2.4 && CHF>0 && CHM>0 && CEMF<0.99) || fabs(iJet->eta())>2.4);
-      tightLepVetoJetID = (NHF<0.90 && NEMF<0.90 && NumConst>1 && MUF<0.8) && ((fabs(iJet->eta())<=2.4 && CHF>0 && CHM>0 && CEMF<0.9) || fabs(iJet->eta())>2.4);
-    } else if (fabs(iJet->eta()) <= 3.0) {
-      tightJetID = (NEMF<0.90 && NNP>2);
+    bool tightNoLepVetoJetID = false;
+
+    if (fabs(iJet->eta()) <= 2.6) {
+      tightJetID          = (CEMF<0.8 && CHM>0 && CHF>0 && NumConst>1 && NEMF<0.9 && MUF <0.8 && NHF < 0.9);
+      tightNoLepVetoJetID = (CHM>0 && CHF>0 && NumConst>1 && NEMF<0.9 && NHF < 0.9);
+    } 
+    else if (fabs(iJet->eta()) <= 2.7) {
+      tightJetID          = (CEMF<0.8 && CHM>0 && NEMF<0.99 && MUF <0.8 && NHF < 0.9);
+      tightNoLepVetoJetID = (CHM>0 && NEMF<0.99 && NHF < 0.9);
+    } 
+    else if (fabs(iJet->eta()) <= 3.0) {
+      tightJetID          = (NEMF > 0.02 && NEMF<0.99 && NNP>2);
+      tightNoLepVetoJetID = (NEMF > 0.02 && NEMF<0.99 && NNP>2);
     } else {
-      tightJetID = (NEMF<0.90 && NNP>10);
+      tightJetID          = (NEMF<0.90 && NHF > 0.2 && NNP>10);
+      tightNoLepVetoJetID = (NEMF<0.90 && NHF > 0.2 && NNP>10);
     }
 
     UShort_t tmpjetIDbit = 0;
-    if (tightJetID)        setbit(tmpjetIDbit, 0);
-    if (tightLepVetoJetID) setbit(tmpjetIDbit, 1);
+    if (tightJetID)          setbit(tmpjetIDbit, 0);
+    if (tightNoLepVetoJetID) setbit(tmpjetIDbit, 1);
 
     jetID_                        .push_back(tmpjetIDbit);    
     // PUJet ID from slimmedJets

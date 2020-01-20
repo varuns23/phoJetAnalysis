@@ -1,28 +1,23 @@
 # 2018 Analyzer: 102X
 ## MiniAOD analyzer for all physics objects 
 
-- Working for 17Sep2018 Re-Reco of ABC
-- For prompt reco refer to 2018_94X branch
-
 Instructions:
 ```
-cmsrel CMSSW_10_2_10
-cd CMSSW_10_2_10/src
+cmsrel CMSSW_10_2_18
+cd CMSSW_10_2_18/src
 cmsenv
 git cms-init
-git config merge.renameLimit 20000
 
 ## MET 
 git cms-addpkg RecoMET/METFilters
-       
-##https://twiki.cern.ch/twiki/bin/view/CMS/EgammaMiniAODV2#2018_MiniAOD
-git cms-merge-topic cms-egamma:EgammaPostRecoTools                                                              
-git cms-merge-topic cms-egamma:PhotonIDValueMapSpeedup1029
-git cms-merge-topic cms-egamma:slava77-btvDictFix_10210
-git cms-addpkg EgammaAnalysis/ElectronTools
-rm EgammaAnalysis/ElectronTools/data -rf
-git clone git@github.com:cms-data/EgammaAnalysis-ElectronTools.git EgammaAnalysis/ElectronTools/data
 
+#https://twiki.cern.ch/twiki/bin/view/CMS/EgammaPostRecoRecipes#102X
+git cms-merge-topic cms-egamma:PhotonIDValueMapSpeedup1029 
+scram b -j 8
+git clone git@github.com:cms-egamma/EgammaPostRecoTools.git  EgammaUser/EgammaPostRecoTools
+cd  EgammaUser/EgammaPostRecoTools
+git checkout master
+cd -
 
 #For 2018 data-taking
 git clone -b 2018_102X https://github.com/varuns23/phoJetAnalysis.git

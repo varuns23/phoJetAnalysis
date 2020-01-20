@@ -33,7 +33,6 @@ phoJetNtuplizer = cms.EDAnalyzer('phoJetNtuplizer',
 				  eeReducedRecHitCollection            = cms.InputTag("reducedEgamma","reducedEERecHits"),
 				  esReducedRecHitCollection            = cms.InputTag("reducedEgamma","reducedESRecHits"),
 
-                                  #jetsAK4Token                          = cms.InputTag("selectedUpdatedPatJetsUpdatedJEC"), 
 				  jetsAK4Token                          = cms.InputTag("slimmedJets"), 
 				  jetsAK8Token                          = cms.InputTag("slimmedJetsAK8"), 
 				  
