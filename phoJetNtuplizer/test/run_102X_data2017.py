@@ -29,7 +29,7 @@ process.jec = cms.ESSource("PoolDBESSource",CondDB,
 ##	record = cms.string('JetCorrectionsRecord'),
 ##	tag    = cms.string('JetCorrectorParametersCollection_Fall17_17Nov2017_V32_102X_DATA_AK8PFPuppi'),
 ##	label  = cms.untracked.string('AK8PFPuppi')
-	)
+##	)
       )
     )
 process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
