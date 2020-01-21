@@ -8,6 +8,7 @@ float            genWeight_;
 float            genHT_;
 float            pdfWeight_;     
 vector<float>    pdfSystWeight_;
+vector<double>   psWeight_;
 
 Int_t            nPUInfo_;
 vector<int>      nPU_;
@@ -38,6 +39,8 @@ void phoJetNtuplizer::branchGenInfo(TTree* tree){
   tree->Branch("genHT",         &genHT_);
   tree->Branch("pdfWeight",     &pdfWeight_);
   tree->Branch("pdfSystWeight", &pdfSystWeight_);
+  if(addPSWeights_)
+    tree->Branch("psWeight",      &psWeight_);
 
   tree->Branch("nPUInfo",       &nPUInfo_);
   tree->Branch("nPU",           &nPU_);
@@ -83,6 +86,24 @@ void phoJetNtuplizer::fillGenInfo(const edm::Event& iEvent){
       pthat_ = genEventInfoHandle->binningValues()[0];
     processID_ = genEventInfoHandle->signalProcessID();
     genWeight_ = genEventInfoHandle->weight();
+
+    if(addPSWeights_){
+      //PS weights:
+      std::vector<double> ps_Weight_ = genEventInfoHandle->weights();
+      // Normalize all Parton-Shower weights to the nominal one
+      if(ps_Weight_.size() > 0){
+	const double nominal_psWeight = ps_Weight_.at(0);
+	if(nominal_psWeight == 0.){
+	  throw cms::Exception("input") << "nominal PS-Weight equal to zero (failed to normalize other PS-Weights";
+	}
+
+	for(uint iweights =0; iweights< ps_Weight_.size(); iweights++){
+	  ps_Weight_.at(iweights) /= nominal_psWeight;
+	  psWeight_.push_back(ps_Weight_.at(iweights));
+	}
+      }
+    } 
+
   }else{
     edm::LogWarning("phoJetNtuplizer") << "no generator info in event";
   }
@@ -147,33 +168,33 @@ void phoJetNtuplizer::fillGenInfo(const edm::Event& iEvent){
     genIndex++;
 
     /*
-    int status = ip->status();
+       int status = ip->status();
     //bool stableFinalStateParticle = status == 1 && ip->pt() > 5.0;
-    
+
     bool quarks = abs(ip->pdgId())<7;
-       
+
     // keep non-FSR photons with pT > 5.0 and all leptons with pT > 3.0;
     bool photonOrLepton =
-      (ip->pdgId() == 22 && (ip->isPromptFinalState() || ip->isLastCopy())) ||
-      (status == 1 && abs(ip->pdgId()) == 11 && (ip->isPromptFinalState() || ip->isLastCopy())) ||               
-      (status == 1 && abs(ip->pdgId()) == 13 && (ip->isPromptFinalState() || ip->isLastCopy())) ||
-      (status == 1 && (abs(ip->pdgId()) == 12 || abs(ip->pdgId()) == 14 || abs(ip->pdgId()) == 16)) ||
-      (status == 1 && ( abs(ip->pdgId()) >= 11 && abs(ip->pdgId()) <= 16 ) && ip->pt() > 3.0)  ||
-      (status < 10 && abs(ip->pdgId()) == 15 && ip->pt() > 3.0);
-       
+    (ip->pdgId() == 22 && (ip->isPromptFinalState() || ip->isLastCopy())) ||
+    (status == 1 && abs(ip->pdgId()) == 11 && (ip->isPromptFinalState() || ip->isLastCopy())) ||               
+    (status == 1 && abs(ip->pdgId()) == 13 && (ip->isPromptFinalState() || ip->isLastCopy())) ||
+    (status == 1 && (abs(ip->pdgId()) == 12 || abs(ip->pdgId()) == 14 || abs(ip->pdgId()) == 16)) ||
+    (status == 1 && ( abs(ip->pdgId()) >= 11 && abs(ip->pdgId()) <= 16 ) && ip->pt() > 3.0)  ||
+    (status < 10 && abs(ip->pdgId()) == 15 && ip->pt() > 3.0);
+
     // select also Z, W, H, top and b 
     bool heavyParticle =
-      ((    ip->pdgId()  == 23 && ip->isHardProcess()) || 
-       (abs(ip->pdgId()) == 24 && ip->isHardProcess()) || 
-       (    ip->pdgId()  == 25 && ip->isHardProcess()) ||
-       (abs(ip->pdgId()) ==  6 && ip->isHardProcess()) || 
-       (abs(ip->pdgId()) ==  5 && ip->isHardProcess()));
-       */
+    ((    ip->pdgId()  == 23 && ip->isHardProcess()) || 
+    (abs(ip->pdgId()) == 24 && ip->isHardProcess()) || 
+    (    ip->pdgId()  == 25 && ip->isHardProcess()) ||
+    (abs(ip->pdgId()) ==  6 && ip->isHardProcess()) || 
+    (abs(ip->pdgId()) ==  5 && ip->isHardProcess()));
+    */
 
     const reco::Candidate *p = (const reco::Candidate*)&(*ip);
     if (!p->mother()) continue;
 
-//    if(heavyParticle || photonOrLepton || quarks){
+    //    if(heavyParticle || photonOrLepton || quarks){
     if(ip->isPromptFinalState() || ip->isHardProcess() || ip->isLastCopy() || ip->fromHardProcessFinalState()){
 
       mcPID    .push_back(p->pdgId());
@@ -211,38 +232,39 @@ void phoJetNtuplizer::fillGenInfo(const edm::Event& iEvent){
     }
   } // loop over gen-level particle
 
-}
+  }
 
 
 
-void phoJetNtuplizer::initGenInfo(){
+  void phoJetNtuplizer::initGenInfo(){
 
-  pdf_           .clear();
-  pthat_         = -99;
-  processID_     = -99;
-  genWeight_     = -99;
-  genHT_         = -99;
-  pdfWeight_     = -99;
-  pdfSystWeight_.clear();
+    pdf_           .clear();
+    pthat_         = -99;
+    processID_     = -99;
+    genWeight_     = -99;
+    genHT_         = -99;
+    pdfWeight_     = -99;
+    pdfSystWeight_  .clear();
+    psWeight_       .clear();
 
-  nPUInfo_       = 0;
-  nPU_          .clear();
-  puBX_         .clear();
-  puTrue_       .clear();
+    nPUInfo_       = 0;
+    nPU_          .clear();
+    puBX_         .clear();
+    puTrue_       .clear();
 
-  nMC_         = 0;
-  mcPID       .clear();
-  mcVtx       .clear();
-  mcVty       .clear();
-  mcVtz       .clear();
-  mcPt        .clear();
-  mcMass      .clear();
-  mcEta       .clear();
-  mcPhi       .clear();
-  mcE         .clear();
-  mcEt        .clear();
-  mcStatus    .clear();
-  mcStatusFlag.clear();
-  mcIndex     .clear();
+    nMC_         = 0;
+    mcPID       .clear();
+    mcVtx       .clear();
+    mcVty       .clear();
+    mcVtz       .clear();
+    mcPt        .clear();
+    mcMass      .clear();
+    mcEta       .clear();
+    mcPhi       .clear();
+    mcE         .clear();
+    mcEt        .clear();
+    mcStatus    .clear();
+    mcStatusFlag.clear();
+    mcIndex     .clear();
 
-}
+  }

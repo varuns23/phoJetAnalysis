@@ -28,6 +28,11 @@ void setbit(UShort_t& x, UShort_t bit){
   x |= (a << bit);
 }
 
+void setbit(UInt_t& x, UInt_t bit){
+  Int_t a = 1;
+  x |= (a << bit);
+}
+
 void setbit(ULong64_t& x, UShort_t bit){
   ULong64_t a = 1;
   x |= (a << bit);
@@ -38,8 +43,10 @@ phoJetNtuplizer::phoJetNtuplizer(const edm::ParameterSet& iConfig):
 {
   //now do what ever initialization is needed
 
-  debug_                = iConfig.getParameter<bool>("debug");
-  is_Data_               = iConfig.getParameter<bool>("is_Data");
+  debug_                     = iConfig.getParameter<bool>("debug");
+  saveAll_                   = iConfig.getParameter<bool>("saveAll");
+  is_Data_                   = iConfig.getParameter<bool>("is_Data");
+  runYear_                   = iConfig.getParameter<int>("runYear");
 
   runEventInfo_              = iConfig.getParameter<bool>("runEventInfo");
   rhoToken_                  = consumes<double>                       (iConfig.getParameter<InputTag>("rhoToken"));
@@ -56,7 +63,7 @@ phoJetNtuplizer::phoJetNtuplizer(const edm::ParameterSet& iConfig):
   trgFilterDeltaPtCut_       = iConfig.getParameter<double>("trgFilterDeltaPtCut");
   trgFilterDeltaRCut_        = iConfig.getParameter<double>("trgFilterDeltaRCut");
 
-  if(is_Data_){
+  if(is_Data_ && runYear_==2017){
     prefweight_token           = consumes< double >                     (edm::InputTag("prefiringweight:nonPrefiringProb"));
     prefweightup_token         = consumes< double >                     (edm::InputTag("prefiringweight:nonPrefiringProbUp"));
     prefweightdown_token       = consumes< double >                     (edm::InputTag("prefiringweight:nonPrefiringProbDown"));
@@ -72,9 +79,17 @@ phoJetNtuplizer::phoJetNtuplizer(const edm::ParameterSet& iConfig):
 
 
  //Jet Info
-  runJets_                  =  iConfig.getParameter<bool>("runJets");
-  runJetWidthCalculator_    =  iConfig.getParameter<bool>("runJetWidthCalculator");
-  jetsAK4Token_             =  consumes<View<pat::Jet> >              (iConfig.getParameter<InputTag>("jetsAK4Token"));
+  runJets_                        =  iConfig.getParameter<bool> ("runJets");
+  runJetWidthCalculator_          =  iConfig.getParameter<bool> ("runJetWidthCalculator");
+  jetsAK4Token_                   =  consumes<View<pat::Jet> >  (iConfig.getParameter<InputTag>("jetsAK4Token"));
+  runak8Jets_                     =  iConfig.getParameter<bool> ("runak8Jets");
+  jetsAK8Token_                   =  consumes<View<pat::Jet> >  (iConfig.getParameter<InputTag>("jetsAK8Token"));
+  jetsAK8TagToken_                =  consumes<View<pat::Jet> >  (iConfig.getParameter<InputTag>("jetsAK8TagToken"));
+
+  //MET Info
+  runMet_                         = iConfig.getParameter<bool>     ("runMet");
+  pfmetToken_                     = consumes<edm::View<pat::MET> > (iConfig.getParameter<edm::InputTag>("pfmetToken"));
+  ecalBadCalibFilterUpdate_token_ = consumes< bool >               (edm::InputTag("ecalBadCalibReducedMINIAODFilter"));
 
   //Electron Info
   runEle_                  =  iConfig.getParameter<bool>("runEle");
@@ -91,12 +106,9 @@ phoJetNtuplizer::phoJetNtuplizer(const edm::ParameterSet& iConfig):
   //tausToken_               = consumes<View<pat::Tau> >(iConfig.getParameter<InputTag>("tausToken"));
   tausToken_               = consumes<vector<pat::Tau> >(iConfig.getParameter<InputTag>("tausToken"));
 
-  //MET Info
-  runMet_               = iConfig.getParameter<bool>("runMet");
-  pfmetToken_           = consumes<edm::View<pat::MET> > (iConfig.getParameter<edm::InputTag>("pfmetToken"));
-
   //Gen Particles
   runGenInfo_                = iConfig.getParameter<bool>("runGenInfo");
+  addPSWeights_              = iConfig.getParameter<bool>("addPSWeights");
   generatorToken_            = consumes<GenEventInfoProduct>        (iConfig.getParameter<InputTag>("generatorToken"));
   lheEventToken_             = consumes<LHEEventProduct>            (iConfig.getParameter<InputTag>("lheEventToken"));
   puCollection_              = consumes<vector<PileupSummaryInfo> > (iConfig.getParameter<InputTag>("pileupCollection"));
@@ -110,6 +122,7 @@ phoJetNtuplizer::phoJetNtuplizer(const edm::ParameterSet& iConfig):
   if(runEventInfo_) branchEventInfo (tree_);
   if(runPhotons_)   branchPhotons(tree_);
   if(runJets_)      branchJets(tree_);
+  if(runak8Jets_)   branchak8Jets(tree_);
   if(runEle_)       branchElectrons(tree_);
   if(runMuon_)      branchMuons(tree_);
   if(runTaus_)      branchTaus(tree_);
@@ -168,6 +181,7 @@ phoJetNtuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
   if(runTaus_)      fillTaus(iEvent);
   if(runGenInfo_)   fillGenInfo(iEvent);
   if(runJets_)      fillJets(iEvent, iSetup);
+  if(runak8Jets_)   fillak8Jets(iEvent, iSetup);
 
   tree_->Fill();
 }
