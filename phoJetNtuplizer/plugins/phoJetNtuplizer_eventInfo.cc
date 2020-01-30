@@ -61,7 +61,7 @@ void phoJetNtuplizer::branchEventInfo(TTree* tree) {
   tree->Branch("nGoodVtx",             &nGoodVtx_);
   tree->Branch("rho",                  &rho_);
   tree->Branch("rhoCentral",           &rhoCentral_);
-  if(is_Data_){
+  if(is_Data_ && runYear_==2017){
     tree->Branch("prefiringweight",      &prefiringweight_);
     tree->Branch("prefiringweightup",    &prefiringweightup_);
     tree->Branch("prefiringweightdown",  &prefiringweightdown_);
@@ -139,7 +139,7 @@ void phoJetNtuplizer::fillEventInfo(const edm::Event& iEvent, const edm::EventSe
   }
 
   //L1 ECAL Prefiring weights
-  if(is_Data_){
+  if(is_Data_ && runYear_==2017){
     edm::Handle< double > theprefweight;
     iEvent.getByToken(prefweight_token, theprefweight ) ;
     prefiringweight_ =(*theprefweight);

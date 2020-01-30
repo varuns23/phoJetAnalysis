@@ -3,7 +3,7 @@
 
 Int_t            nMu_;
 vector<float>    muPt_;
-vector<float>    muEn_;
+vector<float>    muE_;
 vector<float>    muEta_;
 vector<float>    muPhi_;
 vector<int>      muCharge_;
@@ -44,7 +44,7 @@ void phoJetNtuplizer::branchMuons(TTree* tree){
 
   tree->Branch("nMu",                    &nMu_);
   tree->Branch("muPt",                   &muPt_);
-  tree->Branch("muEn",                   &muEn_);
+  tree->Branch("muE",                    &muE_);
   tree->Branch("muEta",                  &muEta_);
   tree->Branch("muPhi",                  &muPhi_);
   tree->Branch("muCharge",               &muCharge_);
@@ -63,18 +63,20 @@ void phoJetNtuplizer::branchMuons(TTree* tree){
   tree->Branch("muStations",             &muStations_);
   tree->Branch("muMatches",              &muMatches_);
   tree->Branch("muTrkQuality",           &muTrkQuality_);
+  tree->Branch("muInnervalidFraction",   &muInnervalidFraction_);
   tree->Branch("muIsoTrk",               &muIsoTrk_);
   tree->Branch("muPFChIso",              &muPFChIso_);
   tree->Branch("muPFPhoIso",             &muPFPhoIso_);
   tree->Branch("muPFNeuIso",             &muPFNeuIso_);
   tree->Branch("muPFPUIso",              &muPFPUIso_);
-  tree->Branch("muInnervalidFraction",   &muInnervalidFraction_);
-  tree->Branch("musegmentCompatibility", &musegmentCompatibility_);
-  tree->Branch("muchi2LocalPosition",    &muchi2LocalPosition_);
-  tree->Branch("mutrkKink",              &mutrkKink_);
-  tree->Branch("muBestTrkPtError",       &muBestTrkPtError_);
-  tree->Branch("muBestTrkPt",            &muBestTrkPt_);
-  tree->Branch("muBestTrkType",          &muBestTrkType_);
+  if(saveAll_){
+    tree->Branch("musegmentCompatibility", &musegmentCompatibility_);
+    tree->Branch("muchi2LocalPosition",    &muchi2LocalPosition_);
+    tree->Branch("mutrkKink",              &mutrkKink_);
+    tree->Branch("muBestTrkPtError",       &muBestTrkPtError_);
+    tree->Branch("muBestTrkPt",            &muBestTrkPt_);
+    tree->Branch("muBestTrkType",          &muBestTrkType_);
+  }
   tree->Branch("muFiredTrgs", &muFiredTrgs_);
   tree->Branch("muFiredL1Trgs", &muFiredL1Trgs_);
 
@@ -83,9 +85,9 @@ void phoJetNtuplizer::branchMuons(TTree* tree){
 }                                                                                                                                                                                    
 
 void phoJetNtuplizer::fillMuons(const edm::Event& iEvent, math::XYZPoint& ipv, reco::Vertex ivtx){
-  
+
   if(debug_) std::cout<< "<<DEBUG>>:: Inside phoJetNtuplizer::fillMuons -->BEGIN<-- "<<std::endl;
-  
+
   initMuons();
 
   edm::Handle<edm::View<pat::Muon> > muonHandle;
@@ -99,13 +101,13 @@ void phoJetNtuplizer::fillMuons(const edm::Event& iEvent, math::XYZPoint& ipv, r
     return;
   }
 
-for (edm::View<pat::Muon>::const_iterator iMu = muonHandle->begin(); iMu != muonHandle->end(); ++iMu){
+  for (edm::View<pat::Muon>::const_iterator iMu = muonHandle->begin(); iMu != muonHandle->end(); ++iMu){
 
     if (iMu->pt() < 3) continue;
     if (!(iMu->isPFMuon() || iMu->isGlobalMuon() || iMu->isTrackerMuon())) continue;
-                               
+
     muPt_    .push_back(iMu->pt());                                                 
-    muEn_    .push_back(iMu->energy());                                             
+    muE_     .push_back(iMu->energy());                                             
     muEta_   .push_back(iMu->eta());                                                
     muPhi_   .push_back(iMu->phi());                                                
     muCharge_.push_back(iMu->charge());                                             
@@ -147,12 +149,14 @@ for (edm::View<pat::Muon>::const_iterator iMu = muonHandle->begin(); iMu != muon
 
     muIDbit_.push_back(tmpmuIDbit);
 
-    muBestTrkPtError_        .push_back(iMu->muonBestTrack()->ptError());
-    muBestTrkPt_             .push_back(iMu->muonBestTrack()->pt());
-    muBestTrkType_           .push_back(iMu->muonBestTrackType());
-    musegmentCompatibility_  .push_back(iMu->segmentCompatibility());
-    muchi2LocalPosition_     .push_back(iMu->combinedQuality().chi2LocalPosition);
-    mutrkKink_               .push_back(iMu->combinedQuality().trkKink);
+    if(saveAll_){
+      muBestTrkPtError_        .push_back(iMu->muonBestTrack()->ptError());
+      muBestTrkPt_             .push_back(iMu->muonBestTrack()->pt());
+      muBestTrkType_           .push_back(iMu->muonBestTrackType());
+      musegmentCompatibility_  .push_back(iMu->segmentCompatibility());
+      muchi2LocalPosition_     .push_back(iMu->combinedQuality().chi2LocalPosition);
+      mutrkKink_               .push_back(iMu->combinedQuality().trkKink);
+    }
 
     const reco::TrackRef glbmu = iMu->globalTrack();
     const reco::TrackRef innmu = iMu->innerTrack();
@@ -193,9 +197,9 @@ for (edm::View<pat::Muon>::const_iterator iMu = muonHandle->begin(); iMu != muon
     muPFPUIso_  .push_back(iMu->pfIsolationR04().sumPUPt);
 
     nMu_++;
-}
+  }
 
-if(debug_) std::cout<< "<<DEBUG>>:: Inside phoJetNtuplizer::fillMuons -->END<--"<<std::endl;
+  if(debug_) std::cout<< "<<DEBUG>>:: Inside phoJetNtuplizer::fillMuons -->END<--"<<std::endl;
 }
 
 
@@ -203,7 +207,7 @@ void phoJetNtuplizer::initMuons(){
 
   nMu_                    = 0;
   muPt_                   .clear();
-  muEn_                   .clear();
+  muE_                    .clear();
   muEta_                  .clear();
   muPhi_                  .clear();
   muCharge_               .clear();

@@ -1,0 +1,33 @@
+2017 Data re-miniAOD 31Mar2018 (94X version 2 Processing)
+  DAS query: dataset=/*/Run2017*31Mar2018*/MINIAOD
+  Produced with CMSSW 9_4_5; Global tag: 94X_dataRun2_v6, cmsDriver eras Run2_2017,run2_miniAOD_94XFall17
+  JECs used: Fall17_17Nov2017BCDEF_V6_DATA
+  Recommended release: 9_4_6_patch1 or later, Global tag: 94X_dataRun2_v6
+
+
+/MET/Run2017B-31Mar2018-v1/MINIAOD
+/MET/Run2017C-31Mar2018-v1/MINIAOD
+/MET/Run2017D-31Mar2018-v1/MINIAOD
+/MET/Run2017E-31Mar2018-v1/MINIAOD
+/MET/Run2017F-31Mar2018-v1/MINIAOD
+
+/SingleElectron/Run2017B-31Mar2018-v1/MINIAOD
+/SingleElectron/Run2017C-31Mar2018-v1/MINIAOD
+/SingleElectron/Run2017D-31Mar2018-v1/MINIAOD
+/SingleElectron/Run2017E-31Mar2018-v1/MINIAOD
+/SingleElectron/Run2017F-31Mar2018-v1/MINIAOD (Wisconsin-T2)
+
+/SinglePhoton/Run2017B-31Mar2018-v1/MINIAOD
+/SinglePhoton/Run2017C-31Mar2018-v1/MINIAOD
+/SinglePhoton/Run2017D-31Mar2018-v1/MINIAOD
+/SinglePhoton/Run2017E-31Mar2018-v1/MINIAOD
+/SinglePhoton/Run2017F-31Mar2018-v1/MINIAOD
+
+/JetHT/Run2017B-31Mar2018-v1/MINIAOD
+/JetHT/Run2017C-31Mar2018-v1/MINIAOD
+/JetHT/Run2017D-31Mar2018-v1/MINIAOD
+/JetHT/Run2017E-31Mar2018-v1/MINIAOD
+/JetHT/Run2017F-31Mar2018-v1/MINIAOD
+
+
+
