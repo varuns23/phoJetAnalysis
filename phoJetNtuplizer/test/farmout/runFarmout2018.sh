@@ -11,11 +11,11 @@
 ##- /EGamma/Run2018D-22Jan2019-v2/MINIAOD
 
 datasets=(
-    /EGamma/Run2018D-22Jan2019-v2/MINIAOD
+    /MET/Run2018D-PromptReco-v2/MINIAOD
     )
 
 dirName=(
-   EGamma2018D
+   MET2018D-PromptReco
     )
 
 

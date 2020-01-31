@@ -22,6 +22,8 @@ def submit(config):
   res = crabCommand('submit', config = config)
 
 from CRABClient.UserUtilities import config
+from multiprocessing import Process
+
 config = config()
 name = 'data2018_22Jan2019_JECv19'
 config.General.workArea = 'crab_'+name
@@ -62,4 +64,6 @@ for sample in listOfSamples:
   config.Data.unitsPerJob = 13
   config.Data.totalUnits = -1
   config.Data.outLFNDirBase = '/store/user/varuns/'+name
-  submit(config)
+  p = Process(target=submit, args=(config,))
+  p.start()
+  p.join()
