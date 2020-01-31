@@ -62,9 +62,27 @@ dataset = {
 'WW'  : '/WW_TuneCP5_13TeV-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
 'WWv2': '/WW_TuneCP5_13TeV-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/MINIAODSIM',
 'WZ': '/WZ_TuneCP5_13TeV-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
-'ZZ': '/ZZ_TuneCP5_13TeV-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM'
+'ZZ': '/ZZ_TuneCP5_13TeV-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+
+'ST_s_4f':         '/ST_s-channel_4f_leptonDecays_TuneCP5_PSweights_13TeV-amcatnlo-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_new_pmx_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+'ST_t_top_4f':     '/ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_new_pmx_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+'ST_t_antitop_4f': '/ST_t-channel_antitop_4f_InclusiveDecays_TuneCP5_PSweights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+'ST_tW_top_5f':    '/ST_tW_top_5f_inclusiveDecays_TuneCP5_PSweights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_new_pmx_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+'ST_tW_antitop_5f':'/ST_tW_antitop_5f_inclusiveDecays_TuneCP5_PSweights_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
 }
 
+#listOfSamples = ['ZJetsToNuNu_HT100-200', 'ZJetsToNuNu_HT200-400', 'ZJetsToNuNu_HT400-600', 'ZJetsToNuNu_HT600-800', 'ZJetsToNuNu_HT800-1200', 'ZJetsToNuNu_HT1200-2500', 'ZJetsToNuNu_HT2500-Inf']
+#listOfSamples = ['WJetsToLNu_HT100-200', 'WJetsToLNu_HT200-400', 'WJetsToLNu_HT400-600', 'WJetsToLNu_HT600-800', 'WJetsToLNu_HT800-1200', 'WJetsToLNu_HT1200-2500', 'WJetsToLNu_HT2500-Inf']
+#listOfSamples = ['DYJetsToLL_HT70-100', 'DYJetsToLL_HT100-200', 'DYJetsToLL_HT200-400', 'DYJetsToLL_HT400-600', 'DYJetsToLL_HT600-800', 'DYJetsToLL_HT800-1200', 'DYJetsToLL_HT1200-2500', 'DYJetsToLL_HT2500-Inf']
+#listOfSamples = ['GJets_HT40-100', 'GJets_HT100-200', 'GJets_HT200-400', 'GJets_HT400-600', 'GJets_HT600-Inf']
+#listOfSamples = ['TTJets_DiLept', 'TTJets_SingleLeptFromT', 'TTJets']
+#listOfSamples = ['QCD_HT100-200', 'QCD_HT200-300', 'QCD_HT300-500, 'QCD_HT500-700', 'QCD_HT700-1000', 'QCD_HT1000-1500', 'QCD_HT1500-2000', 'QCD_HT2000-Inf']
+#listOfSamples = ['WW', 'WWToLNuQQ', 'WWTo2L2Nu', 'WWTo4Q', 'WZ', 'ZZ']
+ 
+#listOfSamples = ['ST_s_4f', 'ST_t_top_4f', 'ST_t_antitop_4f', 'ST_tW_top_5f', 'ST_tW_antitop_5f']
+#listOfSamples = ['TTJets_FXFX']
+
+DirName = 'MC2017_12Apr2018_2020Jan'
 if __name__ == '__main__':
   from CRABAPI.RawCommand import crabCommand
 
@@ -72,33 +90,29 @@ def submit(config):
   res = crabCommand('submit', config = config)
 
 from CRABClient.UserUtilities import config
+from multiprocessing import Process
+
 config = config()
-name = 'MC2017_12Apr2018_May2019'
-config.General.workArea = 'crab_'+name
+config.General.workArea = 'crab_'+DirName
 config.General.transferOutputs = True
-config.General.transferLogs = True
+config.General.transferLogs = False
 
 config.JobType.pluginName = 'Analysis'
 config.JobType.inputFiles = ['Fall17_17Nov2017_V32_102X_MC.db']
 config.JobType.allowUndistributedCMSSW = True
 
 config.section_('Data') 
-config.Data.publication = False
-config.Data.inputDBS = 'global'
-config.Data.splitting = 'EventAwareLumiBased' #'FileBased'
+config.Data.publication   = False
+config.Data.inputDBS      = 'global'
+config.Data.splitting     = 'EventAwareLumiBased' #'FileBased'
+config.Data.unitsPerJob   = 10000
+config.Data.totalUnits    = -1
+config.Data.outLFNDirBase = '/store/user/varuns/'+DirName
 
 config.Site.storageSite = 'T2_US_Wisconsin'
 #config.Site.whitelist = ["T2_US_Wisconsin"]
 #config.Site.blacklist = ['T2_CH_CERN']
-
-listOfSamples = ['ZJetsToNuNu_HT100-200', 'ZJetsToNuNu_HT200-400', 'ZJetsToNuNu_HT400-600', 'ZJetsToNuNu_HT600-800', 'ZJetsToNuNu_HT800-1200', 'ZJetsToNuNu_HT1200-2500', 'ZJetsToNuNu_HT2500-Inf']
-#listOfSamples = ['WJetsToLNu_HT100-200', 'WJetsToLNu_HT200-400', 'WJetsToLNu_HT400-600', 'WJetsToLNu_HT600-800', 'WJetsToLNu_HT800-1200', 'WJetsToLNu_HT1200-2500', 'WJetsToLNu_HT2500-Inf']
-#listOfSamples = ['DYJetsToLL_HT70-100', 'DYJetsToLL_HT100-200', 'DYJetsToLL_HT200-400', 'DYJetsToLL_HT400-600', 'DYJetsToLL_HT600-800', 'DYJetsToLL_HT800-1200', 'DYJetsToLL_HT1200-2500', 'DYJetsToLL_HT2500-Inf']
-#listOfSamples = ['GJets_HT40-100', 'GJets_HT100-200', 'GJets_HT200-400', 'GJets_HT600-Inf']
-#listOfSamples = ['TTJets_DiLept', 'TTJets_SingleLeptFromT', 'TTJets']
-#listOfSamples = ['QCD_HT100-200', 'QCD_HT200-300', 'QCD_HT300-500, 'QCD_HT500-700', 'QCD_HT700-1000', 'QCD_HT1000-1500', 'QCD_HT1500-2000', 'QCD_HT2000-Inf']
-#listOfSamples = ['WW', 'WWToLNuQQ', 'WWTo2L2Nu', 'WWTo4Q', 'WZ', 'ZZ']
-
+  
 for sample in listOfSamples:  
   os.popen('cp run_102X_mc2017.py run_102X_mc2017_'+sample+'.py')
   with open('run_102X_mc2017_'+sample+'.py') as oldFile:
@@ -111,8 +125,9 @@ for sample in listOfSamples:
   config.JobType.psetName = 'run_102X_mc2017_'+sample+'.py'
   config.JobType.outputFiles = ['MC_'+sample+'.root']
   
-  config.Data.inputDataset   = dataset[sample]
-  config.Data.unitsPerJob = 10000
-  config.Data.totalUnits = -1
-  config.Data.outLFNDirBase = '/store/user/varuns/'+name
-  submit(config)
+  config.Data.inputDataset  = dataset[sample]
+
+  p = Process(target=submit, args=(config,))
+  p.start()
+  p.join()
+  

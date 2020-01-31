@@ -35,7 +35,7 @@ dataset = {
   'Z2JetsToNuNu_LHEZpT_50-150': '/Z2JetsToNuNu_M-50_LHEZpT_50-150_TuneCP5_13TeV-amcnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
   'Z2JetsToNuNu_LHEZpT_150-250': '/Z2JetsToNuNu_M-50_LHEZpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
   'Z2JetsToNuNu_LHEZpT_250-400': '/Z2JetsToNuNu_M-50_LHEZpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
-  'Z2JetsToNuNU_LHEZpT_400-inf': '/Z2JetsToNuNU_M-50_LHEZpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM'
+  'Z2JetsToNuNu_LHEZpT_400-inf': '/Z2JetsToNuNU_M-50_LHEZpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM'
      
 }
 
@@ -44,11 +44,40 @@ dataset = {
 #listOfSamples = ['DY1JetsToLL_LHEZpT50-150', 'DY1JetsToLL_LHEZpT150-250', 'DY1JetsToLL_LHEZpT250-400', 'DY1JetsToLL_LHEZpT400-inf']
 #listOfSamples = ['DY2JetsToLL_M-50_LHEZpT_50-150', 'DY2JetsToLL_M-50_LHEZpT_150-250', 'DY2JetsToLL_M-50_LHEZpT_250-400', 'DY2JetsToLL_M-50_LHEZpT_400-inf']
 #listOfSamples = ['Z1JetsToNuNu_LHEZpT50-150', 'Z1JetsToNuNu_LHEZpT150-250', 'Z1JetsToNuNu_LHEZpT250-400', Z1JetsToNuNu_LHEZpT400-inf']
-#listOfSamples = ['Z2JetsToNuNu_LHEZpT_50-150', 'Z2JetsToNuNu_LHEZpT_150-250', 'Z2JetsToNuNu_LHEZpT_250-400', 'Z2JetsToNuNU_LHEZpT_400-inf']
+#listOfSamples = ['Z2JetsToNuNu_LHEZpT_50-150', 'Z2JetsToNuNu_LHEZpT_150-250', 'Z2JetsToNuNu_LHEZpT_250-400', 'Z2JetsToNuNu_LHEZpT_400-inf']
 
-listOfSamples = ['W2JetsToLNu_LHEWpT400-inf']
+listOfSamples = ['Z2JetsToNuNu_LHEZpT_400-inf']
 
 DirName = 'MC2017_12Apr2018_2020Jan'
+if __name__ == '__main__':
+  from CRABAPI.RawCommand import crabCommand
+
+def submit(config):
+  res = crabCommand('submit', config = config)
+
+from CRABClient.UserUtilities import config
+from multiprocessing import Process
+
+config = config()
+config.General.workArea = 'crab_'+DirName
+config.General.transferOutputs = True
+config.General.transferLogs = False
+
+config.JobType.pluginName = 'Analysis'
+config.JobType.inputFiles = ['Fall17_17Nov2017_V32_102X_MC.db']
+config.JobType.allowUndistributedCMSSW = True
+
+config.section_('Data') 
+config.Data.publication   = False
+config.Data.inputDBS      = 'global'
+config.Data.splitting     = 'EventAwareLumiBased' #'FileBased'
+config.Data.unitsPerJob   = 10000
+config.Data.totalUnits    = -1
+config.Data.outLFNDirBase = '/store/user/varuns/'+DirName
+
+config.Site.storageSite = 'T2_US_Wisconsin'
+#config.Site.whitelist = ["T2_US_Wisconsin"]
+#config.Site.blacklist = ['T2_CH_CERN']
 
 for sample in listOfSamples:  
   os.popen('cp run_102X_mc2017.py run_102X_mc2017_'+sample+'.py')
@@ -57,36 +86,13 @@ for sample in listOfSamples:
   with open('run_102X_mc2017_'+sample+'.py', 'w') as newFile:
     newFile.write(newText)
 
-  if __name__ == '__main__':
-    from CRABAPI.RawCommand import crabCommand
-  
-  def submit(config):
-    res = crabCommand('submit', config = config)
-  
-  from CRABClient.UserUtilities import config
-  config = config()
-  config.General.workArea = 'crab_'+DirName
-  config.General.transferOutputs = True
-  config.General.transferLogs = False
   config.General.requestName = 'job_'+sample
   
-  config.JobType.pluginName = 'Analysis'
-  config.JobType.inputFiles = ['Fall17_17Nov2017_V32_102X_MC.db']
-  config.JobType.allowUndistributedCMSSW = True
   config.JobType.psetName = 'run_102X_mc2017_'+sample+'.py'
   config.JobType.outputFiles = ['MC_'+sample+'.root']
   
-  config.section_('Data') 
-  config.Data.publication   = False
-  config.Data.inputDBS      = 'global'
   config.Data.inputDataset  = dataset[sample]
-  config.Data.splitting     = 'EventAwareLumiBased' #'FileBased'
-  config.Data.unitsPerJob   = 10000
-  config.Data.totalUnits    = -1
-  config.Data.outLFNDirBase = '/store/user/varuns/'+DirName
-  
-  config.Site.storageSite = 'T2_US_Wisconsin'
-  #config.Site.whitelist = ["T2_US_Wisconsin"]
-  #config.Site.blacklist = ['T2_CH_CERN']
-  
-  submit(config)
+ 
+  p = Process(target=submit, args=(config,))
+  p.start()
+  p.join()
