@@ -48,6 +48,19 @@ process.load( "PhysicsTools.PatAlgos.producersLayer1.patCandidates_cff" )
 process.load( "PhysicsTools.PatAlgos.triggerLayer1.triggerProducer_cff" )
 process.load( "PhysicsTools.PatAlgos.selectionLayer1.selectedPatCandidates_cff" )
 
+from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
+runMetCorAndUncFromMiniAOD(process,
+    isData=False #(or False for MC),
+    )
+
+# random generator for jet smearing
+process.RandomNumberGeneratorService = cms.Service("RandomNumberGeneratorService",
+    phoJetNtuplizer  = cms.PSet(
+      initialSeed = cms.untracked.uint32(201678),
+      engineName = cms.untracked.string('TRandom3')
+      )
+    )
+
 ##Re-run ECAL bad calibration filter 
 ##https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#2017_data
 process.load('RecoMET.METFilters.ecalBadCalibFilter_cfi')
@@ -113,6 +126,7 @@ process.phoJetNtuplizer.runJetWidthCalculator = cms.bool(True); # needed for mon
 process.phoJetNtuplizer.jetsAK4Token = cms.InputTag("selectedUpdatedPatJetsUpdatedJECAK4")
 
 process.p = cms.Path(
+    process.fullPatMetSequence *
     process.ecalBadCalibReducedMINIAODFilter *
     process.egammaPostRecoSeq *
     process.rerunMvaIsolationSequence *

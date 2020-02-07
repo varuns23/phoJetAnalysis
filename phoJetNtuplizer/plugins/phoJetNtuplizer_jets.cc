@@ -37,6 +37,9 @@ vector<Int_t>    jetPUFullID_;
 vector<Int_t>    jetPartonID_;
 vector<Int_t>    jetHadFlvr_;
 vector<float>    jetJECUnc_;
+vector<float>    jetP4Smear_;
+vector<float>    jetP4SmearUp_;
+vector<float>    jetP4SmearDo_;
 
 vector<float>    jetCEF_;
 vector<float>    jetNEF_;
@@ -195,6 +198,9 @@ void phoJetNtuplizer::branchJets(TTree* tree){
     tree->Branch("jetGenEta",                    &jetGenEta_);
     tree->Branch("jetGenPhi",                    &jetGenPhi_);
     tree->Branch("jetGenPartonMomID",            &jetGenPartonMomID_);
+    tree->Branch("jetP4Smear",                   &jetP4Smear_);
+    tree->Branch("jetP4SmearUp",                 &jetP4SmearUp_);
+    tree->Branch("jetP4SmearDo",                 &jetP4SmearDo_);
   }
 
 }
@@ -212,6 +218,10 @@ void phoJetNtuplizer::fillJets(const edm::Event& iEvent, const edm::EventSetup& 
 
   edm::Handle<vector<reco::GenParticle> > genParticlesHandle;
   if(runGenInfo_)iEvent.getByToken(genParticlesToken_, genParticlesHandle);
+
+  edm::Handle<double> rhoHandle;
+  iEvent.getByToken(rhoToken_, rhoHandle);
+  float rho = *(rhoHandle.product());          
 
   edm::Handle<reco::VertexCollection> vtxHandle;
   iEvent.getByToken(vtxToken_, vtxHandle);
@@ -430,10 +440,44 @@ void phoJetNtuplizer::fillJets(const edm::Event& iEvent, const edm::EventSetup& 
       jetGenJetEta_       .push_back(jetGenJetEta);
       jetGenJetPhi_       .push_back(jetGenJetPhi);
 
+    
+      // access jet resolution             
+      JME::JetParameters parameters;
+      parameters.setJetPt(iJet->pt()).setJetEta(iJet->eta()).setRho(rho);
+      float jetResolution = jetResolution_.getResolution(parameters);
+
+      edm::Service<edm::RandomNumberGenerator> rng;
+      if (!rng.isAvailable()) edm::LogError("JET : random number generator is missing !");
+      CLHEP::HepRandomEngine & engine = rng->getEngine( iEvent.streamID() );
+      float rnd = CLHEP::RandGauss::shoot(&engine, 0., jetResolution);
+
+      float jetResolutionSF   = jetResolutionSF_.getScaleFactor(parameters);
+      float jetResolutionSFUp = jetResolutionSF_.getScaleFactor(parameters, Variation::UP);
+      float jetResolutionSFDo = jetResolutionSF_.getScaleFactor(parameters, Variation::DOWN);                                                                
+
+      float jetP4Smear   = -1.;
+      float jetP4SmearUp = -1.;
+      float jetP4SmearDo = -1.;
+      if ( jetGenJetPt > 0 && 
+           deltaR(iJet->eta(), iJet->phi(), jetGenJetEta, jetGenJetPhi) < 0.2 && 
+           fabs(iJet->pt()-jetGenJetPt) < (3*jetResolution*iJet->pt())) {
+	jetP4Smear   = 1. + (jetResolutionSF   - 1.)*(iJet->pt() - jetGenJetPt)/iJet->pt();
+	jetP4SmearUp = 1. + (jetResolutionSFUp - 1.)*(iJet->pt() - jetGenJetPt)/iJet->pt();
+	jetP4SmearDo = 1. + (jetResolutionSFDo - 1.)*(iJet->pt() - jetGenJetPt)/iJet->pt();
+      } else {
+	jetP4Smear   = 1. + rnd*sqrt(max(pow(jetResolutionSF,   2)-1, 0.));
+	jetP4SmearUp = 1. + rnd*sqrt(max(pow(jetResolutionSFUp, 2)-1, 0.));
+	jetP4SmearDo = 1. + rnd*sqrt(max(pow(jetResolutionSFDo, 2)-1, 0.));
+      }
+      jetP4Smear_  .push_back(jetP4Smear);
+      jetP4SmearUp_.push_back(jetP4SmearUp);
+      jetP4SmearDo_.push_back(jetP4SmearDo); 
+
     }// runGenInfo
 
     nJet_++;
   }
+  delete jecUnc;
 }
 
 void phoJetNtuplizer::initJets(){
@@ -460,6 +504,9 @@ void phoJetNtuplizer::initJets(){
   jetPartonID_                  .clear();
   jetHadFlvr_                   .clear();
   jetJECUnc_                    .clear();
+  jetP4Smear_                   .clear();
+  jetP4SmearUp_                 .clear();
+  jetP4SmearDo_                 .clear();
 
   jetCEF_                       .clear();
   jetNEF_                       .clear();
