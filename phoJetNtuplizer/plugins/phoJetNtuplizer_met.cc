@@ -10,6 +10,8 @@ float caloMETPhi_;
 float caloMETsumEt_;
 float pfMET_;
 float pfMETPhi_;
+float pfMETCorr_;
+float pfMETPhiCorr_;
 float pfMETsumEt_;
 float pfMETmEtSig_;
 float pfMETSig_;
@@ -36,6 +38,8 @@ void phoJetNtuplizer::branchMet(TTree* tree){
   tree->Branch("caloMET",          &caloMET_);
   tree->Branch("caloMETPhi",       &caloMETPhi_);
   tree->Branch("caloMETsumEt",     &caloMETsumEt_);
+  tree->Branch("pfMETCorr",        &pfMETCorr_);
+  tree->Branch("pfMETPhiCorr",     &pfMETPhiCorr_);
   tree->Branch("pfMET",            &pfMET_);
   tree->Branch("pfMETPhi",         &pfMETPhi_);
   tree->Branch("pfMETsumEt",       &pfMETsumEt_);
@@ -120,6 +124,9 @@ void phoJetNtuplizer::fillMet(const edm::Event& iEvent, const edm::EventSetup& i
       genMETPhi_ = pfMET->genMET()->phi();
     }
 
+    //Type-1 smeared MET:
+    pfMETCorr_     = pfMET->corPt(pat::MET::Type1Smear);
+    pfMETPhiCorr_  = pfMET->corPhi(pat::MET::Type1Smear);
     // Type-1 MET uncertainties
     pfMET_T1JERUp_ = pfMET->shiftedPt(pat::MET::JetResUp);
     pfMET_T1JERDo_ = pfMET->shiftedPt(pat::MET::JetResDown);
@@ -145,6 +152,8 @@ void phoJetNtuplizer::initMet(){
   caloMETsumEt_     = -99.;
   pfMET_            = -99.;
   pfMETPhi_         = -99.;
+  pfMETCorr_        = -99.;
+  pfMETPhiCorr_     = -99.;
   pfMETsumEt_       = -99.;
   pfMETmEtSig_      = -99.;
   pfMETSig_         = -99.;

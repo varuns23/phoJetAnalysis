@@ -189,7 +189,7 @@ void phoJetNtuplizer::fillak8Jets(const edm::Event& iEvent, const edm::EventSetu
     nak8Jet_++;
   }
 
-
+delete ak8jecUnc;
 }
 
 void phoJetNtuplizer::initak8Jets(){

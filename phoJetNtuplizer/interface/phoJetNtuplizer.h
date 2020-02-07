@@ -160,6 +160,10 @@ class phoJetNtuplizer : public edm::one::EDAnalyzer<edm::one::SharedResources>{
     bool                                             runak8Jets_;
     edm::EDGetTokenT<edm::View<pat::Jet> >           jetsAK8Token_;
     edm::EDGetTokenT<edm::View<pat::Jet> >           jetsAK8TagToken_;
+    JME::JetResolution                               jetResolution_;
+    JME::JetResolutionScaleFactor                    jetResolutionSF_;
+    JME::JetResolution                               AK8jetResolution_;
+    JME::JetResolutionScaleFactor                    AK8jetResolutionSF_;
 
     //MET Info
     bool                                             runMet_;

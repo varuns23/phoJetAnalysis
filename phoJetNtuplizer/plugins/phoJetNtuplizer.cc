@@ -146,10 +146,12 @@ phoJetNtuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
   
   if(debug_) std::cout<< "<<DEBUG>>:: Inside analyze method "<<std::endl;
 
-///--  if (runGenInfo_) {
-///--    jetResolution_   = JME::JetResolution::get(iSetup, "AK4PFchs_pt");
-///--    jetResolutionSF_ = JME::JetResolutionScaleFactor::get(iSetup, "AK4PFchs");
-///--  }
+  if (runGenInfo_) {
+    jetResolution_      = JME::JetResolution::get(iSetup, "AK4PFchs_pt");
+    jetResolutionSF_    = JME::JetResolutionScaleFactor::get(iSetup, "AK4PFchs");
+    AK8jetResolution_   = JME::JetResolution::get(iSetup, "AK8PFchs_pt");
+    AK8jetResolutionSF_ = JME::JetResolutionScaleFactor::get(iSetup, "AK8PFchs");
+  }
   edm::Handle<reco::VertexCollection> vtxHandle;
   iEvent.getByToken(vtxToken_, vtxHandle);
 

@@ -5,7 +5,9 @@ process = cms.Process("Analyzer")
 process.load("FWCore.MessageService.MessageLogger_cfi")
 
 process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
+process.load("Configuration.StandardSequences.Services_cff")
 process.load("Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cff" )
+process.load("Geometry.CaloEventSetup.CaloTowerConstituents_cfi")
 
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 from Configuration.AlCa.GlobalTag_condDBv2 import GlobalTag
@@ -86,6 +88,14 @@ runMetCorAndUncFromMiniAOD (
     fixEE2017       = True,
     fixEE2017Params = {'userawPt': True, 'ptThreshold':50.0, 'minEtaThreshold':2.65, 'maxEtaThreshold': 3.139} ,
     postfix         = "ModifiedMET"
+    )
+
+# random generator for jet smearing
+process.RandomNumberGeneratorService = cms.Service("RandomNumberGeneratorService",
+    phoJetNtuplizer  = cms.PSet(
+      initialSeed = cms.untracked.uint32(201678),
+      engineName = cms.untracked.string('TRandom3')
+      )
     )
 
 ## https://twiki.cern.ch/twiki/bin/view/CMS/EgammaPostRecoRecipes#Running_on_2017_MiniAOD_V2
