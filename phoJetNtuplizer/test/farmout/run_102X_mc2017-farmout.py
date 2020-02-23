@@ -90,6 +90,16 @@ runMetCorAndUncFromMiniAOD (
     postfix         = "ModifiedMET"
     )
 
+## L1 Prefirring
+## https://twiki.cern.ch/twiki/bin/viewauth/CMS/L1ECALPrefiringWeightRecipe
+from PhysicsTools.PatUtils.l1ECALPrefiringWeightProducer_cfi import l1ECALPrefiringWeightProducer
+process.prefiringweight = l1ECALPrefiringWeightProducer.clone(
+    DataEra                      = cms.string("2017BtoF"),
+    UseJetEMPt                   = cms.bool(False),
+    PrefiringRateSystematicUncty = cms.double(0.2),
+    SkipWarnings                 = False
+    )
+
 # random generator for jet smearing
 process.RandomNumberGeneratorService = cms.Service("RandomNumberGeneratorService",
     phoJetNtuplizer  = cms.PSet(
@@ -187,6 +197,7 @@ process.p = cms.Path(
     process.ecalBadCalibReducedMINIAODFilter *
     process.fullPatMetSequenceModifiedMET *
     process.egammaPostRecoSeq *
+    process.prefiringweight *
     process.rerunMvaIsolationSequence *
     process.NewTauIDsEmbedded *
     process.phoJetNtuplizer

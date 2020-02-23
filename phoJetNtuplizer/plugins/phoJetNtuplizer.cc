@@ -62,11 +62,9 @@ phoJetNtuplizer::phoJetNtuplizer(const edm::ParameterSet& iConfig):
   trgFilterDeltaPtCut_       = iConfig.getParameter<double>("trgFilterDeltaPtCut");
   trgFilterDeltaRCut_        = iConfig.getParameter<double>("trgFilterDeltaRCut");
 
-  if(is_Data_){
-    prefweight_token           = consumes< double >                     (edm::InputTag("prefiringweight:nonPrefiringProb"));
-    prefweightup_token         = consumes< double >                     (edm::InputTag("prefiringweight:nonPrefiringProbUp"));
-    prefweightdown_token       = consumes< double >                     (edm::InputTag("prefiringweight:nonPrefiringProbDown"));
-  }
+  prefweight_token           = consumes< double >                     (edm::InputTag("prefiringweight:nonPrefiringProb"));
+  prefweightup_token         = consumes< double >                     (edm::InputTag("prefiringweight:nonPrefiringProbUp"));
+  prefweightdown_token       = consumes< double >                     (edm::InputTag("prefiringweight:nonPrefiringProbDown"));
 
   //Photon Info
   runPhotons_          = iConfig.getParameter<bool>("runPhotons");

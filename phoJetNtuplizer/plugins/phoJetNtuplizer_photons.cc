@@ -269,7 +269,7 @@ void phoJetNtuplizer::initPhotons(){
   phoEt_                       .clear();
   phoEta_                      .clear();
   phoPhi_                      .clear();
-  
+
   phoUnCalibE_                 .clear();
   phoUnCalibESigma_            .clear();
   phoCalibE_                   .clear();

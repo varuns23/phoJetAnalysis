@@ -55,8 +55,8 @@ process.load( "PhysicsTools.PatAlgos.producersLayer1.patCandidates_cff" )
 process.load( "PhysicsTools.PatAlgos.triggerLayer1.triggerProducer_cff" )
 process.load( "PhysicsTools.PatAlgos.selectionLayer1.selectedPatCandidates_cff" )
 
-## Re-run ECAL bad calibration filter 
-## https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#2017_data
+##Re-run ECAL bad calibration filter 
+##https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#2017_data
 process.load('RecoMET.METFilters.ecalBadCalibFilter_cfi')
 baddetEcallist = cms.vuint32(
     [872439604,872422825,872420274,872423218,
@@ -118,7 +118,7 @@ updateJetCollection(
     pvSource = cms.InputTag('offlineSlimmedPrimaryVertices'),
     svSource = cms.InputTag('slimmedSecondaryVertices'),
     jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']), 'None'),  # Update: Safe to always add 'L2L3Residual' as MC contains dummy L2L3Residual corrections (always set to 1)
-    postfix='UpdatedJECAK4',
+    postfix='UpdatedJECAK4'
     )
 ## AK4Jet Tag: selectedUpdatedPatJetsUpdatedJECAK4
 
