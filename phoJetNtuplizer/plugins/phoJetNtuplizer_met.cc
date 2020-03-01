@@ -73,9 +73,7 @@ void phoJetNtuplizer::fillMet(const edm::Event& iEvent, const edm::EventSetup& i
   metFilterNames.push_back("Flag_HBHENoiseIsoFilter"); // 3
   metFilterNames.push_back("Flag_EcalDeadCellTriggerPrimitiveFilter"); //4
   metFilterNames.push_back("Flag_BadPFMuonFilter"); //5
-  metFilterNames.push_back("Flag_BadChargedCandidateFilter"); //6
-  if(is_Data_)metFilterNames.push_back("Flag_eeBadScFilter"); //7
-  //metFilterNames.push_back("ecalBadCalibReducedMINIAODFilter"); //8 // Need to be RE-RUN - done below
+  if(is_Data_)metFilterNames.push_back("Flag_eeBadScFilter"); //6
 
   edm::Handle<edm::TriggerResults> patFilterResultsHandle;                                                          
   //iEvent.getByToken(patTrgResultsToken_, patFilterResultsHandle);
@@ -94,13 +92,6 @@ void phoJetNtuplizer::fillMet(const edm::Event& iEvent, const edm::EventSetup& i
       }
     }
   }
-
-  edm::Handle< bool > passecalBadCalibFilterUpdate ;
-  iEvent.getByToken(ecalBadCalibFilterUpdate_token_,passecalBadCalibFilterUpdate);
-  bool  _passecalBadCalibFilterUpdate =  (*passecalBadCalibFilterUpdate );
-  if(!_passecalBadCalibFilterUpdate) 
-    setbit(metFilters_, 8);
-  
 
   edm::Handle<edm::View<pat::MET> > pfmetHandle;
   iEvent.getByToken(pfmetToken_, pfmetHandle);

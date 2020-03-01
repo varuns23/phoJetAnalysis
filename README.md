@@ -7,25 +7,16 @@ cd CMSSW_10_2_18/src
 cmsenv
 git cms-init
 
-#https://twiki.cern.ch/twiki/bin/viewauth/CMS/JetToolbox#How_to_run_the_jetToolbox
-git clone git@github.com:cms-jet/JetToolbox.git JMEAnalysis/JetToolbox -b jetToolbox_102X_v2
-scram b -j 18
-
-#https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#How_to_run_ecal_BadCalibReducedM
-git cms-addpkg RecoMET/METFilters
- 
 #https://twiki.cern.ch/twiki/bin/view/CMS/EgammaPostRecoRecipes#102X
 git cms-merge-topic cms-egamma:PhotonIDValueMapSpeedup1029 #optional but speeds up the photon ID value module so things run faster
-#now build everything
 scram b -j 8
-#now add in E/gamma Post reco tools
 git clone git@github.com:cms-egamma/EgammaPostRecoTools.git  EgammaUser/EgammaPostRecoTools
 cd  EgammaUser/EgammaPostRecoTools
 git checkout master
 cd -
 
-#For 2017 data-taking
-git clone -b 2017_102X https://github.com/varuns23/phoJetAnalysis.git
+#For 2016 data-taking
+git clone -b 2016_102X https://github.com/varuns23/phoJetAnalysis.git
 
 scram b -j10
 ```

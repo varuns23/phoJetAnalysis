@@ -213,24 +213,28 @@ void phoJetNtuplizer::fillGenInfo(const edm::Event& iEvent){
       if (ip->isPromptFinalState())        setbit(tmpStatusFlag, 1);
       if (ip->isHardProcess())             setbit(tmpStatusFlag, 2);
 
+      if (ip->fromHardProcessDecayed())    setbit(tmpStatusFlag, 3);
+      if (ip->isDirectHardProcessTauDecayProductFinalState())      setbit(tmpStatusFlag, 4);
+      if (ip->fromHardProcessBeforeFSR())  setbit(tmpStatusFlag, 5);
+      if (ip->isLastCopy())                setbit(tmpStatusFlag, 6);
+      if (ip->isLastCopyBeforeFSR())       setbit(tmpStatusFlag, 7);
+
       // if genParticle is W or Z, check its decay type
       if ( ip->pdgId() == 23 || abs(ip->pdgId()) == 24 ) {
 	for (size_t k=0; k < p->numberOfDaughters(); ++k) {
 	  const reco::Candidate *dp = p->daughter(k);
-	  if (abs(dp->pdgId())<=6)                               setbit(tmpStatusFlag, 4);
-	  else if (abs(dp->pdgId())==11 || abs(dp->pdgId())==12) setbit(tmpStatusFlag, 5);
-	  else if (abs(dp->pdgId())==13 || abs(dp->pdgId())==14) setbit(tmpStatusFlag, 6);
-	  else if (abs(dp->pdgId())==15 || abs(dp->pdgId())==16) setbit(tmpStatusFlag, 7);
+	  if (abs(dp->pdgId())<=6)                               setbit(tmpStatusFlag, 8);
+	  else if (abs(dp->pdgId())==11 || abs(dp->pdgId())==12) setbit(tmpStatusFlag, 9);
+	  else if (abs(dp->pdgId())==13 || abs(dp->pdgId())==14) setbit(tmpStatusFlag, 10);
+	  else if (abs(dp->pdgId())==15 || abs(dp->pdgId())==16) setbit(tmpStatusFlag, 11);
 	}
       } 
       mcStatusFlag.push_back(tmpStatusFlag);
       mcIndex.push_back(genIndex-1);
 
-
       nMC_++;
     }
   } // loop over gen-level particle
-
 }
 
 

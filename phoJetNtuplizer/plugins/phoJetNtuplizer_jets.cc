@@ -264,20 +264,25 @@ void phoJetNtuplizer::fillJets(const edm::Event& iEvent, const edm::EventSetup& 
     float NNP      = iJet->neutralMultiplicity();
     float MUF      = iJet->muonEnergyFraction();
 
+    bool looseJetID        = false;
     bool tightJetID        = false;
     bool tightLepVetoJetID = false;
     if (fabs(iJet->eta()) <= 2.7) {
-      tightJetID = (NHF<0.90 && NEMF<0.90 && NumConst>1) && ((fabs(iJet->eta())<=2.4 && CHF>0 && CHM>0) || fabs(iJet->eta())>2.4);
-      tightLepVetoJetID = (NHF<0.90 && NEMF<0.90 && NumConst>1 && MUF<0.8) && ((fabs(iJet->eta())<=2.4 && CHF>0 && CHM>0 && CEMF<0.8) || fabs(iJet->eta())>2.4);
+      looseJetID        = (NHF<0.99 && NEMF<0.99 && NumConst>1) &&             ((fabs(iJet->eta())<=2.4 && CHF>0 && CHM>0 && CEMF<0.99) || fabs(iJet->eta())>2.4) && fabs(iJet->eta())<=2.7;
+      tightJetID        = (NHF<0.90 && NEMF<0.90 && NumConst>1) &&             ((fabs(iJet->eta())<=2.4 && CHF>0 && CHM>0 && CEMF<0.99) || fabs(iJet->eta())>2.4) && fabs(iJet->eta())<=2.7;
+      tightLepVetoJetID = (NHF<0.90 && NEMF<0.90 && NumConst>1  && MUF<0.8) && ((fabs(iJet->eta())<=2.4 && CHF>0 && CHM>0 && CEMF<0.90) || fabs(iJet->eta())>2.4) && fabs(iJet->eta())<=2.7;
     } else if (fabs(iJet->eta()) <= 3.0) {
-      tightJetID = (NEMF>0.02 && NEMF<0.99 && NNP>2);
+      looseJetID = (NHF<0.98 && NEMF>0.01 && NNP>2 && fabs(iJet->eta())>2.7 && fabs(iJet->eta())<=3.0 );
+      tightJetID = (NHF<0.98 && NEMF>0.01 && NNP>2 && fabs(iJet->eta())>2.7 && fabs(iJet->eta())<=3.0 );
     } else {
-      tightJetID = (NEMF<0.90 && NHF>0.02 && NNP>10);
+      looseJetID = (NEMF<0.90 && NNP>10 && fabs(iJet->eta())>3.0 );
+      tightJetID = (NEMF<0.90 && NNP>10 && fabs(iJet->eta())>3.0 );
     }
 
     UShort_t tmpjetIDbit = 0;
-    if (tightJetID)        setbit(tmpjetIDbit, 0);
-    if (tightLepVetoJetID) setbit(tmpjetIDbit, 1);
+    if (looseJetID)        setbit(tmpjetIDbit, 0);
+    if (tightJetID)        setbit(tmpjetIDbit, 1);
+    if (tightLepVetoJetID) setbit(tmpjetIDbit, 2);
 
     jetID_                        .push_back(tmpjetIDbit);    
     // PUJet ID from slimmedJets

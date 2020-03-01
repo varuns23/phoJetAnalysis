@@ -24,6 +24,11 @@ vector<float> ak8JetE_;
 vector<float> ak8JetEta_;
 vector<float> ak8JetPhi_;
 vector<float> ak8JetMass_;
+vector<UShort_t> ak8JetID_; 
+vector<float>    ak8JetP4Smear_;
+vector<float>    ak8JetP4SmearUp_;
+vector<float>    ak8JetP4SmearDo_;
+
 
 vector<float> ak8Jet_tau1_;
 vector<float> ak8Jet_tau2_;
@@ -70,6 +75,13 @@ void phoJetNtuplizer::branchak8Jets(TTree* tree){
   tree->Branch("ak8JetEta",                &ak8JetEta_);
   tree->Branch("ak8JetPhi",                &ak8JetPhi_);
   tree->Branch("ak8JetMass",               &ak8JetMass_);
+  tree->Branch("ak8JetID",                 &ak8JetID_); 
+  if(runGenInfo_){
+    tree->Branch("ak8JetP4Smear",          &ak8JetP4Smear_);
+    tree->Branch("ak8JetP4SmearUp",        &ak8JetP4SmearUp_);
+    tree->Branch("ak8JetP4SmearDo",        &ak8JetP4SmearDo_);
+  }
+
  
   tree->Branch("ak8Jet_tau1",              &ak8Jet_tau1_);
   tree->Branch("ak8Jet_tau2",              &ak8Jet_tau2_);
@@ -112,6 +124,13 @@ void phoJetNtuplizer::branchak8Jets(TTree* tree){
 void phoJetNtuplizer::fillak8Jets(const edm::Event& iEvent, const edm::EventSetup& iSetup){        
   initak8Jets();
 
+  edm::Handle<vector<reco::GenParticle> > genParticlesHandle;
+  if(runGenInfo_)iEvent.getByToken(genParticlesToken_, genParticlesHandle);
+
+  edm::Handle<double> rhoHandle;
+  iEvent.getByToken(rhoToken_, rhoHandle);
+  float rho = *(rhoHandle.product());          
+
   edm::Handle<edm::View<pat::Jet> > ak8jetHandle;
   iEvent.getByToken(jetsAK8Token_, ak8jetHandle);
 
@@ -142,6 +161,40 @@ void phoJetNtuplizer::fillak8Jets(const edm::Event& iEvent, const edm::EventSetu
     ak8JetEta_                       .push_back(iak8Jet->eta());
     ak8JetPhi_                       .push_back(iak8Jet->phi());
     ak8JetMass_                      .push_back(iak8Jet->mass());
+
+    //PF JetID
+    float NHF      = iak8Jet->neutralHadronEnergyFraction();
+    float NEMF     = iak8Jet->neutralEmEnergyFraction();
+    float NumConst = iak8Jet->chargedMultiplicity()+iak8Jet->neutralMultiplicity();
+    float CHF      = iak8Jet->chargedHadronEnergyFraction();
+    float CHM      = iak8Jet->chargedMultiplicity();
+    float CEMF     = iak8Jet->chargedEmEnergyFraction();
+    float NNP      = iak8Jet->neutralMultiplicity();
+    float MUF      = iak8Jet->muonEnergyFraction();
+
+    bool looseJetID        = false;
+    bool tightJetID        = false;
+    bool tightLepVetoJetID = false;
+    if (fabs(iak8Jet->eta()) <= 2.7) {
+      looseJetID        = (NHF<0.99 && NEMF<0.99 && NumConst>1) &&             ((fabs(iak8Jet->eta())<=2.4 && CHF>0 && CHM>0 && CEMF<0.99) || fabs(iak8Jet->eta())>2.4) && fabs(iak8Jet->eta())<=2.7;
+      tightJetID        = (NHF<0.90 && NEMF<0.90 && NumConst>1) &&             ((fabs(iak8Jet->eta())<=2.4 && CHF>0 && CHM>0 && CEMF<0.99) || fabs(iak8Jet->eta())>2.4) && fabs(iak8Jet->eta())<=2.7;
+      tightLepVetoJetID = (NHF<0.90 && NEMF<0.90 && NumConst>1  && MUF<0.8) && ((fabs(iak8Jet->eta())<=2.4 && CHF>0 && CHM>0 && CEMF<0.90) || fabs(iak8Jet->eta())>2.4) && fabs(iak8Jet->eta())<=2.7;
+    } else if (fabs(iak8Jet->eta()) <= 3.0) {
+      looseJetID = (NHF<0.98 && NEMF>0.01 && NNP>2 && fabs(iak8Jet->eta())>2.7 && fabs(iak8Jet->eta())<=3.0 );
+      tightJetID = (NHF<0.98 && NEMF>0.01 && NNP>2 && fabs(iak8Jet->eta())>2.7 && fabs(iak8Jet->eta())<=3.0 );
+    } else {
+      looseJetID = (NEMF<0.90 && NNP>10 && fabs(iak8Jet->eta())>3.0 );
+      tightJetID = (NEMF<0.90 && NNP>10 && fabs(iak8Jet->eta())>3.0 );
+    }
+
+    UShort_t tmpjetIDbit = 0;
+    if (looseJetID)        setbit(tmpjetIDbit, 0);
+    if (tightJetID)        setbit(tmpjetIDbit, 1);
+    if (tightLepVetoJetID) setbit(tmpjetIDbit, 2);
+
+    ak8JetID_                        .push_back(tmpjetIDbit);    
+
+
 
     ak8Jet_tau1_      .push_back(iak8Jet->userFloat("ak8PFJetsCHSValueMap:NjettinessAK8CHSTau1"));
     ak8Jet_tau2_      .push_back(iak8Jet->userFloat("ak8PFJetsCHSValueMap:NjettinessAK8CHSTau2"));
@@ -186,6 +239,51 @@ void phoJetNtuplizer::fillak8Jets(const edm::Event& iEvent, const edm::EventSetu
       ak8JetJECUnc_.push_back(-1.);
     }
 
+    
+    if (runGenInfo_ && genParticlesHandle.isValid()) {
+      float jetGenJetPt       = -999.;
+      float jetGenJetEta      = -999.;
+      float jetGenJetPhi      = -999.;
+      if ((*iak8Jet).genJet()) {
+	jetGenJetPt    = (*iak8Jet).genJet()->pt();
+	jetGenJetEta   = (*iak8Jet).genJet()->eta();
+	jetGenJetPhi   = (*iak8Jet).genJet()->phi();
+      }
+    
+      // access jet resolution             
+      JME::JetParameters parameters;
+      parameters.setJetPt(iak8Jet->pt()).setJetEta(iak8Jet->eta()).setRho(rho);
+      float jetResolution = AK8jetResolution_.getResolution(parameters);
+
+      edm::Service<edm::RandomNumberGenerator> rng;
+      if (!rng.isAvailable()) edm::LogError("JET : random number generator is missing !");
+      CLHEP::HepRandomEngine & engine = rng->getEngine( iEvent.streamID() );
+      float rnd = CLHEP::RandGauss::shoot(&engine, 0., jetResolution);
+
+      float jetResolutionSF   = AK8jetResolutionSF_.getScaleFactor(parameters);
+      float jetResolutionSFUp = AK8jetResolutionSF_.getScaleFactor(parameters, Variation::UP);
+      float jetResolutionSFDo = AK8jetResolutionSF_.getScaleFactor(parameters, Variation::DOWN);                                                                
+
+      float ak8JetP4Smear   = -1.;
+      float ak8JetP4SmearUp = -1.;
+      float ak8JetP4SmearDo = -1.;
+      if ( jetGenJetPt > 0 && 
+           deltaR(iak8Jet->eta(), iak8Jet->phi(), jetGenJetEta, jetGenJetPhi) < 0.2 && 
+           fabs(iak8Jet->pt()-jetGenJetPt) < (3*jetResolution*iak8Jet->pt())) {
+	ak8JetP4Smear   = 1. + (jetResolutionSF   - 1.)*(iak8Jet->pt() - jetGenJetPt)/iak8Jet->pt();
+	ak8JetP4SmearUp = 1. + (jetResolutionSFUp - 1.)*(iak8Jet->pt() - jetGenJetPt)/iak8Jet->pt();
+	ak8JetP4SmearDo = 1. + (jetResolutionSFDo - 1.)*(iak8Jet->pt() - jetGenJetPt)/iak8Jet->pt();
+      } else {
+	ak8JetP4Smear   = 1. + rnd*sqrt(max(pow(jetResolutionSF,   2)-1, 0.));
+	ak8JetP4SmearUp = 1. + rnd*sqrt(max(pow(jetResolutionSFUp, 2)-1, 0.));
+	ak8JetP4SmearDo = 1. + rnd*sqrt(max(pow(jetResolutionSFDo, 2)-1, 0.));
+      }
+      ak8JetP4Smear_  .push_back(ak8JetP4Smear);
+      ak8JetP4SmearUp_.push_back(ak8JetP4SmearUp);
+      ak8JetP4SmearDo_.push_back(ak8JetP4SmearDo); 
+
+    }// runGenInfo
+
     nak8Jet_++;
   }
 
@@ -200,6 +298,10 @@ void phoJetNtuplizer::initak8Jets(){
   ak8JetEta_          .clear();
   ak8JetPhi_          .clear();
   ak8JetMass_         .clear();
+  ak8JetID_           .clear();
+  ak8JetP4Smear_      .clear();
+  ak8JetP4SmearUp_    .clear();
+  ak8JetP4SmearDo_    .clear();
 
   ak8Jet_tau1_        .clear();
   ak8Jet_tau2_        .clear();
