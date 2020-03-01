@@ -15,7 +15,7 @@ dataset = {
 'Axial_MonoJ_NLO_Mphi-500_Mchi-500': '/Axial_MonoJ_NLO_Mphi-500_Mchi-500_gSM-0p25_gDM-1p0_13TeV-madgraph/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
 'Axial_MonoJ_NLO_Mphi-750_Mchi-1':   '/Axial_MonoJ_NLO_Mphi-750_Mchi-1_gSM-0p25_gDM-1p0_13TeV-madgraph/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
 'Axial_MonoJ_NLO_Mphi-750_Mchi-300': '/Axial_MonoJ_NLO_Mphi-750_Mchi-300_gSM-0p25_gDM-1p0_13TeV-madgraph/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
-'Axial_MonoJ_NLO_Mphi-750_Mchi-600': '/Axial_MonoJ_NLO_Mphi-750_Mchi-600_gSM-0p25_gDM-1p0_13TeV-madgraph/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM'
+'Axial_MonoJ_NLO_Mphi-750_Mchi-600': '/Axial_MonoJ_NLO_Mphi-750_Mchi-600_gSM-0p25_gDM-1p0_13TeV-madgraph/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
 'Axial_MonoJ_NLO_Mphi-1000_Mchi-1':   '/Axial_MonoJ_NLO_Mphi-1000_Mchi-1_gSM-0p25_gDM-1p0_13TeV-madgraph/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
 'Axial_MonoJ_NLO_Mphi-1000_Mchi-300': '/Axial_MonoJ_NLO_Mphi-1000_Mchi-300_gSM-0p25_gDM-1p0_13TeV-madgraph/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
 'Axial_MonoJ_NLO_Mphi-1000_Mchi-600': '/Axial_MonoJ_NLO_Mphi-1000_Mchi-600_gSM-0p25_gDM-1p0_13TeV-madgraph/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM',
@@ -55,7 +55,7 @@ config = config()
 name = 'monoJet2016_Axial'
 config.General.workArea = 'crab_'+name
 config.General.transferOutputs = True
-config.General.transferLogs = True
+config.General.transferLogs = False
 
 config.JobType.pluginName = 'Analysis'
 #config.JobType.inputFiles = ['']
@@ -70,7 +70,7 @@ config.Site.storageSite = 'T2_US_Wisconsin'
 #config.Site.whitelist = ["T2_US_Wisconsin"]
 #config.Site.blacklist = ['T2_CH_CERN']
 
-#listOfSamples = []
+listOfSamples = ['Axial_MonoJ_NLO_Mphi-100_Mchi-1','Axial_MonoJ_NLO_Mphi-100_Mchi-200','Axial_MonoJ_NLO_Mphi-100_Mchi-40','Axial_MonoJ_NLO_Mphi-300_Mchi-100','Axial_MonoJ_NLO_Mphi-300_Mchi-1','Axial_MonoJ_NLO_Mphi-300_Mchi-300','Axial_MonoJ_NLO_Mphi-300_Mchi-400','Axial_MonoJ_NLO_Mphi-500_Mchi-150','Axial_MonoJ_NLO_Mphi-500_Mchi-1','Axial_MonoJ_NLO_Mphi-500_Mchi-200','Axial_MonoJ_NLO_Mphi-500_Mchi-300','Axial_MonoJ_NLO_Mphi-500_Mchi-500','Axial_MonoJ_NLO_Mphi-750_Mchi-1','Axial_MonoJ_NLO_Mphi-750_Mchi-300','Axial_MonoJ_NLO_Mphi-750_Mchi-600','Axial_MonoJ_NLO_Mphi-1000_Mchi-1','Axial_MonoJ_NLO_Mphi-1000_Mchi-300','Axial_MonoJ_NLO_Mphi-1000_Mchi-600','Axial_MonoJ_NLO_Mphi-1500_Mchi-1','Axial_MonoJ_NLO_Mphi-1500_Mchi-300','Axial_MonoJ_NLO_Mphi-1500_Mchi-600','Axial_MonoJ_NLO_Mphi-1750_Mchi-100','Axial_MonoJ_NLO_Mphi-1750_Mchi-10','Axial_MonoJ_NLO_Mphi-1750_Mchi-150','Axial_MonoJ_NLO_Mphi-1750_Mchi-1','Axial_MonoJ_NLO_Mphi-1750_Mchi-200','Axial_MonoJ_NLO_Mphi-1750_Mchi-300','Axial_MonoJ_NLO_Mphi-1750_Mchi-300','Axial_MonoJ_NLO_Mphi-1750_Mchi-500','Axial_MonoJ_NLO_Mphi-2000_Mchi-100','Axial_MonoJ_NLO_Mphi-2000_Mchi-10','Axial_MonoJ_NLO_Mphi-2000_Mchi-150','Axial_MonoJ_NLO_Mphi-2000_Mchi-1','Axial_MonoJ_NLO_Mphi-2000_Mchi-200','Axial_MonoJ_NLO_Mphi-2000_Mchi-300','Axial_MonoJ_NLO_Mphi-2000_Mchi-400','Axial_MonoJ_NLO_Mphi-2250_Mchi-150','Axial_MonoJ_NLO_Mphi-2250_Mchi-1','Axial_MonoJ_NLO_Mphi-2250_Mchi-300','Axial_MonoJ_NLO_Mphi-2250_Mchi-400']
 
 for sample in listOfSamples:  
   os.popen('cp run_102X_mc2016.py run_102X_mc2016_'+sample+'.py')

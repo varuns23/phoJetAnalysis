@@ -239,7 +239,6 @@ void phoJetNtuplizer::fillak8Jets(const edm::Event& iEvent, const edm::EventSetu
       ak8JetJECUnc_.push_back(-1.);
     }
 
-    
     if (runGenInfo_ && genParticlesHandle.isValid()) {
       float jetGenJetPt       = -999.;
       float jetGenJetEta      = -999.;
